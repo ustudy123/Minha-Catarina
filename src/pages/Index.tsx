@@ -2,6 +2,9 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useAudioPlayer } from "@/hooks/useAudioPlayer";
+import { useTextToSpeech } from "@/hooks/useTextToSpeech";
+import { PlayButton } from "@/components/audio/PlayButton";
 import { 
   MessageSquare, 
   BookOpen, 
@@ -18,6 +21,30 @@ import catarinaMascot from "@/assets/catarina-mascot.png";
 
 const Index = () => {
   const [isConnected, setIsConnected] = useState(false);
+  const audioPlayer = useAudioPlayer();
+  const { generate, isGenerating } = useTextToSpeech();
+
+  const phraseOfTheDay = "Bom dia, meu amor! Que tal começarmos o dia com um sorriso?";
+
+  const handlePlayPhraseOfDay = async () => {
+    if (audioPlayer.isPlaying) {
+      audioPlayer.pause();
+      return;
+    }
+
+    try {
+      const { url } = await generate({ 
+        text: phraseOfTheDay, 
+        language: 'pt' 
+      });
+      
+      if (url) {
+        await audioPlayer.play(url);
+      }
+    } catch (error) {
+      console.error('Error playing phrase:', error);
+    }
+  };
 
   const quickActions = [
     {
@@ -145,12 +172,19 @@ const Index = () => {
               <div className="flex-1">
                 <h3 className="font-semibold mb-1">Frase do Dia</h3>
                 <p className="text-sm opacity-90">
-                  "Bom dia, meu amor! Que tal começarmos o dia com um sorriso?"
+                  "{phraseOfTheDay}"
                 </p>
               </div>
-              <Button size="sm" variant="secondary" className="flex-shrink-0">
-                <Volume2 className="w-4 h-4" />
-              </Button>
+              <PlayButton
+                isPlaying={audioPlayer.isPlaying}
+                isLoading={isGenerating || audioPlayer.isLoading}
+                onPlay={handlePlayPhraseOfDay}
+                onPause={audioPlayer.pause}
+                variant="secondary"
+                size="sm"
+                showWave
+                className="flex-shrink-0"
+              />
             </div>
           </Card>
         )}

@@ -4,6 +4,10 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useAudioPlayer } from "@/hooks/useAudioPlayer";
+import { useTextToSpeech } from "@/hooks/useTextToSpeech";
+import { PlayButton } from "@/components/audio/PlayButton";
+import { toast } from "sonner";
 import { 
   Search, 
   Play, 
@@ -51,11 +55,40 @@ const Library = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [favorites, setFavorites] = useState<string[]>(["2", "6"]);
+  const [playingId, setPlayingId] = useState<string | null>(null);
+  
+  const audioPlayer = useAudioPlayer();
+  const { generate, isGenerating } = useTextToSpeech();
 
   const toggleFavorite = (id: string) => {
     setFavorites(prev => 
       prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]
     );
+  };
+
+  const handlePlayPhrase = async (phrase: Phrase) => {
+    if (playingId === phrase.id && audioPlayer.isPlaying) {
+      audioPlayer.pause();
+      setPlayingId(null);
+      return;
+    }
+
+    try {
+      setPlayingId(phrase.id);
+      
+      // Generate voice for the phrase
+      const { url } = await generate({ 
+        text: phrase.text, 
+        language: 'pt' 
+      });
+      
+      if (url) {
+        await audioPlayer.play(url);
+      }
+    } catch (error) {
+      console.error('Error playing phrase:', error);
+      setPlayingId(null);
+    }
   };
 
   const filteredPhrases = samplePhrases.filter(phrase => {
@@ -174,13 +207,15 @@ const Library = () => {
                   style={{ animationDelay: `${index * 0.05}s` }}
                 >
                   <div className="flex items-start gap-3">
-                    <Button 
-                      size="icon" 
+                    <PlayButton
+                      isPlaying={playingId === phrase.id && audioPlayer.isPlaying}
+                      isLoading={isGenerating && playingId === phrase.id}
+                      onPlay={() => handlePlayPhrase(phrase)}
+                      onPause={audioPlayer.pause}
                       variant="secondary"
-                      className="flex-shrink-0 rounded-xl"
-                    >
-                      <Play className="w-4 h-4" />
-                    </Button>
+                      size="icon"
+                      className="flex-shrink-0"
+                    />
                     
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium mb-1 break-words">
