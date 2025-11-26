@@ -4,6 +4,11 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
+import { useTextToSpeech } from "@/hooks/useTextToSpeech";
+import { useAudioPlayer } from "@/hooks/useAudioPlayer";
+import { useSavedPhrases } from "@/hooks/useSavedPhrases";
+import { toast } from "sonner";
+import { PlayButton } from "@/components/audio/PlayButton";
 import {
   Select,
   SelectContent,
@@ -25,19 +30,63 @@ import { cn } from "@/lib/utils";
 
 const CreatePhrase = () => {
   const [phraseText, setPhraseText] = useState("");
-  const [language, setLanguage] = useState("pt");
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [tokensRemaining, setTokensRemaining] = useState(10);
+  const [language, setLanguage] = useState<"pt" | "en" | "es">("pt");
+  const [tokensRemaining, setTokensRemaining] = useState(1000);
   const maxTokens = 1000;
   const maxChars = 200;
 
-  const handleGenerate = () => {
-    setIsGenerating(true);
-    // Simulate AI generation
-    setTimeout(() => {
-      setIsGenerating(false);
+  const { generate, isGenerating, audioUrl, audioBlob, reset } = useTextToSpeech();
+  const audioPlayer = useAudioPlayer();
+  const { addPhrase } = useSavedPhrases();
+
+  const handleGenerate = async () => {
+    if (!phraseText.trim()) {
+      toast.error("Digite uma frase primeiro");
+      return;
+    }
+
+    if (tokensRemaining <= 0) {
+      toast.error("Tokens esgotados este mês");
+      return;
+    }
+
+    try {
+      await generate({ text: phraseText, language });
       setTokensRemaining(prev => Math.max(0, prev - 1));
-    }, 2000);
+    } catch (error) {
+      console.error('Error generating voice:', error);
+    }
+  };
+
+  const handlePlayPreview = () => {
+    if (audioUrl) {
+      audioPlayer.play(audioUrl);
+    }
+  };
+
+  const handleSave = () => {
+    if (!audioBlob) {
+      toast.error("Gere a voz primeiro");
+      return;
+    }
+
+    addPhrase({
+      text: phraseText,
+      language,
+      audioUrl,
+      category: 'custom',
+    });
+
+    toast.success("Frase salva na biblioteca!");
+    
+    // Reset form
+    setPhraseText("");
+    reset();
+    audioPlayer.stop();
+  };
+
+  const handleSendToDoll = () => {
+    toast.info("Em breve: enviar via Bluetooth!");
   };
 
   return (
@@ -90,7 +139,7 @@ const CreatePhrase = () => {
               <Globe className="w-4 h-4" />
               Idioma
             </div>
-            <Select value={language} onValueChange={setLanguage}>
+            <Select value={language} onValueChange={(value) => setLanguage(value as "pt" | "en" | "es")}>
               <SelectTrigger className="h-12 rounded-xl border-2">
                 <SelectValue />
               </SelectTrigger>
@@ -172,17 +221,35 @@ const CreatePhrase = () => {
               </div>
 
               <div className="flex gap-2">
-                <Button variant="secondary" size="lg" className="flex-1">
-                  <Play className="w-5 h-5" />
-                  Ouvir Preview
-                </Button>
-                <Button variant="outline" size="lg" className="flex-1">
+                <PlayButton
+                  isPlaying={audioPlayer.isPlaying}
+                  isLoading={audioPlayer.isLoading}
+                  onPlay={handlePlayPreview}
+                  onPause={audioPlayer.pause}
+                  variant="secondary"
+                  size="lg"
+                  showWave
+                  className="flex-1 gap-2"
+                />
+                <Button 
+                  variant="outline" 
+                  size="lg" 
+                  className="flex-1"
+                  onClick={handleSave}
+                  disabled={!audioBlob}
+                >
                   <Save className="w-5 h-5" />
                   Salvar
                 </Button>
               </div>
 
-              <Button size="lg" variant="default" className="w-full">
+              <Button 
+                size="lg" 
+                variant="default" 
+                className="w-full"
+                onClick={handleSendToDoll}
+                disabled={!audioBlob}
+              >
                 <Volume2 className="w-5 h-5" />
                 Enviar para Catarina
               </Button>
