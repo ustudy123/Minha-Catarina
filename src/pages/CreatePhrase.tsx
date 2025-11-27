@@ -21,6 +21,7 @@ import {
   Save,
   Volume2,
   Globe,
+  Send,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -219,8 +220,8 @@ const CreatePhrase = () => {
                 onClick={handleSendToDoll}
                 disabled={!audioBlob}
               >
-                <Volume2 className="w-5 h-5" />
-                Enviar para Catarina
+                <Send className="w-5 h-5" />
+                Enviar via WhatsApp
               </Button>
             </div>
           </Card>
