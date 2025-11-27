@@ -4,6 +4,8 @@ import { ArrowLeft, Plus, Clock, Calendar, MessageSquare, Trash2 } from "lucide-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { getTranslations } from "@/translations";
 import { toast } from "sonner";
 
 interface ScheduledMessage {
@@ -14,17 +16,20 @@ interface ScheduledMessage {
   isActive: boolean;
 }
 
-const daysOfWeek = [
-  { id: "mon", label: "Seg" },
-  { id: "tue", label: "Ter" },
-  { id: "wed", label: "Qua" },
-  { id: "thu", label: "Qui" },
-  { id: "fri", label: "Sex" },
-  { id: "sat", label: "Sáb" },
-  { id: "sun", label: "Dom" },
-];
-
 export default function Schedule() {
+  const { language } = useLanguage();
+  const t = getTranslations(language);
+
+  const daysOfWeek = [
+    { id: "mon", label: t.schedule.days.mon },
+    { id: "tue", label: t.schedule.days.tue },
+    { id: "wed", label: t.schedule.days.wed },
+    { id: "thu", label: t.schedule.days.thu },
+    { id: "fri", label: t.schedule.days.fri },
+    { id: "sat", label: t.schedule.days.sat },
+    { id: "sun", label: t.schedule.days.sun },
+  ];
+
   const [schedules] = useState<ScheduledMessage[]>([
     {
       id: "1",
@@ -50,14 +55,14 @@ export default function Schedule() {
   ]);
 
   const handleCreateSchedule = () => {
-    toast.info("Programação via WhatsApp em breve! 🚀", {
-      description: "Esta funcionalidade será integrada com o WhatsApp em breve.",
+    toast.info(t.schedule.comingSoonToast, {
+      description: t.schedule.comingSoonToastDescription,
     });
   };
 
   const handleDeleteSchedule = (id: string) => {
-    toast.info("Programação via WhatsApp em breve! 🚀", {
-      description: "Esta funcionalidade será integrada com o WhatsApp em breve.",
+    toast.info(t.schedule.comingSoonToast, {
+      description: t.schedule.comingSoonToastDescription,
     });
   };
 
@@ -72,7 +77,7 @@ export default function Schedule() {
             </Button>
           </Link>
           <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
-            Programar Mensagens
+            {t.schedule.title}
           </h1>
           <div className="w-10" />
         </div>
@@ -88,11 +93,10 @@ export default function Schedule() {
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-primary mb-2">
-                  Programação via WhatsApp em Desenvolvimento
+                  {t.schedule.comingSoonTitle}
                 </h3>
                 <p className="text-sm text-gray-700 leading-relaxed">
-                  Em breve você poderá programar mensagens automáticas para serem enviadas via WhatsApp 
-                  nos horários que você definir. A Catarina estará sempre presente nos momentos importantes!
+                  {t.schedule.comingSoonDescription}
                 </p>
               </div>
             </div>
@@ -107,14 +111,14 @@ export default function Schedule() {
             size="lg"
           >
             <Plus className="mr-2 h-5 w-5" />
-            Criar Nova Programação
+            {t.schedule.createNew}
           </Button>
         </div>
 
         {/* Schedule List (Preview) */}
         <div className="space-y-4">
           <h2 className="text-xl font-semibold text-gray-800 mb-4">
-            Programações Exemplo
+            {t.schedule.exampleSchedules}
           </h2>
 
           {schedules.map((schedule) => (
@@ -161,7 +165,7 @@ export default function Schedule() {
                     variant={schedule.isActive ? "default" : "secondary"}
                     className="ml-auto"
                   >
-                    {schedule.isActive ? "Ativo" : "Inativo"}
+                    {schedule.isActive ? t.schedule.active : t.schedule.inactive}
                   </Badge>
                 </div>
               </CardContent>
@@ -173,9 +177,7 @@ export default function Schedule() {
         <Card className="mt-8 border-dashed border-2">
           <CardContent className="p-6 text-center">
             <p className="text-gray-600">
-              💡 <strong>Dica:</strong> Em breve você poderá criar sequências de mensagens 
-              para diferentes momentos do dia. A Catarina cuidará da rotina da sua filha 
-              mesmo quando você estiver ocupada!
+              {t.schedule.tip}
             </p>
           </CardContent>
         </Card>

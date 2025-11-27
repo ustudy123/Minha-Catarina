@@ -2,10 +2,11 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-import { useTextToSpeech } from "@/hooks/useTextToSpeech";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
+import { useTextToSpeech } from "@/hooks/useTextToSpeech";
 import { useSavedPhrases } from "@/hooks/useSavedPhrases";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { getTranslations } from "@/translations";
 import { toast } from "sonner";
 import { PlayButton } from "@/components/audio/PlayButton";
 import { AudioControls } from "@/components/audio/AudioControls";
@@ -34,10 +35,11 @@ const CreatePhrase = () => {
   const audioPlayer = useAudioPlayer();
   const { addPhrase } = useSavedPhrases();
   const { language, setLanguage } = useLanguage();
+  const t = getTranslations(language);
 
   const handleGenerate = async () => {
     if (!phraseText.trim()) {
-      toast.error("Digite uma frase primeiro");
+      toast.error(t.createPhrase.errorEnterPhrase);
       return;
     }
 
@@ -56,7 +58,7 @@ const CreatePhrase = () => {
 
   const handleSave = () => {
     if (!audioBlob) {
-      toast.error("Gere a voz primeiro");
+      toast.error(t.createPhrase.errorGenerateFirst);
       return;
     }
 
@@ -67,7 +69,7 @@ const CreatePhrase = () => {
       category: 'custom',
     });
 
-    toast.success("Frase salva na biblioteca!");
+    toast.success(t.createPhrase.phraseSaved);
     
     // Reset form
     setPhraseText("");
@@ -76,7 +78,7 @@ const CreatePhrase = () => {
   };
 
   const handleSendToDoll = () => {
-    toast.info("Em breve: enviar via Bluetooth!");
+    toast.info(t.createPhrase.whatsappSoon);
   };
 
   return (
@@ -90,8 +92,8 @@ const CreatePhrase = () => {
                 <ArrowLeft className="w-5 h-5" />
               </Button>
               <div>
-                <h1 className="text-xl font-bold">Criar Frase</h1>
-                <p className="text-xs text-muted-foreground">IA personalizada com voz infantil</p>
+                <h1 className="text-xl font-bold">{t.createPhrase.title}</h1>
+                <p className="text-xs text-muted-foreground">{t.createPhrase.subtitle}</p>
               </div>
             </div>
           </div>
@@ -104,7 +106,7 @@ const CreatePhrase = () => {
           <div className="space-y-3">
             <div className="flex items-center gap-2 text-sm font-semibold">
               <Globe className="w-4 h-4" />
-              Idioma
+              {t.createPhrase.language}
             </div>
             <Select value={language} onValueChange={(value) => setLanguage(value as "pt" | "en" | "es")}>
               <SelectTrigger className="h-12 rounded-xl border-2">
@@ -125,7 +127,7 @@ const CreatePhrase = () => {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-sm font-semibold">
                 <Sparkles className="w-4 h-4" />
-                O que a Catarina deve dizer?
+                {t.createPhrase.whatToSay}
               </div>
               <span className={cn(
                 "text-xs font-medium",
@@ -136,7 +138,7 @@ const CreatePhrase = () => {
             </div>
             
             <Textarea
-              placeholder="Digite a mensagem que você quer que a Catarina fale..."
+              placeholder={t.createPhrase.placeholder}
               className="min-h-[120px] rounded-xl border-2 resize-none text-base"
               value={phraseText}
               onChange={(e) => setPhraseText(e.target.value.slice(0, maxChars))}
@@ -153,12 +155,12 @@ const CreatePhrase = () => {
               >
                 {isGenerating ? (
                   <>
-                    <span className="animate-pulse">Gerando</span>
+                    <span className="animate-pulse">{t.createPhrase.generating}</span>
                   </>
                 ) : (
                   <>
                     <Sparkles className="w-5 h-5" />
-                    Gerar Voz com IA
+                    {t.createPhrase.generateVoice}
                   </>
                 )}
               </Button>
@@ -172,7 +174,7 @@ const CreatePhrase = () => {
             <div className="space-y-4">
               <div className="flex items-center gap-2 text-sm font-semibold">
                 <Volume2 className="w-4 h-4" />
-                Preview da Frase
+                {t.createPhrase.preview}
               </div>
 
               <div className="p-4 rounded-xl bg-muted/50">
@@ -198,7 +200,7 @@ const CreatePhrase = () => {
                   disabled={!audioBlob}
                 >
                   <Save className="w-5 h-5" />
-                  Salvar
+                  {t.common.save}
                 </Button>
               </div>
 
@@ -222,7 +224,7 @@ const CreatePhrase = () => {
                 disabled={!audioBlob}
               >
                 <Send className="w-5 h-5" />
-                Enviar via WhatsApp
+                {t.createPhrase.sendWhatsApp}
               </Button>
             </div>
           </Card>
@@ -232,20 +234,20 @@ const CreatePhrase = () => {
         <Card className="p-5 border-2 bg-highlight/10 border-highlight/20 animate-fade-in" style={{ animationDelay: "0.3s" }}>
           <h3 className="font-semibold mb-3 flex items-center gap-2">
             <Sparkles className="w-4 h-4" />
-            Dicas para frases melhores
+            {t.createPhrase.tips.title}
           </h3>
           <ul className="space-y-2 text-sm text-muted-foreground">
             <li className="flex items-start gap-2">
               <span className="text-highlight-foreground">•</span>
-              <span>Use linguagem simples e carinhosa</span>
+              <span>{t.createPhrase.tips.simple}</span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-highlight-foreground">•</span>
-              <span>Frases curtas são mais naturais para crianças</span>
+              <span>{t.createPhrase.tips.short}</span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-highlight-foreground">•</span>
-              <span>Inclua o nome da criança para personalizar</span>
+              <span>{t.createPhrase.tips.personalize}</span>
             </li>
           </ul>
         </Card>

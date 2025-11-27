@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useTextToSpeech } from "@/hooks/useTextToSpeech";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { getTranslations } from "@/translations";
 import { AudioControls } from "@/components/audio/AudioControls";
 import { PlayButton } from "@/components/audio/PlayButton";
 import { toast } from "sonner";
@@ -41,18 +42,18 @@ const dailyPhrases: Phrase[] = [
   { id: "12", text: "Vamos agradecer pelo dia de hoje? Obrigada por tudo!", category: "educational", timeOfDay: "evening", isFavorite: false },
 ];
 
-const categories = [
-  { id: "all", name: "Todas", icon: Sparkles, color: "from-purple-100 to-pink-100" },
-  { id: "routine", name: "Rotina", icon: Clock, color: "from-blue-100 to-cyan-100" },
-  { id: "motivation", name: "Motivação", icon: Heart, color: "from-rose-100 to-pink-100" },
-  { id: "educational", name: "Educacional", icon: GraduationCap, color: "from-amber-100 to-yellow-100" },
+const timePeriods = [
+  { id: "all", name: "timePeriods.all", icon: Sun },
+  { id: "morning", name: "timePeriods.morning", icon: Sun },
+  { id: "afternoon", name: "timePeriods.afternoon", icon: Sunset },
+  { id: "evening", name: "timePeriods.evening", icon: Moon },
 ];
 
-const timePeriods = [
-  { id: "all", name: "Todo Dia", icon: Sun },
-  { id: "morning", name: "Manhã", icon: Sun },
-  { id: "afternoon", name: "Tarde", icon: Sunset },
-  { id: "evening", name: "Noite", icon: Moon },
+const categories = [
+  { id: "all", name: "categories.all", icon: Sparkles, color: "from-purple-100 to-pink-100" },
+  { id: "routine", name: "categories.routine", icon: Clock, color: "from-blue-100 to-cyan-100" },
+  { id: "motivation", name: "categories.motivation", icon: Heart, color: "from-rose-100 to-pink-100" },
+  { id: "educational", name: "categories.educational", icon: GraduationCap, color: "from-amber-100 to-yellow-100" },
 ];
 
 export default function DailyPhrases() {
@@ -66,16 +67,17 @@ export default function DailyPhrases() {
   const audioPlayer = useAudioPlayer();
   const { audioUrl, isGenerating, generate } = useTextToSpeech();
   const { language } = useLanguage();
+  const t = getTranslations(language);
 
   const toggleFavorite = (id: string) => {
     setFavorites(prev => {
       const newFavorites = new Set(prev);
       if (newFavorites.has(id)) {
         newFavorites.delete(id);
-        toast.success("Removido dos favoritos");
+        toast.success(t.dailyPhrases.removedFromFavorites);
       } else {
         newFavorites.add(id);
-        toast.success("Adicionado aos favoritos");
+        toast.success(t.dailyPhrases.addedToFavorites);
       }
       return newFavorites;
     });
@@ -110,6 +112,16 @@ export default function DailyPhrases() {
     return matchesSearch && matchesCategory && matchesTime;
   });
 
+  const getCategoryLabel = (category: string) => {
+    const parts = t.dailyPhrases.categories as any;
+    return parts[category] || category;
+  };
+
+  const getTimeLabel = (time: string) => {
+    const parts = t.dailyPhrases.timePeriods as any;
+    return parts[time] || time;
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50">
       {/* Header */}
@@ -121,7 +133,7 @@ export default function DailyPhrases() {
             </Button>
           </Link>
           <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
-            Frases do Dia
+            {t.dailyPhrases.title}
           </h1>
           <div className="w-10" />
         </div>
@@ -132,7 +144,7 @@ export default function DailyPhrases() {
         <div className="mb-8">
           <Input
             type="search"
-            placeholder="Buscar frases..."
+            placeholder={t.dailyPhrases.searchPlaceholder}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="max-w-md mx-auto"
@@ -145,7 +157,7 @@ export default function DailyPhrases() {
             {timePeriods.map((period) => (
               <TabsTrigger key={period.id} value={period.id} className="flex items-center gap-2">
                 <period.icon className="h-4 w-4" />
-                {period.name}
+                {getTimeLabel(period.id)}
               </TabsTrigger>
             ))}
           </TabsList>
@@ -166,7 +178,7 @@ export default function DailyPhrases() {
               <CardContent className={`p-4 bg-gradient-to-br ${category.color}`}>
                 <div className="flex flex-col items-center text-center gap-2">
                   <category.icon className="h-8 w-8 text-primary" />
-                  <span className="font-semibold text-sm">{category.name}</span>
+                  <span className="font-semibold text-sm">{getCategoryLabel(category.id)}</span>
                 </div>
               </CardContent>
             </Card>
@@ -177,7 +189,7 @@ export default function DailyPhrases() {
         <div className="space-y-4">
           {filteredPhrases.length === 0 ? (
             <Card className="p-8 text-center">
-              <p className="text-gray-500">Nenhuma frase encontrada</p>
+              <p className="text-gray-500">{t.dailyPhrases.noPhrasesFound}</p>
             </Card>
           ) : (
             filteredPhrases.map((phrase) => (
@@ -198,14 +210,10 @@ export default function DailyPhrases() {
                       <p className="text-lg text-gray-800 mb-3">{phrase.text}</p>
                       <div className="flex items-center gap-2 flex-wrap">
                         <Badge variant="secondary" className="capitalize">
-                          {phrase.category === "routine" && "Rotina"}
-                          {phrase.category === "motivation" && "Motivação"}
-                          {phrase.category === "educational" && "Educacional"}
+                          {getCategoryLabel(phrase.category)}
                         </Badge>
                         <Badge variant="outline" className="capitalize">
-                          {phrase.timeOfDay === "morning" && "Manhã"}
-                          {phrase.timeOfDay === "afternoon" && "Tarde"}
-                          {phrase.timeOfDay === "evening" && "Noite"}
+                          {getTimeLabel(phrase.timeOfDay)}
                         </Badge>
                       </div>
                     </div>

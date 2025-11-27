@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { getTranslations } from '@/translations';
 
 export type Language = 'pt' | 'en' | 'es';
 
@@ -36,4 +37,9 @@ export const useLanguage = () => {
     throw new Error('useLanguage must be used within a LanguageProvider');
   }
   return context;
+};
+
+export const useTranslations = () => {
+  const { language } = useLanguage();
+  return getTranslations(language);
 };
