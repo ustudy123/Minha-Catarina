@@ -67,8 +67,7 @@ const Index = () => {
       title: "Criar Frase",
       description: "IA personalizada",
       gradient: "from-highlight to-primary",
-      href: "/create",
-      premium: true
+      href: "/create"
     },
     {
       icon: Calendar,
@@ -222,19 +221,11 @@ const Index = () => {
                 )} />
                 
                 <div className="relative p-5 space-y-3">
-                  <div className="flex items-start justify-between">
-                    <div className={cn(
-                      "w-12 h-12 rounded-xl bg-gradient-to-br flex items-center justify-center shadow-md",
-                      action.gradient
-                    )}>
-                      <action.icon className="w-6 h-6 text-white" />
-                    </div>
-                    {action.premium && (
-                      <Badge variant="secondary" className="text-xs gap-1">
-                        <Crown className="w-3 h-3" />
-                        Plus
-                      </Badge>
-                    )}
+                  <div className={cn(
+                    "w-12 h-12 rounded-xl bg-gradient-to-br flex items-center justify-center shadow-md",
+                    action.gradient
+                  )}>
+                    <action.icon className="w-6 h-6 text-white" />
                   </div>
                   
                   <div>
@@ -248,25 +239,6 @@ const Index = () => {
             ))}
           </div>
         </div>
-
-        {/* Premium Banner */}
-        <Card className="relative overflow-hidden border-2 border-accent cursor-pointer group hover-lift">
-          <div className="absolute inset-0 bg-gradient-to-r from-accent/20 via-secondary/20 to-highlight/20" />
-          <div className="relative p-6 flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-accent to-secondary flex items-center justify-center animate-pulse-glow">
-              <Crown className="w-6 h-6 text-white" />
-            </div>
-            <div className="flex-1">
-              <h3 className="font-bold mb-1">Experimente o Plano Plus</h3>
-              <p className="text-sm text-muted-foreground">
-                Crie frases ilimitadas com IA • Apenas R$ 19,90/mês
-              </p>
-            </div>
-            <Button variant="premium" size="sm">
-              Testar Grátis
-            </Button>
-          </div>
-        </Card>
 
         {/* Bottom Navigation Spacer */}
         <div className="h-20" />

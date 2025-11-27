@@ -50,8 +50,14 @@ export const useTextToSpeech = () => {
       );
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Erro ao gerar voz');
+        let errorMessage = 'Erro ao gerar voz';
+        try {
+          const error = await response.json();
+          errorMessage = error.error || errorMessage;
+        } catch (e) {
+          errorMessage = `Erro ${response.status}: ${response.statusText}`;
+        }
+        throw new Error(errorMessage);
       }
 
       const data = await response.json();
