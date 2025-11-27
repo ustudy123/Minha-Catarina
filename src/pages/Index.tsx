@@ -22,12 +22,14 @@ import { useTextToSpeech } from "@/hooks/useTextToSpeech";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
 import catarinaMascot from "@/assets/catarina-mascot.png";
+import { getTranslations } from "@/translations";
 
 const Index = () => {
   const [isConnected, setIsConnected] = useState(false);
   const audioPlayer = useAudioPlayer();
   const { generate, isGenerating } = useTextToSpeech();
   const { language } = useLanguage();
+  const t = getTranslations(language);
 
   const phraseOfTheDay = "Bom dia, meu amor! Que tal começarmos o dia com um sorriso?";
 
@@ -54,29 +56,29 @@ const Index = () => {
   const quickActions = [
     {
       icon: MessageSquare,
-      title: "Frases do Dia",
-      description: "Rotinas e mensagens",
+      title: t.quickActions.dailyPhrases.title,
+      description: t.quickActions.dailyPhrases.description,
       gradient: "from-primary to-secondary",
       href: "/phrases-daily"
     },
     {
       icon: BookOpen,
-      title: "Biblioteca",
-      description: "500+ frases gravadas",
+      title: t.quickActions.library.title,
+      description: t.quickActions.library.description,
       gradient: "from-accent to-secondary",
       href: "/library"
     },
     {
       icon: Sparkles,
-      title: "Criar Frase",
-      description: "IA personalizada",
+      title: t.quickActions.createPhrase.title,
+      description: t.quickActions.createPhrase.description,
       gradient: "from-highlight to-primary",
       href: "/create"
     },
     {
       icon: Calendar,
-      title: "Programar",
-      description: "Sequências e rotinas",
+      title: t.quickActions.schedule.title,
+      description: t.quickActions.schedule.description,
       gradient: "from-secondary to-accent",
       href: "/schedule"
     }
@@ -92,7 +94,7 @@ const Index = () => {
               <Crown className="w-5 h-5 text-primary-foreground" />
             </div>
             <h1 className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-              Minha Catarina
+              {t.home.title}
             </h1>
           </div>
           <div className="flex items-center gap-2">
@@ -130,14 +132,14 @@ const Index = () => {
                     className="gap-1"
                   >
                     <Bluetooth className="w-3 h-3" />
-                    {isConnected ? "Conectada" : "Desconectada"}
+                    {isConnected ? t.home.connected : t.home.disconnected}
                   </Badge>
                 </div>
                 
                 <p className="text-sm text-muted-foreground">
                   {isConnected 
-                    ? "🎀 Pronta para conversar com você!" 
-                    : "Toque no botão abaixo para conectar"}
+                    ? t.home.readyToTalk 
+                    : t.home.tapToConnect}
                 </p>
 
                 {isConnected && (
@@ -148,7 +150,7 @@ const Index = () => {
                     </div>
                     <div className="flex items-center gap-1 text-muted-foreground">
                       <Volume2 className="w-4 h-4" />
-                      <span>Médio</span>
+                      <span>{t.home.medium}</span>
                     </div>
                   </div>
                 )}
@@ -163,7 +165,7 @@ const Index = () => {
                 onClick={() => setIsConnected(true)}
               >
                 <Bluetooth className="w-5 h-5" />
-                Conectar via Bluetooth
+                {t.home.connectBluetooth}
               </Button>
             )}
           </div>
@@ -177,7 +179,7 @@ const Index = () => {
                 <Sparkles className="w-5 h-5" />
               </div>
               <div className="flex-1">
-                <h3 className="font-semibold mb-1">Frase do Dia</h3>
+                <h3 className="font-semibold mb-1">{t.home.phraseOfTheDay}</h3>
                 <p className="text-sm opacity-90">
                   "{phraseOfTheDay}"
                 </p>
@@ -211,7 +213,7 @@ const Index = () => {
 
         {/* Quick Actions Grid */}
         <div className="space-y-3">
-          <h3 className="text-lg font-semibold px-1">Ações Rápidas</h3>
+          <h3 className="text-lg font-semibold px-1">{t.home.quickActions}</h3>
           <div className="grid grid-cols-2 gap-3">
             {quickActions.map((action, index) => (
               <Link key={index} to={action.href}>

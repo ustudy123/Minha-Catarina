@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useTextToSpeech } from "@/hooks/useTextToSpeech";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { getTranslations } from "@/translations";
 import { PlayButton } from "@/components/audio/PlayButton";
 import { AudioControls } from "@/components/audio/AudioControls";
 import { toast } from "sonner";
@@ -33,17 +34,6 @@ interface Phrase {
   isFavorite?: boolean;
 }
 
-const categories = [
-  { id: "routine", name: "Rotina Diária", icon: Sunrise, color: "from-primary to-highlight" },
-  { id: "education", name: "Educação", icon: BookOpen, color: "from-accent to-secondary" },
-  { id: "songs", name: "Músicas", icon: Music, color: "from-secondary to-primary" },
-  { id: "affection", name: "Carinho", icon: Heart, color: "from-highlight to-accent" },
-  { id: "bedtime", name: "Hora de Dormir", icon: Moon, color: "from-secondary to-accent" },
-  { id: "meals", name: "Refeições", icon: Utensils, color: "from-primary to-accent" },
-  { id: "bath", name: "Banho", icon: Bath, color: "from-accent to-highlight" },
-  { id: "languages", name: "Idiomas", icon: Globe, color: "from-secondary to-highlight" },
-];
-
 const samplePhrases: Phrase[] = [
   { id: "1", text: "Bom dia, meu amor! Hora de acordar!", category: "routine" },
   { id: "2", text: "Você é muito especial para mim!", category: "affection", isFavorite: true },
@@ -62,6 +52,18 @@ const Library = () => {
   const audioPlayer = useAudioPlayer();
   const { generate, isGenerating } = useTextToSpeech();
   const { language } = useLanguage();
+  const t = getTranslations(language);
+
+  const categories = [
+    { id: "routine", name: t.library.categories.routine, icon: Sunrise, color: "from-primary to-highlight" },
+    { id: "education", name: t.library.categories.education, icon: BookOpen, color: "from-accent to-secondary" },
+    { id: "songs", name: t.library.categories.songs, icon: Music, color: "from-secondary to-primary" },
+    { id: "affection", name: t.library.categories.affection, icon: Heart, color: "from-highlight to-accent" },
+    { id: "bedtime", name: t.library.categories.bedtime, icon: Moon, color: "from-secondary to-accent" },
+    { id: "meals", name: t.library.categories.meals, icon: Utensils, color: "from-primary to-accent" },
+    { id: "bath", name: t.library.categories.bath, icon: Bath, color: "from-accent to-highlight" },
+    { id: "languages", name: t.library.categories.languages, icon: Globe, color: "from-secondary to-highlight" },
+  ];
 
   const toggleFavorite = (id: string) => {
     setFavorites(prev => 
@@ -110,8 +112,8 @@ const Library = () => {
               <ArrowLeft className="w-5 h-5" />
             </Button>
             <div>
-              <h1 className="text-xl font-bold">Biblioteca de Frases</h1>
-              <p className="text-xs text-muted-foreground">500+ frases pré-gravadas</p>
+              <h1 className="text-xl font-bold">{t.library.title}</h1>
+              <p className="text-xs text-muted-foreground">{t.library.subtitle}</p>
             </div>
           </div>
         </div>
@@ -122,7 +124,7 @@ const Library = () => {
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
           <Input 
-            placeholder="Buscar frases..." 
+            placeholder={t.library.searchPlaceholder}
             className="pl-10 h-12 rounded-xl border-2"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -136,7 +138,7 @@ const Library = () => {
               value="all" 
               className="rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
             >
-              Todas
+              {t.library.all}
             </TabsTrigger>
             {categories.slice(0, 3).map(cat => (
               <TabsTrigger
@@ -177,7 +179,7 @@ const Library = () => {
                   <div>
                     <h3 className="font-semibold text-sm">{category.name}</h3>
                     <p className="text-xs text-muted-foreground">
-                      {samplePhrases.filter(p => p.category === category.id).length} frases
+                      {samplePhrases.filter(p => p.category === category.id).length} {t.library.phrases}
                     </p>
                   </div>
                 </div>
@@ -189,7 +191,7 @@ const Library = () => {
           <TabsContent value={selectedCategory} className="space-y-3 mt-6">
             <div className="flex items-center justify-between px-1">
               <h3 className="text-sm font-semibold text-muted-foreground">
-                {filteredPhrases.length} frases encontradas
+                {filteredPhrases.length} {t.library.phrasesFound}
               </h3>
               {searchQuery && (
                 <Button 
@@ -197,7 +199,7 @@ const Library = () => {
                   size="sm"
                   onClick={() => setSearchQuery("")}
                 >
-                  Limpar
+                  {t.common.clear}
                 </Button>
               )}
             </div>
