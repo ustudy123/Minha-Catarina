@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -207,35 +208,36 @@ const Index = () => {
           <h3 className="text-lg font-semibold px-1">Ações Rápidas</h3>
           <div className="grid grid-cols-2 gap-3">
             {quickActions.map((action, index) => (
-              <Card 
-                key={index}
-                className={cn(
-                  "relative overflow-hidden border-2 cursor-pointer group hover-lift",
-                  "animate-fade-in-scale"
-                )}
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <div className={cn(
-                  "absolute inset-0 bg-gradient-to-br opacity-10 group-hover:opacity-20 transition-opacity",
-                  action.gradient
-                )} />
-                
-                <div className="relative p-5 space-y-3">
+              <Link key={index} to={action.href}>
+                <Card 
+                  className={cn(
+                    "relative overflow-hidden border-2 cursor-pointer group hover-lift",
+                    "animate-fade-in-scale"
+                  )}
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
                   <div className={cn(
-                    "w-12 h-12 rounded-xl bg-gradient-to-br flex items-center justify-center shadow-md",
+                    "absolute inset-0 bg-gradient-to-br opacity-10 group-hover:opacity-20 transition-opacity",
                     action.gradient
-                  )}>
-                    <action.icon className="w-6 h-6 text-white" />
-                  </div>
+                  )} />
                   
-                  <div>
-                    <h4 className="font-semibold mb-0.5">{action.title}</h4>
-                    <p className="text-xs text-muted-foreground">
-                      {action.description}
-                    </p>
+                  <div className="relative p-5 space-y-3">
+                    <div className={cn(
+                      "w-12 h-12 rounded-xl bg-gradient-to-br flex items-center justify-center shadow-md",
+                      action.gradient
+                    )}>
+                      <action.icon className="w-6 h-6 text-white" />
+                    </div>
+                    
+                    <div>
+                      <h4 className="font-semibold mb-0.5">{action.title}</h4>
+                      <p className="text-xs text-muted-foreground">
+                        {action.description}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              </Card>
+                </Card>
+              </Link>
             ))}
           </div>
         </div>

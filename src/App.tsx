@@ -6,6 +6,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Library from "./pages/Library";
 import CreatePhrase from "./pages/CreatePhrase";
+import DailyPhrases from "./pages/DailyPhrases";
+import Schedule from "./pages/Schedule";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -20,6 +22,8 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/library" element={<Library />} />
           <Route path="/create" element={<CreatePhrase />} />
+          <Route path="/phrases-daily" element={<DailyPhrases />} />
+          <Route path="/schedule" element={<Schedule />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
