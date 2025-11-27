@@ -34,25 +34,27 @@ interface Phrase {
   isFavorite?: boolean;
 }
 
-const samplePhrases: Phrase[] = [
-  { id: "1", text: "Bom dia, meu amor! Hora de acordar!", category: "routine" },
-  { id: "2", text: "Você é muito especial para mim!", category: "affection", isFavorite: true },
-  { id: "3", text: "Vamos tomar café da manhã?", category: "meals" },
-  { id: "4", text: "Hora do banho! Vai ser divertido!", category: "bath" },
-  { id: "5", text: "A é de amor, B é de bola, C é de casa!", category: "education" },
-  { id: "6", text: "Boa noite! Tenha sonhos lindos!", category: "bedtime", isFavorite: true },
-];
-
 const Library = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [favorites, setFavorites] = useState<string[]>(["2", "6"]);
   const [playingId, setPlayingId] = useState<string | null>(null);
   
   const audioPlayer = useAudioPlayer();
   const { generate, isGenerating } = useTextToSpeech();
   const { language } = useLanguage();
   const t = getTranslations(language);
+
+  // Get prerecorded phrases from translations
+  const samplePhrases: Phrase[] = t.library.prerecordedPhrases.map((phrase, index) => ({
+    id: `phrase-${index}`,
+    text: phrase.text,
+    category: phrase.category,
+    isFavorite: index === 1 || index === 5, // Mark some as favorites by default
+  }));
+
+  const [favorites, setFavorites] = useState<string[]>(() => 
+    samplePhrases.filter(p => p.isFavorite).map(p => p.id)
+  );
 
   const categories = [
     { id: "routine", name: t.library.categories.routine, icon: Sunrise, color: "from-primary to-highlight" },
