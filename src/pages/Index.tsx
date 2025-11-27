@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { PlayButton } from "@/components/audio/PlayButton";
 import { AudioControls } from "@/components/audio/AudioControls";
+import { LanguageSelector } from "@/components/LanguageSelector";
 import {
   MessageSquare,
   BookOpen,
@@ -18,6 +19,7 @@ import {
 import { useState } from "react";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useTextToSpeech } from "@/hooks/useTextToSpeech";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
 import catarinaMascot from "@/assets/catarina-mascot.png";
 
@@ -25,6 +27,7 @@ const Index = () => {
   const [isConnected, setIsConnected] = useState(false);
   const audioPlayer = useAudioPlayer();
   const { generate, isGenerating } = useTextToSpeech();
+  const { language } = useLanguage();
 
   const phraseOfTheDay = "Bom dia, meu amor! Que tal começarmos o dia com um sorriso?";
 
@@ -37,7 +40,7 @@ const Index = () => {
     try {
       const { url } = await generate({ 
         text: phraseOfTheDay, 
-        language: 'pt' 
+        language
       });
       
       if (url) {
@@ -92,9 +95,12 @@ const Index = () => {
               Minha Catarina
             </h1>
           </div>
-          <Button variant="ghost" size="icon">
-            <Settings className="w-5 h-5" />
-          </Button>
+          <div className="flex items-center gap-2">
+            <LanguageSelector />
+            <Button variant="ghost" size="icon">
+              <Settings className="w-5 h-5" />
+            </Button>
+          </div>
         </div>
       </header>
 

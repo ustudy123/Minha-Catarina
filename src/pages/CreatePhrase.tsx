@@ -5,6 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useTextToSpeech } from "@/hooks/useTextToSpeech";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useSavedPhrases } from "@/hooks/useSavedPhrases";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { toast } from "sonner";
 import { PlayButton } from "@/components/audio/PlayButton";
 import { AudioControls } from "@/components/audio/AudioControls";
@@ -27,12 +28,12 @@ import { cn } from "@/lib/utils";
 
 const CreatePhrase = () => {
   const [phraseText, setPhraseText] = useState("");
-  const [language, setLanguage] = useState<"pt" | "en" | "es">("pt");
   const maxChars = 200;
 
   const { generate, isGenerating, audioUrl, audioBlob, reset } = useTextToSpeech();
   const audioPlayer = useAudioPlayer();
   const { addPhrase } = useSavedPhrases();
+  const { language, setLanguage } = useLanguage();
 
   const handleGenerate = async () => {
     if (!phraseText.trim()) {

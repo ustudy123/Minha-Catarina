@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useTextToSpeech } from "@/hooks/useTextToSpeech";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { PlayButton } from "@/components/audio/PlayButton";
 import { AudioControls } from "@/components/audio/AudioControls";
 import { toast } from "sonner";
@@ -60,6 +61,7 @@ const Library = () => {
   
   const audioPlayer = useAudioPlayer();
   const { generate, isGenerating } = useTextToSpeech();
+  const { language } = useLanguage();
 
   const toggleFavorite = (id: string) => {
     setFavorites(prev => 
@@ -80,7 +82,7 @@ const Library = () => {
       // Generate voice for the phrase
       const { url } = await generate({ 
         text: phrase.text, 
-        language: 'pt' 
+        language
       });
       
       if (url) {
