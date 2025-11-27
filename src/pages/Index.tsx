@@ -1,21 +1,22 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { useAudioPlayer } from "@/hooks/useAudioPlayer";
-import { useTextToSpeech } from "@/hooks/useTextToSpeech";
 import { PlayButton } from "@/components/audio/PlayButton";
-import { 
-  MessageSquare, 
-  BookOpen, 
-  Sparkles, 
-  Calendar, 
+import { AudioControls } from "@/components/audio/AudioControls";
+import {
+  MessageSquare,
+  BookOpen,
+  Sparkles,
+  Calendar,
   Settings,
   Bluetooth,
   Battery,
   Crown,
-  Volume2
+  Volume2,
 } from "lucide-react";
+import { useState } from "react";
+import { useAudioPlayer } from "@/hooks/useAudioPlayer";
+import { useTextToSpeech } from "@/hooks/useTextToSpeech";
 import { cn } from "@/lib/utils";
 import catarinaMascot from "@/assets/catarina-mascot.png";
 
@@ -186,6 +187,19 @@ const Index = () => {
                 className="flex-shrink-0"
               />
             </div>
+
+            {audioPlayer.duration > 0 && (
+              <AudioControls
+                volume={audioPlayer.volume}
+                playbackRate={audioPlayer.playbackRate}
+                currentTime={audioPlayer.currentTime}
+                duration={audioPlayer.duration}
+                onVolumeChange={audioPlayer.setVolume}
+                onPlaybackRateChange={audioPlayer.setPlaybackRate}
+                onSeek={audioPlayer.seek}
+                className="mt-4"
+              />
+            )}
           </Card>
         )}
 
