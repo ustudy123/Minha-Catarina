@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useTextToSpeech } from "@/hooks/useTextToSpeech";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { AudioControls } from "@/components/audio/AudioControls";
 import { PlayButton } from "@/components/audio/PlayButton";
 import { toast } from "sonner";
@@ -64,6 +65,7 @@ export default function DailyPhrases() {
 
   const audioPlayer = useAudioPlayer();
   const { audioUrl, isGenerating, generate } = useTextToSpeech();
+  const { language } = useLanguage();
 
   const toggleFavorite = (id: string) => {
     setFavorites(prev => {
@@ -92,7 +94,7 @@ export default function DailyPhrases() {
     setCurrentPhrase(phrase);
     
     if (!audioUrl || currentPhrase?.id !== phrase.id) {
-      const { url } = await generate({ text: phrase.text, language: "pt" });
+      const { url } = await generate({ text: phrase.text, language });
       if (url) {
         await audioPlayer.play(url);
       }
