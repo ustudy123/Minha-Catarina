@@ -7,10 +7,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useTextToSpeech } from "@/hooks/useTextToSpeech";
 import { PlayButton } from "@/components/audio/PlayButton";
+import { AudioControls } from "@/components/audio/AudioControls";
 import { toast } from "sonner";
-import { 
-  Search, 
-  Play, 
+import {
+  Search,
+  Play,
   Star,
   ArrowLeft,
   Sunrise,
@@ -20,7 +21,7 @@ import {
   BookOpen,
   Music,
   Heart,
-  Globe
+  Globe,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -240,6 +241,19 @@ const Library = () => {
                       />
                     </Button>
                   </div>
+
+                  {playingId === phrase.id && audioPlayer.duration > 0 && (
+                    <AudioControls
+                      volume={audioPlayer.volume}
+                      playbackRate={audioPlayer.playbackRate}
+                      currentTime={audioPlayer.currentTime}
+                      duration={audioPlayer.duration}
+                      onVolumeChange={audioPlayer.setVolume}
+                      onPlaybackRateChange={audioPlayer.setPlaybackRate}
+                      onSeek={audioPlayer.seek}
+                      className="mt-3"
+                    />
+                  )}
                 </Card>
               ))}
             </div>

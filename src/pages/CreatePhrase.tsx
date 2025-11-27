@@ -9,6 +9,7 @@ import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useSavedPhrases } from "@/hooks/useSavedPhrases";
 import { toast } from "sonner";
 import { PlayButton } from "@/components/audio/PlayButton";
+import { AudioControls } from "@/components/audio/AudioControls";
 import {
   Select,
   SelectContent,
@@ -16,7 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { 
+import {
   ArrowLeft,
   Sparkles,
   Play,
@@ -24,7 +25,7 @@ import {
   Crown,
   Volume2,
   Zap,
-  Globe
+  Globe,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -231,9 +232,9 @@ const CreatePhrase = () => {
                   showWave
                   className="flex-1 gap-2"
                 />
-                <Button 
-                  variant="outline" 
-                  size="lg" 
+                <Button
+                  variant="outline"
+                  size="lg"
                   className="flex-1"
                   onClick={handleSave}
                   disabled={!audioBlob}
@@ -243,7 +244,19 @@ const CreatePhrase = () => {
                 </Button>
               </div>
 
-              <Button 
+              {audioUrl && audioPlayer.duration > 0 && (
+                <AudioControls
+                  volume={audioPlayer.volume}
+                  playbackRate={audioPlayer.playbackRate}
+                  currentTime={audioPlayer.currentTime}
+                  duration={audioPlayer.duration}
+                  onVolumeChange={audioPlayer.setVolume}
+                  onPlaybackRateChange={audioPlayer.setPlaybackRate}
+                  onSeek={audioPlayer.seek}
+                />
+              )}
+
+              <Button
                 size="lg" 
                 variant="default" 
                 className="w-full"

@@ -7,6 +7,7 @@ export interface AudioPlayerState {
   currentTime: number;
   duration: number;
   volume: number;
+  playbackRate: number;
 }
 
 export const useAudioPlayer = () => {
@@ -17,6 +18,7 @@ export const useAudioPlayer = () => {
     currentTime: 0,
     duration: 0,
     volume: 1,
+    playbackRate: 1,
   });
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -46,8 +48,8 @@ export const useAudioPlayer = () => {
         currentSourceRef.current = url;
       }
 
-      // Set volume
-      audio.volume = state.volume;
+      audioRef.current.volume = state.volume;
+      audioRef.current.playbackRate = state.playbackRate;
 
       // Event listeners
       audio.addEventListener('loadedmetadata', () => {
@@ -94,7 +96,7 @@ export const useAudioPlayer = () => {
       }));
       console.error('Play error:', error);
     }
-  }, [state.volume]);
+  }, [state.volume, state.playbackRate]);
 
   const pause = useCallback(() => {
     if (audioRef.current) {
@@ -131,6 +133,14 @@ export const useAudioPlayer = () => {
     }
   }, []);
 
+  const setPlaybackRate = useCallback((rate: number) => {
+    const clampedRate = Math.max(0.25, Math.min(2, rate));
+    if (audioRef.current) {
+      audioRef.current.playbackRate = clampedRate;
+    }
+    setState(prev => ({ ...prev, playbackRate: clampedRate }));
+  }, []);
+
   return {
     ...state,
     play,
@@ -138,5 +148,6 @@ export const useAudioPlayer = () => {
     stop,
     setVolume,
     seek,
+    setPlaybackRate,
   };
 };
