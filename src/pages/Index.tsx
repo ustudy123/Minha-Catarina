@@ -5,12 +5,12 @@ import { Badge } from "@/components/ui/badge";
 import { PlayButton } from "@/components/audio/PlayButton";
 import { AudioControls } from "@/components/audio/AudioControls";
 import { LanguageSelector } from "@/components/LanguageSelector";
+import { UserMenu } from "@/components/UserMenu";
 import {
   MessageSquare,
   BookOpen,
   Sparkles,
   Calendar,
-  Settings,
   Bluetooth,
   Battery,
   Crown,
@@ -99,9 +99,7 @@ const Index = () => {
           </div>
           <div className="flex items-center gap-2">
             <LanguageSelector />
-            <Button variant="ghost" size="icon">
-              <Settings className="w-5 h-5" />
-            </Button>
+            <UserMenu />
           </div>
         </div>
       </header>

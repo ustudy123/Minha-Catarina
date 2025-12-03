@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
 
 export interface TTSOptions {
   text: string;
@@ -33,14 +34,21 @@ export const useTextToSpeech = () => {
     try {
       setState(prev => ({ ...prev, isGenerating: true, error: null }));
 
-      // Call Supabase Edge Function
+      // Get current session for auth token
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        throw new Error('Você precisa estar logado para gerar voz');
+      }
+
+      // Call Supabase Edge Function with user's JWT
       const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/text-to-speech`,
+        `https://vfhspeubasrdmwqxdcaw.supabase.co/functions/v1/text-to-speech`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+            'Authorization': `Bearer ${session.access_token}`,
           },
           body: JSON.stringify({
             text,
