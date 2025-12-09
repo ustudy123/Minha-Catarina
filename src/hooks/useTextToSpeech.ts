@@ -16,10 +16,11 @@ export interface TTSState {
 }
 
 // Voice IDs for different languages (ElevenLabs)
+// Usando "The Kid" - voz infantil multilíngue para a boneca Catarina
 const VOICE_IDS = {
-  pt: 'pFZP5JQG7iQjIQuC4Bku', // Lily - soft, child-friendly voice
-  en: 'XB0fDUnXU5powFXDhCwa', // Charlotte - warm, friendly
-  es: 'EXAVITQu4vr4xnSDxMaL', // Sarah - gentle, clear
+  pt: 'qHjcDL87pelA6RkUz0Ij', // The Kid - child voice (multilingual)
+  en: 'qHjcDL87pelA6RkUz0Ij', // The Kid - child voice (multilingual)
+  es: 'qHjcDL87pelA6RkUz0Ij', // The Kid - child voice (multilingual)
 };
 
 export const useTextToSpeech = () => {
