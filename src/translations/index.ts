@@ -123,6 +123,20 @@ export const translations = {
         motivation: "Motivação",
         educational: "Educacional",
       },
+      phrases: [
+        { id: "1", text: "Bom dia, meu amor! Hora de acordar com um sorriso!", category: "routine", timeOfDay: "morning" },
+        { id: "2", text: "Você é capaz de fazer coisas incríveis hoje!", category: "motivation", timeOfDay: "morning" },
+        { id: "3", text: "Vamos escovar os dentinhos? Deixa eles brilhando!", category: "routine", timeOfDay: "morning" },
+        { id: "4", text: "Que tal aprender uma palavra nova hoje? Vamos lá!", category: "educational", timeOfDay: "morning" },
+        { id: "5", text: "Hora do almoço! Vamos comer bem para crescer forte!", category: "routine", timeOfDay: "afternoon" },
+        { id: "6", text: "Você está se saindo muito bem! Continue assim!", category: "motivation", timeOfDay: "afternoon" },
+        { id: "7", text: "Que tal brincar um pouquinho agora?", category: "routine", timeOfDay: "afternoon" },
+        { id: "8", text: "Vamos contar até 10 juntas? 1, 2, 3...", category: "educational", timeOfDay: "afternoon" },
+        { id: "9", text: "Hora do banho! Vamos ficar cheirosinha!", category: "routine", timeOfDay: "evening" },
+        { id: "10", text: "Você foi incrível hoje! A mamãe está muito orgulhosa!", category: "motivation", timeOfDay: "evening" },
+        { id: "11", text: "Hora de dormir, meu amor. Tenha sonhos lindos!", category: "routine", timeOfDay: "evening" },
+        { id: "12", text: "Vamos agradecer pelo dia de hoje? Obrigada por tudo!", category: "educational", timeOfDay: "evening" },
+      ],
     },
     
     // Library Page
@@ -324,6 +338,20 @@ export const translations = {
         motivation: "Motivation",
         educational: "Educational",
       },
+      phrases: [
+        { id: "1", text: "Good morning, my love! Time to wake up with a smile!", category: "routine", timeOfDay: "morning" },
+        { id: "2", text: "You are capable of doing amazing things today!", category: "motivation", timeOfDay: "morning" },
+        { id: "3", text: "Let's brush your teeth? Make them sparkle!", category: "routine", timeOfDay: "morning" },
+        { id: "4", text: "How about learning a new word today? Let's go!", category: "educational", timeOfDay: "morning" },
+        { id: "5", text: "Lunchtime! Let's eat well to grow strong!", category: "routine", timeOfDay: "afternoon" },
+        { id: "6", text: "You're doing so great! Keep it up!", category: "motivation", timeOfDay: "afternoon" },
+        { id: "7", text: "How about playing a little now?", category: "routine", timeOfDay: "afternoon" },
+        { id: "8", text: "Let's count to 10 together? 1, 2, 3...", category: "educational", timeOfDay: "afternoon" },
+        { id: "9", text: "Bath time! Let's get all clean and fresh!", category: "routine", timeOfDay: "evening" },
+        { id: "10", text: "You were amazing today! Mommy is so proud!", category: "motivation", timeOfDay: "evening" },
+        { id: "11", text: "Time to sleep, my love. Have beautiful dreams!", category: "routine", timeOfDay: "evening" },
+        { id: "12", text: "Let's be thankful for today? Thank you for everything!", category: "educational", timeOfDay: "evening" },
+      ],
     },
     
     // Library Page
@@ -525,6 +553,20 @@ export const translations = {
         motivation: "Motivación",
         educational: "Educacional",
       },
+      phrases: [
+        { id: "1", text: "¡Buenos días, mi amor! ¡Hora de despertar con una sonrisa!", category: "routine", timeOfDay: "morning" },
+        { id: "2", text: "¡Eres capaz de hacer cosas increíbles hoy!", category: "motivation", timeOfDay: "morning" },
+        { id: "3", text: "¿Vamos a cepillar los dientes? ¡Que brillen!", category: "routine", timeOfDay: "morning" },
+        { id: "4", text: "¿Qué tal aprender una palabra nueva hoy? ¡Vamos!", category: "educational", timeOfDay: "morning" },
+        { id: "5", text: "¡Hora del almuerzo! ¡Vamos a comer bien para crecer fuerte!", category: "routine", timeOfDay: "afternoon" },
+        { id: "6", text: "¡Lo estás haciendo muy bien! ¡Sigue así!", category: "motivation", timeOfDay: "afternoon" },
+        { id: "7", text: "¿Qué tal jugar un poquito ahora?", category: "routine", timeOfDay: "afternoon" },
+        { id: "8", text: "¿Vamos a contar hasta 10 juntas? 1, 2, 3...", category: "educational", timeOfDay: "afternoon" },
+        { id: "9", text: "¡Hora del baño! ¡Vamos a quedar limpita!", category: "routine", timeOfDay: "evening" },
+        { id: "10", text: "¡Estuviste increíble hoy! ¡Mamá está muy orgullosa!", category: "motivation", timeOfDay: "evening" },
+        { id: "11", text: "Hora de dormir, mi amor. ¡Ten sueños hermosos!", category: "routine", timeOfDay: "evening" },
+        { id: "12", text: "¿Vamos a agradecer por el día de hoy? ¡Gracias por todo!", category: "educational", timeOfDay: "evening" },
+      ],
     },
     
     // Library Page

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Play, Heart, Clock, Sun, Sunset, Moon, BookOpen, Sparkles, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -22,26 +22,6 @@ interface Phrase {
   isFavorite: boolean;
 }
 
-const dailyPhrases: Phrase[] = [
-  // Morning Phrases
-  { id: "1", text: "Bom dia, meu amor! Hora de acordar com um sorriso!", category: "routine", timeOfDay: "morning", isFavorite: false },
-  { id: "2", text: "Você é capaz de fazer coisas incríveis hoje!", category: "motivation", timeOfDay: "morning", isFavorite: false },
-  { id: "3", text: "Vamos escovar os dentinhos? Deixa eles brilhando!", category: "routine", timeOfDay: "morning", isFavorite: false },
-  { id: "4", text: "Que tal aprender uma palavra nova hoje? Vamos lá!", category: "educational", timeOfDay: "morning", isFavorite: false },
-  
-  // Afternoon Phrases
-  { id: "5", text: "Hora do almoço! Vamos comer bem para crescer forte!", category: "routine", timeOfDay: "afternoon", isFavorite: false },
-  { id: "6", text: "Você está se saindo muito bem! Continue assim!", category: "motivation", timeOfDay: "afternoon", isFavorite: false },
-  { id: "7", text: "Que tal brincar um pouquinho agora?", category: "routine", timeOfDay: "afternoon", isFavorite: false },
-  { id: "8", text: "Vamos contar até 10 juntas? 1, 2, 3...", category: "educational", timeOfDay: "afternoon", isFavorite: false },
-  
-  // Evening Phrases
-  { id: "9", text: "Hora do banho! Vamos ficar cheirosinha!", category: "routine", timeOfDay: "evening", isFavorite: false },
-  { id: "10", text: "Você foi incrível hoje! A mamãe está muito orgulhosa!", category: "motivation", timeOfDay: "evening", isFavorite: false },
-  { id: "11", text: "Hora de dormir, meu amor. Tenha sonhos lindos!", category: "routine", timeOfDay: "evening", isFavorite: false },
-  { id: "12", text: "Vamos agradecer pelo dia de hoje? Obrigada por tudo!", category: "educational", timeOfDay: "evening", isFavorite: false },
-];
-
 const timePeriods = [
   { id: "all", name: "timePeriods.all", icon: Sun },
   { id: "morning", name: "timePeriods.morning", icon: Sun },
@@ -61,13 +41,21 @@ export default function DailyPhrases() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedTime, setSelectedTime] = useState("all");
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
-  const [phrases, setPhrases] = useState<Phrase[]>(dailyPhrases);
   const [currentPhrase, setCurrentPhrase] = useState<Phrase | null>(null);
 
   const audioPlayer = useAudioPlayer();
   const { audioUrl, isGenerating, generate } = useTextToSpeech();
   const { language } = useLanguage();
   const t = getTranslations(language);
+
+  // Get phrases from translations and add isFavorite state
+  const phrases = useMemo(() => {
+    const translatedPhrases = (t.dailyPhrases as any).phrases || [];
+    return translatedPhrases.map((p: any) => ({
+      ...p,
+      isFavorite: favorites.has(p.id),
+    })) as Phrase[];
+  }, [t.dailyPhrases, favorites]);
 
   const toggleFavorite = (id: string) => {
     setFavorites(prev => {
@@ -81,10 +69,6 @@ export default function DailyPhrases() {
       }
       return newFavorites;
     });
-
-    setPhrases(prev => prev.map(p => 
-      p.id === id ? { ...p, isFavorite: !p.isFavorite } : p
-    ));
   };
 
   const handlePlayPhrase = async (phrase: Phrase) => {
