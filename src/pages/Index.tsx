@@ -31,7 +31,7 @@ const Index = () => {
   const { language } = useLanguage();
   const t = getTranslations(language);
 
-  const phraseOfTheDay = "Bom dia, meu amor! Que tal começarmos o dia com um sorriso?";
+  const phraseOfTheDay = t.home.phraseOfTheDayText;
 
   const handlePlayPhraseOfDay = async () => {
     if (audioPlayer.isPlaying) {

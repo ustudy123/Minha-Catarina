@@ -57,6 +57,7 @@ export const translations = {
       volume: "Volume",
       medium: "Médio",
       phraseOfTheDay: "Frase do Dia",
+      phraseOfTheDayText: "Bom dia, meu amor! Que tal começarmos o dia com um sorriso?",
       quickActions: "Ações Rápidas",
     },
     
@@ -257,6 +258,7 @@ export const translations = {
       volume: "Volume",
       medium: "Medium",
       phraseOfTheDay: "Phrase of the Day",
+      phraseOfTheDayText: "Good morning, my love! How about starting the day with a smile?",
       quickActions: "Quick Actions",
     },
     
@@ -457,6 +459,7 @@ export const translations = {
       volume: "Volumen",
       medium: "Medio",
       phraseOfTheDay: "Frase del Día",
+      phraseOfTheDayText: "¡Buenos días, mi amor! ¿Qué tal empezar el día con una sonrisa?",
       quickActions: "Acciones Rápidas",
     },
     
