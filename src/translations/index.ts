@@ -43,6 +43,7 @@ export const translations = {
       profile: "Perfil",
       settings: "Configurações",
       logout: "Sair",
+      loginRequired: "Você precisa estar logado",
     },
     
     // Home Page
@@ -207,6 +208,17 @@ export const translations = {
         sun: "Dom",
       },
     },
+
+    // Settings Page
+    settings: {
+      title: "Configurações",
+      voiceSelection: "Voz da Catarina",
+      voiceDescription: "Escolha a voz infantil que a Catarina usará para falar",
+      voiceChanged: "Voz alterada com sucesso!",
+      previewError: "Erro ao reproduzir preview",
+      languageTitle: "Idioma do App",
+      languageDescription: "Escolha o idioma da interface e das frases",
+    },
     
     // Not Found Page
     notFound: {
@@ -258,6 +270,7 @@ export const translations = {
       profile: "Profile",
       settings: "Settings",
       logout: "Logout",
+      loginRequired: "You need to be logged in",
     },
     
     // Home Page
@@ -422,6 +435,17 @@ export const translations = {
         sun: "Sun",
       },
     },
+
+    // Settings Page
+    settings: {
+      title: "Settings",
+      voiceSelection: "Catarina's Voice",
+      voiceDescription: "Choose the child voice that Catarina will use to speak",
+      voiceChanged: "Voice changed successfully!",
+      previewError: "Error playing preview",
+      languageTitle: "App Language",
+      languageDescription: "Choose the interface and phrases language",
+    },
     
     // Not Found Page
     notFound: {
@@ -473,6 +497,7 @@ export const translations = {
       profile: "Perfil",
       settings: "Configuración",
       logout: "Salir",
+      loginRequired: "Necesitas iniciar sesión",
     },
     
     // Home Page
@@ -636,6 +661,17 @@ export const translations = {
         sat: "Sáb",
         sun: "Dom",
       },
+    },
+
+    // Settings Page
+    settings: {
+      title: "Configuración",
+      voiceSelection: "Voz de Catarina",
+      voiceDescription: "Elige la voz infantil que Catarina usará para hablar",
+      voiceChanged: "¡Voz cambiada con éxito!",
+      previewError: "Error al reproducir vista previa",
+      languageTitle: "Idioma de la App",
+      languageDescription: "Elige el idioma de la interfaz y las frases",
     },
     
     // Not Found Page
