@@ -1,6 +1,7 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { getTranslations } from '@/translations';
+import { useNavigate } from 'react-router-dom';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,6 +18,7 @@ import { toast } from 'sonner';
 export function UserMenu() {
   const { user, profile, signOut } = useAuth();
   const { language } = useLanguage();
+  const navigate = useNavigate();
   const t = getTranslations(language);
 
   const handleSignOut = async () => {
@@ -64,7 +66,7 @@ export function UserMenu() {
           <User className="mr-2 h-4 w-4" />
           <span>{t.auth.profile}</span>
         </DropdownMenuItem>
-        <DropdownMenuItem className="cursor-pointer">
+        <DropdownMenuItem className="cursor-pointer" onClick={() => navigate('/settings')}>
           <Settings className="mr-2 h-4 w-4" />
           <span>{t.auth.settings}</span>
         </DropdownMenuItem>

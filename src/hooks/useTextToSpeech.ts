@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
+import { useVoice } from '@/contexts/VoiceContext';
 
 export interface TTSOptions {
   text: string;
@@ -15,15 +16,8 @@ export interface TTSState {
   audioUrl: string | null;
 }
 
-// Voice IDs for different languages (ElevenLabs)
-// Usando "The Kid" - voz infantil multilíngue para a boneca Catarina
-const VOICE_IDS = {
-  pt: 'qHjcDL87pelA6RkUz0Ij', // The Kid - child voice (multilingual)
-  en: 'qHjcDL87pelA6RkUz0Ij', // The Kid - child voice (multilingual)
-  es: 'qHjcDL87pelA6RkUz0Ij', // The Kid - child voice (multilingual)
-};
-
 export const useTextToSpeech = () => {
+  const { selectedVoice } = useVoice();
   const [state, setState] = useState<TTSState>({
     isGenerating: false,
     error: null,
@@ -53,7 +47,7 @@ export const useTextToSpeech = () => {
           },
           body: JSON.stringify({
             text,
-            voiceId: voiceId || VOICE_IDS[language],
+            voiceId: voiceId || selectedVoice.voiceId,
           }),
         }
       );
@@ -99,7 +93,7 @@ export const useTextToSpeech = () => {
       toast.error(errorMessage);
       throw error;
     }
-  }, []);
+  }, [selectedVoice]);
 
   const reset = useCallback(() => {
     if (state.audioUrl) {
