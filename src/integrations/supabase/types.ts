@@ -41,6 +41,74 @@ export type Database = {
         }
         Relationships: []
       }
+      routine_phrases: {
+        Row: {
+          created_at: string | null
+          id: string
+          phrase_id: string
+          phrase_source: string | null
+          phrase_text: string
+          position: number
+          routine_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          phrase_id: string
+          phrase_source?: string | null
+          phrase_text: string
+          position: number
+          routine_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          phrase_id?: string
+          phrase_source?: string | null
+          phrase_text?: string
+          position?: number
+          routine_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "routine_phrases_routine_id_fkey"
+            columns: ["routine_id"]
+            isOneToOne: false
+            referencedRelation: "routines"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      routines: {
+        Row: {
+          created_at: string | null
+          id: string
+          interval_minutes: number | null
+          name: string
+          play_random: boolean | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          interval_minutes?: number | null
+          name: string
+          play_random?: boolean | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          interval_minutes?: number | null
+          name?: string
+          play_random?: boolean | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       saved_phrases: {
         Row: {
           audio_url: string | null
@@ -50,6 +118,7 @@ export type Database = {
           is_favorite: boolean | null
           language: string
           text: string
+          time_of_day: string | null
           user_id: string
         }
         Insert: {
@@ -60,6 +129,7 @@ export type Database = {
           is_favorite?: boolean | null
           language?: string
           text: string
+          time_of_day?: string | null
           user_id: string
         }
         Update: {
@@ -70,6 +140,7 @@ export type Database = {
           is_favorite?: boolean | null
           language?: string
           text?: string
+          time_of_day?: string | null
           user_id?: string
         }
         Relationships: []
@@ -132,6 +203,30 @@ export type Database = {
         Update: {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_subscriptions: {
+        Row: {
+          created_at: string | null
+          expires_at: string | null
+          id: string
+          plan_type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          plan_type?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          plan_type?: string
           user_id?: string
         }
         Relationships: []
