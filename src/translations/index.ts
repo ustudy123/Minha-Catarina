@@ -45,6 +45,17 @@ export const translations = {
       logout: "Sair",
       loginRequired: "Você precisa estar logado",
     },
+
+    // Onboarding
+    onboarding: {
+      welcome: "Bem-vindo(a)!",
+      selectDoll: "Qual boneca você adquiriu?",
+      continue: "Continuar",
+      catarina: "Catarina",
+      antonio: "Antônio",
+      catarinaDescription: "Boneca menina",
+      antonioDescription: "Boneco menino",
+    },
     
     // Home Page
     home: {
@@ -213,11 +224,18 @@ export const translations = {
     settings: {
       title: "Configurações",
       voiceSelection: "Voz da Catarina",
-      voiceDescription: "Escolha a voz infantil que a Catarina usará para falar",
+      voiceDescription: "Escolha a voz infantil que a boneca usará para falar",
       voiceChanged: "Voz alterada com sucesso!",
       previewError: "Erro ao reproduzir preview",
       languageTitle: "Idioma do App",
       languageDescription: "Escolha o idioma da interface e das frases",
+      dollSelection: "Minha Boneca",
+      dollDescription: "Escolha a boneca que você adquiriu",
+      catarina: "Catarina",
+      antonio: "Antônio",
+      catarinaDescription: "Boneca menina",
+      antonioDescription: "Boneco menino",
+      dollChanged: "Boneca alterada com sucesso!",
     },
     
     // Not Found Page
@@ -271,6 +289,17 @@ export const translations = {
       settings: "Settings",
       logout: "Logout",
       loginRequired: "You need to be logged in",
+    },
+
+    // Onboarding
+    onboarding: {
+      welcome: "Welcome!",
+      selectDoll: "Which doll did you purchase?",
+      continue: "Continue",
+      catarina: "Catarina",
+      antonio: "Antonio",
+      catarinaDescription: "Girl doll",
+      antonioDescription: "Boy doll",
     },
     
     // Home Page
@@ -440,11 +469,18 @@ export const translations = {
     settings: {
       title: "Settings",
       voiceSelection: "Catarina's Voice",
-      voiceDescription: "Choose the child voice that Catarina will use to speak",
+      voiceDescription: "Choose the child voice that the doll will use to speak",
       voiceChanged: "Voice changed successfully!",
       previewError: "Error playing preview",
       languageTitle: "App Language",
       languageDescription: "Choose the interface and phrases language",
+      dollSelection: "My Doll",
+      dollDescription: "Choose the doll you purchased",
+      catarina: "Catarina",
+      antonio: "Antonio",
+      catarinaDescription: "Girl doll",
+      antonioDescription: "Boy doll",
+      dollChanged: "Doll changed successfully!",
     },
     
     // Not Found Page
@@ -498,6 +534,17 @@ export const translations = {
       settings: "Configuración",
       logout: "Salir",
       loginRequired: "Necesitas iniciar sesión",
+    },
+
+    // Onboarding
+    onboarding: {
+      welcome: "¡Bienvenido(a)!",
+      selectDoll: "¿Cuál muñeca compraste?",
+      continue: "Continuar",
+      catarina: "Catarina",
+      antonio: "Antonio",
+      catarinaDescription: "Muñeca niña",
+      antonioDescription: "Muñeco niño",
     },
     
     // Home Page
@@ -667,11 +714,18 @@ export const translations = {
     settings: {
       title: "Configuración",
       voiceSelection: "Voz de Catarina",
-      voiceDescription: "Elige la voz infantil que Catarina usará para hablar",
+      voiceDescription: "Elige la voz infantil que la muñeca usará para hablar",
       voiceChanged: "¡Voz cambiada con éxito!",
       previewError: "Error al reproducir vista previa",
       languageTitle: "Idioma de la App",
       languageDescription: "Elige el idioma de la interfaz y las frases",
+      dollSelection: "Mi Muñeca",
+      dollDescription: "Elige la muñeca que compraste",
+      catarina: "Catarina",
+      antonio: "Antonio",
+      catarinaDescription: "Muñeca niña",
+      antonioDescription: "Muñeco niño",
+      dollChanged: "¡Muñeca cambiada con éxito!",
     },
     
     // Not Found Page

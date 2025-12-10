@@ -14,6 +14,7 @@ import DailyPhrases from "./pages/DailyPhrases";
 import Schedule from "./pages/Schedule";
 import Settings from "./pages/Settings";
 import Auth from "./pages/Auth";
+import Onboarding from "./pages/Onboarding";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,6 +30,14 @@ const App = () => (
           <BrowserRouter>
             <Routes>
               <Route path="/auth" element={<Auth />} />
+              <Route
+                path="/onboarding"
+                element={
+                  <ProtectedRoute skipOnboardingCheck>
+                    <Onboarding />
+                  </ProtectedRoute>
+                }
+              />
               <Route
                 path="/"
                 element={
