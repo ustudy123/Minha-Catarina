@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
+export type DollType = 'catarina' | 'antonio';
+
 export interface ChildVoice {
   id: string;
   name: string;
@@ -9,20 +11,11 @@ export interface ChildVoice {
     es: string;
   };
   voiceId: string;
+  gender: 'female' | 'male';
 }
 
-// Vozes infantis disponíveis no ElevenLabs
-export const CHILD_VOICES: ChildVoice[] = [
-  {
-    id: 'the-kid',
-    name: 'The Kid',
-    description: {
-      pt: 'Voz infantil neutra e alegre',
-      en: 'Neutral and cheerful child voice',
-      es: 'Voz infantil neutra y alegre',
-    },
-    voiceId: 'qHjcDL87pelA6RkUz0Ij',
-  },
+// Vozes femininas para Catarina
+export const FEMALE_VOICES: ChildVoice[] = [
   {
     id: 'lily',
     name: 'Lily',
@@ -32,16 +25,7 @@ export const CHILD_VOICES: ChildVoice[] = [
       es: 'Voz suave y dulce de niña',
     },
     voiceId: 'pFZP5JQG7iQjIQuC4Bku',
-  },
-  {
-    id: 'river',
-    name: 'River',
-    description: {
-      pt: 'Voz calma e gentil',
-      en: 'Calm and gentle voice',
-      es: 'Voz calmada y gentil',
-    },
-    voiceId: 'SAz9YHcvj6GT2YYXdXww',
+    gender: 'female',
   },
   {
     id: 'alice',
@@ -52,6 +36,7 @@ export const CHILD_VOICES: ChildVoice[] = [
       es: 'Voz joven y expresiva',
     },
     voiceId: 'Xb7hH8MSUJpSbSDYk0k2',
+    gender: 'female',
   },
   {
     id: 'jessica',
@@ -62,34 +47,121 @@ export const CHILD_VOICES: ChildVoice[] = [
       es: 'Voz animada y divertida',
     },
     voiceId: 'cgSgspJ2msm6clMCkdW9',
+    gender: 'female',
   },
 ];
+
+// Vozes masculinas para Antônio
+export const MALE_VOICES: ChildVoice[] = [
+  {
+    id: 'the-kid',
+    name: 'The Kid',
+    description: {
+      pt: 'Voz infantil neutra e alegre',
+      en: 'Neutral and cheerful child voice',
+      es: 'Voz infantil neutra y alegre',
+    },
+    voiceId: 'qHjcDL87pelA6RkUz0Ij',
+    gender: 'male',
+  },
+  {
+    id: 'river',
+    name: 'River',
+    description: {
+      pt: 'Voz calma e gentil',
+      en: 'Calm and gentle voice',
+      es: 'Voz calmada y gentil',
+    },
+    voiceId: 'SAz9YHcvj6GT2YYXdXww',
+    gender: 'male',
+  },
+  {
+    id: 'charlie',
+    name: 'Charlie',
+    description: {
+      pt: 'Voz masculina jovem e amigável',
+      en: 'Young and friendly boy voice',
+      es: 'Voz masculina joven y amigable',
+    },
+    voiceId: 'IKne3meq5aSn9XLyUdCD',
+    gender: 'male',
+  },
+];
+
+// Todas as vozes combinadas (para compatibilidade)
+export const CHILD_VOICES: ChildVoice[] = [...FEMALE_VOICES, ...MALE_VOICES];
 
 interface VoiceContextType {
   selectedVoice: ChildVoice;
   setSelectedVoice: (voice: ChildVoice) => void;
-  voices: ChildVoice[];
+  selectedDoll: DollType;
+  setSelectedDoll: (doll: DollType) => void;
+  availableVoices: ChildVoice[];
+  voices: ChildVoice[]; // Para compatibilidade com código existente
+  hasCompletedOnboarding: boolean;
+  completeOnboarding: (doll: DollType) => void;
 }
 
 const VoiceContext = createContext<VoiceContextType | undefined>(undefined);
 
 export const VoiceProvider = ({ children }: { children: ReactNode }) => {
+  const [selectedDoll, setSelectedDollState] = useState<DollType>(() => {
+    const savedDoll = localStorage.getItem('selected-doll-type');
+    return (savedDoll as DollType) || 'catarina';
+  });
+
+  const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState<boolean>(() => {
+    return localStorage.getItem('onboarding-completed') === 'true';
+  });
+
+  const availableVoices = selectedDoll === 'catarina' ? FEMALE_VOICES : MALE_VOICES;
+
   const [selectedVoice, setSelectedVoiceState] = useState<ChildVoice>(() => {
     const savedVoiceId = localStorage.getItem('selected-voice-id');
-    const foundVoice = CHILD_VOICES.find((v) => v.id === savedVoiceId);
-    return foundVoice || CHILD_VOICES[0]; // Default to "The Kid"
+    const savedDoll = localStorage.getItem('selected-doll-type') as DollType || 'catarina';
+    const voicesForDoll = savedDoll === 'catarina' ? FEMALE_VOICES : MALE_VOICES;
+    const foundVoice = voicesForDoll.find((v) => v.id === savedVoiceId);
+    return foundVoice || voicesForDoll[0];
   });
 
   useEffect(() => {
     localStorage.setItem('selected-voice-id', selectedVoice.id);
   }, [selectedVoice]);
 
+  useEffect(() => {
+    localStorage.setItem('selected-doll-type', selectedDoll);
+  }, [selectedDoll]);
+
   const setSelectedVoice = (voice: ChildVoice) => {
     setSelectedVoiceState(voice);
   };
 
+  const setSelectedDoll = (doll: DollType) => {
+    setSelectedDollState(doll);
+    // Reset voice to first available for the new doll
+    const newVoices = doll === 'catarina' ? FEMALE_VOICES : MALE_VOICES;
+    setSelectedVoiceState(newVoices[0]);
+  };
+
+  const completeOnboarding = (doll: DollType) => {
+    setSelectedDoll(doll);
+    setHasCompletedOnboarding(true);
+    localStorage.setItem('onboarding-completed', 'true');
+  };
+
   return (
-    <VoiceContext.Provider value={{ selectedVoice, setSelectedVoice, voices: CHILD_VOICES }}>
+    <VoiceContext.Provider
+      value={{
+        selectedVoice,
+        setSelectedVoice,
+        selectedDoll,
+        setSelectedDoll,
+        availableVoices,
+        voices: availableVoices,
+        hasCompletedOnboarding,
+        completeOnboarding,
+      }}
+    >
       {children}
     </VoiceContext.Provider>
   );
