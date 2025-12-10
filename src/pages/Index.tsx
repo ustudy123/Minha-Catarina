@@ -6,12 +6,13 @@ import { PlayButton } from "@/components/audio/PlayButton";
 import { AudioControls } from "@/components/audio/AudioControls";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { UserMenu } from "@/components/UserMenu";
-import { MessageSquare, BookOpen, Sparkles, Calendar, Bluetooth, Battery, Volume2 } from "lucide-react";
+import { BookOpen, Sparkles, Star, ListMusic, Bluetooth, Battery, Volume2, Lock, Crown } from "lucide-react";
 import { useState } from "react";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useTextToSpeech } from "@/hooks/useTextToSpeech";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useVoice } from "@/contexts/VoiceContext";
+import { useSubscription } from "@/hooks/useSubscription";
 import { cn } from "@/lib/utils";
 import catarinaMascot from "@/assets/catarina-mascot.png";
 import { getTranslations } from "@/translations";
@@ -22,12 +23,12 @@ const Index = () => {
   const { generate, isGenerating } = useTextToSpeech();
   const { language } = useLanguage();
   const { selectedDoll } = useVoice();
+  const { isPremium } = useSubscription();
   const t = getTranslations(language);
   
   const dollName = selectedDoll === 'catarina' ? 'Catarina' : 'Antônio';
   const phraseOfTheDay = t.home.phraseOfTheDayText;
   
-  // Dynamic status text based on doll
   const readyToTalk = selectedDoll === 'catarina' 
     ? t.home.readyToTalk 
     : (language === 'pt' ? '🧢 Pronto para conversar com você!' : 
@@ -40,10 +41,7 @@ const Index = () => {
       return;
     }
     try {
-      const { url } = await generate({
-        text: phraseOfTheDay,
-        language
-      });
+      const { url } = await generate({ text: phraseOfTheDay, language });
       if (url) {
         await audioPlayer.play(url);
       }
@@ -52,41 +50,70 @@ const Index = () => {
     }
   };
 
-  const quickActions = [{
-    icon: MessageSquare,
-    title: t.quickActions.dailyPhrases.title,
-    description: t.quickActions.dailyPhrases.description,
-    gradient: "from-primary to-secondary",
-    href: "/phrases-daily"
-  }, {
-    icon: BookOpen,
-    title: t.quickActions.library.title,
-    description: t.quickActions.library.description,
-    gradient: "from-accent to-secondary",
-    href: "/library"
-  }, {
-    icon: Sparkles,
-    title: t.quickActions.createPhrase.title,
-    description: t.quickActions.createPhrase.description,
-    gradient: "from-highlight to-primary",
-    href: "/create"
-  }, {
-    icon: Calendar,
-    title: t.quickActions.schedule.title,
-    description: t.quickActions.schedule.description,
-    gradient: "from-secondary to-accent",
-    href: "/schedule"
-  }];
+  const quickActionsTexts = {
+    pt: {
+      library: { title: "Biblioteca", description: "500+ frases gravadas" },
+      favorites: { title: "Favoritas", description: "Suas preferidas" },
+      create: { title: "Crie e Converse", description: "Criar novas frases" },
+      routines: { title: "Minhas Rotinas", description: "Organize sequências" },
+    },
+    en: {
+      library: { title: "Library", description: "500+ recorded phrases" },
+      favorites: { title: "Favorites", description: "Your favorites" },
+      create: { title: "Create & Talk", description: "Create new phrases" },
+      routines: { title: "My Routines", description: "Organize sequences" },
+    },
+    es: {
+      library: { title: "Biblioteca", description: "500+ frases grabadas" },
+      favorites: { title: "Favoritas", description: "Tus preferidas" },
+      create: { title: "Crea y Conversa", description: "Crear nuevas frases" },
+      routines: { title: "Mis Rutinas", description: "Organiza secuencias" },
+    },
+  };
+
+  const actionTexts = quickActionsTexts[language];
+
+  const quickActions = [
+    {
+      icon: BookOpen,
+      title: actionTexts.library.title,
+      description: actionTexts.library.description,
+      gradient: "from-accent to-secondary",
+      href: "/library",
+      isPremium: false,
+    },
+    {
+      icon: Star,
+      title: actionTexts.favorites.title,
+      description: actionTexts.favorites.description,
+      gradient: "from-highlight to-primary",
+      href: "/favorites",
+      isPremium: false,
+    },
+    {
+      icon: Sparkles,
+      title: actionTexts.create.title,
+      description: actionTexts.create.description,
+      gradient: "from-primary to-secondary",
+      href: "/create",
+      isPremium: true,
+    },
+    {
+      icon: ListMusic,
+      title: actionTexts.routines.title,
+      description: actionTexts.routines.description,
+      gradient: "from-secondary to-accent",
+      href: "/routines",
+      isPremium: false,
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-muted via-background to-secondary/20">
-      {/* Header */}
       <header className="sticky top-0 z-50 glass border-b border-border/50 backdrop-blur-lg">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-primary flex items-center justify-center">
-              
-            </div>
+            <div className="w-10 h-10 rounded-full bg-gradient-primary flex items-center justify-center" />
             <h1 className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">
               {t.home.title}
             </h1>
@@ -105,7 +132,6 @@ const Index = () => {
           <div className="relative p-6">
             <div className="flex items-start gap-4">
               <div className="relative">
-                {/* Dynamic mascot - using placeholder for Antonio */}
                 {selectedDoll === 'catarina' ? (
                   <img src={catarinaMascot} alt="Catarina" className="w-24 h-24 rounded-2xl object-cover shadow-lg" />
                 ) : (
@@ -165,9 +191,7 @@ const Index = () => {
               </div>
               <div className="flex-1">
                 <h3 className="font-semibold mb-1">{t.home.phraseOfTheDay}</h3>
-                <p className="text-sm opacity-90">
-                  "{phraseOfTheDay}"
-                </p>
+                <p className="text-sm opacity-90">"{phraseOfTheDay}"</p>
               </div>
               <PlayButton 
                 isPlaying={audioPlayer.isPlaying} 
@@ -196,7 +220,7 @@ const Index = () => {
           </Card>
         )}
 
-        {/* Quick Actions Grid */}
+        {/* Quick Actions Grid - 4 cards */}
         <div className="space-y-3">
           <h3 className="text-lg font-semibold px-1">{t.home.quickActions}</h3>
           <div className="grid grid-cols-2 gap-3">
@@ -212,11 +236,18 @@ const Index = () => {
                   )} />
                   
                   <div className="relative p-5 space-y-3">
-                    <div className={cn(
-                      "w-12 h-12 rounded-xl bg-gradient-to-br flex items-center justify-center shadow-md",
-                      action.gradient
-                    )}>
-                      <action.icon className="w-6 h-6 text-white" />
+                    <div className="flex items-start justify-between">
+                      <div className={cn(
+                        "w-12 h-12 rounded-xl bg-gradient-to-br flex items-center justify-center shadow-md",
+                        action.gradient
+                      )}>
+                        <action.icon className="w-6 h-6 text-white" />
+                      </div>
+                      {action.isPremium && !isPremium && (
+                        <Badge variant="secondary" className="gap-1 text-xs">
+                          <Crown className="w-3 h-3" />
+                        </Badge>
+                      )}
                     </div>
                     
                     <div>
@@ -232,7 +263,6 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Bottom Navigation Spacer */}
         <div className="h-20" />
       </main>
     </div>

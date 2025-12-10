@@ -11,7 +11,8 @@ import Index from "./pages/Index";
 import Library from "./pages/Library";
 import CreatePhrase from "./pages/CreatePhrase";
 import DailyPhrases from "./pages/DailyPhrases";
-import Schedule from "./pages/Schedule";
+import Favorites from "./pages/Favorites";
+import Routines from "./pages/Routines";
 import Settings from "./pages/Settings";
 import Auth from "./pages/Auth";
 import Onboarding from "./pages/Onboarding";
@@ -71,10 +72,18 @@ const App = () => (
                 }
               />
               <Route
-                path="/schedule"
+                path="/favorites"
                 element={
                   <ProtectedRoute>
-                    <Schedule />
+                    <Favorites />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/routines"
+                element={
+                  <ProtectedRoute>
+                    <Routines />
                   </ProtectedRoute>
                 }
               />
@@ -86,7 +95,6 @@ const App = () => (
                   </ProtectedRoute>
                 }
               />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
