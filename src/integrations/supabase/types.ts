@@ -14,6 +14,54 @@ export type Database = {
   }
   public: {
     Tables: {
+      library_phrases: {
+        Row: {
+          audio_url_en: string | null
+          audio_url_es: string | null
+          audio_url_pt: string | null
+          category: string
+          created_at: string | null
+          created_by: string | null
+          id: string
+          is_active: boolean | null
+          text_en: string | null
+          text_es: string | null
+          text_pt: string
+          time_of_day: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          audio_url_en?: string | null
+          audio_url_es?: string | null
+          audio_url_pt?: string | null
+          category: string
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          is_active?: boolean | null
+          text_en?: string | null
+          text_es?: string | null
+          text_pt: string
+          time_of_day?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          audio_url_en?: string | null
+          audio_url_es?: string | null
+          audio_url_pt?: string | null
+          category?: string
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          is_active?: boolean | null
+          text_en?: string | null
+          text_es?: string | null
+          text_pt?: string
+          time_of_day?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
