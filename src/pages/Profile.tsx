@@ -1,22 +1,34 @@
-import { ArrowLeft, Volume2, Check, Play, Loader2, Ribbon } from 'lucide-react';
+import { ArrowLeft, Volume2, Check, Play, Loader2, Ribbon, User, Save } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { useLanguage, useTranslations } from '@/contexts/LanguageContext';
 import { useVoice, ChildVoice, DollType } from '@/contexts/VoiceContext';
 import { LanguageSelector } from '@/components/LanguageSelector';
 import { UserMenu } from '@/components/UserMenu';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
+import { supabase } from '@/integrations/supabase/client';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
-export default function Settings() {
+export default function Profile() {
   const { language } = useLanguage();
   const t = useTranslations();
   const { selectedVoice, setSelectedVoice, selectedDoll, setSelectedDoll, availableVoices } = useVoice();
-  const { session } = useAuth();
+  const { session, user, profile } = useAuth();
   const [previewingVoice, setPreviewingVoice] = useState<string | null>(null);
+  const [fullName, setFullName] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    if (profile?.full_name) {
+      setFullName(profile.full_name);
+    }
+  }, [profile]);
 
   const handleVoiceSelect = (voice: ChildVoice) => {
     setSelectedVoice(voice);
@@ -26,6 +38,27 @@ export default function Settings() {
   const handleDollSelect = (doll: DollType) => {
     setSelectedDoll(doll);
     toast.success(t.settings.dollChanged || 'Boneca alterada com sucesso!');
+  };
+
+  const handleSaveProfile = async () => {
+    if (!user) return;
+
+    setIsSaving(true);
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({ full_name: fullName })
+        .eq('id', user.id);
+
+      if (error) throw error;
+
+      toast.success(t.profile?.saveSuccess || 'Perfil salvo com sucesso!');
+    } catch (error) {
+      console.error('Error saving profile:', error);
+      toast.error(t.profile?.saveError || 'Erro ao salvar perfil');
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handlePreviewVoice = async (voice: ChildVoice) => {
@@ -69,7 +102,6 @@ export default function Settings() {
 
       const data = await response.json();
       
-      // Convert base64 to blob and play
       const binaryString = atob(data.audioContent);
       const bytes = new Uint8Array(binaryString.length);
       for (let i = 0; i < binaryString.length; i++) {
@@ -95,6 +127,18 @@ export default function Settings() {
     }
   };
 
+  const getInitials = () => {
+    if (fullName) {
+      return fullName
+        .split(' ')
+        .map((n) => n[0])
+        .join('')
+        .toUpperCase()
+        .slice(0, 2);
+    }
+    return user?.email?.slice(0, 2).toUpperCase() || 'U';
+  };
+
   const dollName = selectedDoll === 'catarina' ? 'Catarina' : 'Antônio';
 
   return (
@@ -109,7 +153,7 @@ export default function Settings() {
               </Button>
             </Link>
             <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-              {t.settings.title}
+              {t.profile?.title || 'Meu Perfil'}
             </h1>
           </div>
           <div className="flex items-center gap-2">
@@ -120,6 +164,61 @@ export default function Settings() {
       </header>
 
       <main className="container mx-auto px-4 py-6 space-y-6">
+        {/* Personal Info */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <User className="h-5 w-5 text-primary" />
+              {t.profile?.personalInfo || 'Informações Pessoais'}
+            </CardTitle>
+            <CardDescription>
+              {t.profile?.personalInfoDescription || 'Gerencie suas informações pessoais'}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center gap-4">
+              <Avatar className="h-16 w-16 border-2 border-primary/20">
+                <AvatarImage src={profile?.avatar_url || undefined} alt={fullName || 'User'} />
+                <AvatarFallback className="bg-gradient-primary text-primary-foreground text-lg font-medium">
+                  {getInitials()}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-1 space-y-3">
+                <div className="space-y-1.5">
+                  <Label htmlFor="fullName">{t.profile?.fullName || 'Nome Completo'}</Label>
+                  <Input
+                    id="fullName"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    placeholder={t.profile?.fullNamePlaceholder || 'Seu nome completo'}
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="email">{t.profile?.email || 'Email'}</Label>
+                  <Input
+                    id="email"
+                    value={user?.email || ''}
+                    disabled
+                    className="bg-muted"
+                  />
+                </div>
+              </div>
+            </div>
+            <Button 
+              onClick={handleSaveProfile} 
+              disabled={isSaving}
+              className="w-full sm:w-auto"
+            >
+              {isSaving ? (
+                <Loader2 className="h-4 w-4 animate-spin mr-2" />
+              ) : (
+                <Save className="h-4 w-4 mr-2" />
+              )}
+              {t.profile?.saveChanges || 'Salvar Alterações'}
+            </Button>
+          </CardContent>
+        </Card>
+
         {/* Doll Selection */}
         <Card>
           <CardHeader>
