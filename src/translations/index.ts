@@ -71,9 +71,17 @@ export const translations = {
       phraseOfTheDay: "Frase do Dia",
       phraseOfTheDayText: "Bom dia, meu amor! Que tal começarmos o dia com um sorriso?",
       quickActions: "Ações Rápidas",
+      library: "Biblioteca",
+      libraryDesc: "500+ frases",
+      favorites: "Favoritas",
+      favoritesDesc: "Suas favoritas",
+      createPhrase: "Crie e Converse",
+      createPhraseDesc: "IA personalizada",
+      routines: "Minhas Rotinas",
+      routinesDesc: "Suas sequências",
     },
     
-    // Quick Actions
+    // Quick Actions (legacy)
     quickActions: {
       dailyPhrases: {
         title: "Frases do Dia",
@@ -95,8 +103,8 @@ export const translations = {
     
     // Create Phrase Page
     createPhrase: {
-      title: "Criar Frase",
-      subtitle: "IA personalizada com voz infantil",
+      title: "Crie e Converse",
+      subtitle: "Crie frases personalizadas com IA",
       language: "Idioma",
       whatToSay: "O que a Catarina deve dizer?",
       placeholder: "Digite a mensagem que você quer que a Catarina fale...",
@@ -106,8 +114,10 @@ export const translations = {
       sendWhatsApp: "Enviar via WhatsApp",
       errorEnterPhrase: "Digite uma frase primeiro",
       errorGenerateFirst: "Gere a voz primeiro",
-      phraseSaved: "Frase salva na biblioteca!",
+      phraseSaved: "Frase salva em Minhas Frases!",
       whatsappSoon: "Em breve: enviar via Bluetooth!",
+      listenIn: "Ouvir em",
+      saveToMyPhrases: "Salvar em Minhas Frases",
       tips: {
         title: "Dicas para frases melhores",
         simple: "Use linguagem simples e carinhosa",
@@ -159,36 +169,88 @@ export const translations = {
       all: "Todas",
       phrasesFound: "frases encontradas",
       categories: {
-        routine: "Rotina Diária",
-        education: "Educação",
+        all: "Todas",
         songs: "Músicas",
+        stories: "Histórias e Poemas",
         affection: "Carinho",
+        daily: "Dia a Dia",
+        education: "Educação",
+        sounds: "Sons",
+        myPhrases: "Minhas Frases",
+        // Legacy categories
+        routine: "Rotina Diária",
         bedtime: "Hora de Dormir",
         meals: "Refeições",
         bath: "Banho",
         languages: "Idiomas",
       },
+      timeOfDay: {
+        morning: "Manhã",
+        afternoon: "Tarde",
+        night: "Noite",
+      },
       phrases: "frases",
       prerecordedPhrases: [
-        { text: "Bom dia, meu amor! Hora de acordar!", category: "routine" },
-        { text: "Você é muito especial para mim!", category: "affection" },
-        { text: "Vamos tomar café da manhã?", category: "meals" },
-        { text: "Hora do banho! Vai ser divertido!", category: "bath" },
-        { text: "A é de amor, B é de bola, C é de casa!", category: "education" },
-        { text: "Boa noite! Tenha sonhos lindos!", category: "bedtime" },
-        { text: "Que tal brincar um pouquinho?", category: "routine" },
-        { text: "Eu te amo muito!", category: "affection" },
-        { text: "Está na hora do almoço!", category: "meals" },
-        { text: "Vamos escovar os dentes?", category: "bath" },
-        { text: "Parabéns! Você conseguiu!", category: "affection" },
-        { text: "Hora de descansar um pouquinho.", category: "bedtime" },
-        { text: "Vamos cantar uma música?", category: "songs" },
-        { text: "Você está crescendo tão rápido!", category: "affection" },
-        { text: "É hora de estudar um pouquinho!", category: "education" },
+        { text: "Bom dia, meu amor! Hora de acordar!", category: "daily", timeOfDay: "morning" },
+        { text: "Você é muito especial para mim!", category: "affection", timeOfDay: "morning" },
+        { text: "Vamos tomar café da manhã?", category: "daily", timeOfDay: "morning" },
+        { text: "Hora do banho! Vai ser divertido!", category: "daily", timeOfDay: "night" },
+        { text: "A é de amor, B é de bola, C é de casa!", category: "education", timeOfDay: "morning" },
+        { text: "Boa noite! Tenha sonhos lindos!", category: "daily", timeOfDay: "night" },
+        { text: "Que tal brincar um pouquinho?", category: "daily", timeOfDay: "afternoon" },
+        { text: "Eu te amo muito!", category: "affection", timeOfDay: "afternoon" },
+        { text: "Está na hora do almoço!", category: "daily", timeOfDay: "afternoon" },
+        { text: "Vamos escovar os dentes?", category: "daily", timeOfDay: "night" },
+        { text: "Parabéns! Você conseguiu!", category: "affection", timeOfDay: "afternoon" },
+        { text: "Hora de descansar um pouquinho.", category: "daily", timeOfDay: "night" },
+        { text: "Vamos cantar uma música?", category: "songs", timeOfDay: "afternoon" },
+        { text: "Você está crescendo tão rápido!", category: "affection", timeOfDay: "afternoon" },
+        { text: "É hora de estudar um pouquinho!", category: "education", timeOfDay: "morning" },
       ],
     },
+
+    // Routines
+    routines: {
+      title: "Minhas Rotinas",
+      subtitle: "Suas sequências de frases",
+      createRoutine: "Criar Rotina",
+      routineName: "Nome da rotina",
+      addPhrases: "Adicionar frases",
+      playRandom: "Tocar aleatório",
+      interval: "Intervalo entre frases",
+      minutes: "minutos",
+      deleteRoutine: "Excluir rotina",
+      editName: "Editar nome",
+      noRoutines: "Nenhuma rotina criada",
+      routineLimit: "Limite de 3 rotinas no plano básico",
+      dragToReorder: "Arraste para reordenar",
+      playAll: "Tocar todas",
+      emptyRoutine: "Rotina vazia",
+      addPhrasesHint: "Adicione frases da biblioteca",
+    },
+
+    // Favorites
+    favorites: {
+      title: "Favoritas",
+      subtitle: "Suas frases favoritas",
+      yourFavorites: "Suas frases favoritas",
+      addPhrase: "Adicionar frase",
+      dragToReorder: "Arraste para reordenar",
+      playAll: "Tocar todas",
+      noFavorites: "Nenhuma frase favorita ainda",
+      addFromLibrary: "Adicionar da biblioteca",
+    },
+
+    // Premium
+    premium: {
+      title: "Recurso Premium",
+      description: "Para usar esta funcionalidade, adquira a versão premium",
+      upgrade: "Ver Planos",
+      badge: "PAGO",
+      premiumOnly: "Apenas para assinantes",
+    },
     
-    // Schedule Page
+    // Schedule Page (legacy)
     schedule: {
       title: "Programar Mensagens",
       createNew: "Criar Nova Programação",
@@ -316,9 +378,17 @@ export const translations = {
       phraseOfTheDay: "Phrase of the Day",
       phraseOfTheDayText: "Good morning, my love! How about starting the day with a smile?",
       quickActions: "Quick Actions",
+      library: "Library",
+      libraryDesc: "500+ phrases",
+      favorites: "Favorites",
+      favoritesDesc: "Your favorites",
+      createPhrase: "Create & Chat",
+      createPhraseDesc: "Custom AI",
+      routines: "My Routines",
+      routinesDesc: "Your sequences",
     },
     
-    // Quick Actions
+    // Quick Actions (legacy)
     quickActions: {
       dailyPhrases: {
         title: "Daily Phrases",
@@ -340,8 +410,8 @@ export const translations = {
     
     // Create Phrase Page
     createPhrase: {
-      title: "Create Phrase",
-      subtitle: "Custom AI with child voice",
+      title: "Create & Chat",
+      subtitle: "Create custom phrases with AI",
       language: "Language",
       whatToSay: "What should Catarina say?",
       placeholder: "Type the message you want Catarina to say...",
@@ -351,8 +421,10 @@ export const translations = {
       sendWhatsApp: "Send via WhatsApp",
       errorEnterPhrase: "Enter a phrase first",
       errorGenerateFirst: "Generate voice first",
-      phraseSaved: "Phrase saved to library!",
+      phraseSaved: "Phrase saved to My Phrases!",
       whatsappSoon: "Coming soon: send via Bluetooth!",
+      listenIn: "Listen in",
+      saveToMyPhrases: "Save to My Phrases",
       tips: {
         title: "Tips for better phrases",
         simple: "Use simple and caring language",
@@ -404,36 +476,88 @@ export const translations = {
       all: "All",
       phrasesFound: "phrases found",
       categories: {
-        routine: "Daily Routine",
-        education: "Education",
+        all: "All",
         songs: "Songs",
+        stories: "Stories & Poems",
         affection: "Affection",
+        daily: "Daily Life",
+        education: "Education",
+        sounds: "Sounds",
+        myPhrases: "My Phrases",
+        // Legacy categories
+        routine: "Daily Routine",
         bedtime: "Bedtime",
         meals: "Meals",
         bath: "Bath",
         languages: "Languages",
       },
+      timeOfDay: {
+        morning: "Morning",
+        afternoon: "Afternoon",
+        night: "Night",
+      },
       phrases: "phrases",
       prerecordedPhrases: [
-        { text: "Good morning, my love! Time to wake up!", category: "routine" },
-        { text: "You are very special to me!", category: "affection" },
-        { text: "Let's have breakfast?", category: "meals" },
-        { text: "Bath time! It's going to be fun!", category: "bath" },
-        { text: "A is for apple, B is for ball, C is for cat!", category: "education" },
-        { text: "Good night! Have beautiful dreams!", category: "bedtime" },
-        { text: "How about playing a little?", category: "routine" },
-        { text: "I love you so much!", category: "affection" },
-        { text: "It's lunchtime!", category: "meals" },
-        { text: "Let's brush our teeth?", category: "bath" },
-        { text: "Congratulations! You did it!", category: "affection" },
-        { text: "Time to rest a little.", category: "bedtime" },
-        { text: "Let's sing a song?", category: "songs" },
-        { text: "You're growing up so fast!", category: "affection" },
-        { text: "It's time to study a little!", category: "education" },
+        { text: "Good morning, my love! Time to wake up!", category: "daily", timeOfDay: "morning" },
+        { text: "You are very special to me!", category: "affection", timeOfDay: "morning" },
+        { text: "Let's have breakfast?", category: "daily", timeOfDay: "morning" },
+        { text: "Bath time! It's going to be fun!", category: "daily", timeOfDay: "night" },
+        { text: "A is for apple, B is for ball, C is for cat!", category: "education", timeOfDay: "morning" },
+        { text: "Good night! Have beautiful dreams!", category: "daily", timeOfDay: "night" },
+        { text: "How about playing a little?", category: "daily", timeOfDay: "afternoon" },
+        { text: "I love you so much!", category: "affection", timeOfDay: "afternoon" },
+        { text: "It's lunchtime!", category: "daily", timeOfDay: "afternoon" },
+        { text: "Let's brush our teeth?", category: "daily", timeOfDay: "night" },
+        { text: "Congratulations! You did it!", category: "affection", timeOfDay: "afternoon" },
+        { text: "Time to rest a little.", category: "daily", timeOfDay: "night" },
+        { text: "Let's sing a song?", category: "songs", timeOfDay: "afternoon" },
+        { text: "You're growing up so fast!", category: "affection", timeOfDay: "afternoon" },
+        { text: "It's time to study a little!", category: "education", timeOfDay: "morning" },
       ],
     },
+
+    // Routines
+    routines: {
+      title: "My Routines",
+      subtitle: "Your phrase sequences",
+      createRoutine: "Create Routine",
+      routineName: "Routine name",
+      addPhrases: "Add phrases",
+      playRandom: "Play random",
+      interval: "Interval between phrases",
+      minutes: "minutes",
+      deleteRoutine: "Delete routine",
+      editName: "Edit name",
+      noRoutines: "No routines created",
+      routineLimit: "Limit of 3 routines on basic plan",
+      dragToReorder: "Drag to reorder",
+      playAll: "Play all",
+      emptyRoutine: "Empty routine",
+      addPhrasesHint: "Add phrases from the library",
+    },
+
+    // Favorites
+    favorites: {
+      title: "Favorites",
+      subtitle: "Your favorite phrases",
+      yourFavorites: "Your favorite phrases",
+      addPhrase: "Add phrase",
+      dragToReorder: "Drag to reorder",
+      playAll: "Play all",
+      noFavorites: "No favorite phrases yet",
+      addFromLibrary: "Add from library",
+    },
+
+    // Premium
+    premium: {
+      title: "Premium Feature",
+      description: "To use this feature, upgrade to premium",
+      upgrade: "View Plans",
+      badge: "PAID",
+      premiumOnly: "Premium only",
+    },
     
-    // Schedule Page
+    // Schedule Page (legacy)
     schedule: {
       title: "Schedule Messages",
       createNew: "Create New Schedule",
@@ -561,9 +685,17 @@ export const translations = {
       phraseOfTheDay: "Frase del Día",
       phraseOfTheDayText: "¡Buenos días, mi amor! ¿Qué tal empezar el día con una sonrisa?",
       quickActions: "Acciones Rápidas",
+      library: "Biblioteca",
+      libraryDesc: "500+ frases",
+      favorites: "Favoritas",
+      favoritesDesc: "Tus favoritas",
+      createPhrase: "Crea y Conversa",
+      createPhraseDesc: "IA personalizada",
+      routines: "Mis Rutinas",
+      routinesDesc: "Tus secuencias",
     },
     
-    // Quick Actions
+    // Quick Actions (legacy)
     quickActions: {
       dailyPhrases: {
         title: "Frases Diarias",
@@ -585,8 +717,8 @@ export const translations = {
     
     // Create Phrase Page
     createPhrase: {
-      title: "Crear Frase",
-      subtitle: "IA personalizada con voz infantil",
+      title: "Crea y Conversa",
+      subtitle: "Crea frases personalizadas con IA",
       language: "Idioma",
       whatToSay: "¿Qué debe decir Catarina?",
       placeholder: "Escribe el mensaje que quieres que Catarina diga...",
@@ -596,8 +728,10 @@ export const translations = {
       sendWhatsApp: "Enviar por WhatsApp",
       errorEnterPhrase: "Escribe una frase primero",
       errorGenerateFirst: "Genera la voz primero",
-      phraseSaved: "¡Frase guardada en la biblioteca!",
+      phraseSaved: "¡Frase guardada en Mis Frases!",
       whatsappSoon: "Próximamente: ¡enviar vía Bluetooth!",
+      listenIn: "Escuchar en",
+      saveToMyPhrases: "Guardar en Mis Frases",
       tips: {
         title: "Consejos para mejores frases",
         simple: "Usa lenguaje simple y cariñoso",
@@ -649,36 +783,88 @@ export const translations = {
       all: "Todas",
       phrasesFound: "frases encontradas",
       categories: {
-        routine: "Rutina Diaria",
-        education: "Educación",
+        all: "Todas",
         songs: "Canciones",
+        stories: "Historias y Poemas",
         affection: "Cariño",
+        daily: "Día a Día",
+        education: "Educación",
+        sounds: "Sonidos",
+        myPhrases: "Mis Frases",
+        // Legacy categories
+        routine: "Rutina Diaria",
         bedtime: "Hora de Dormir",
         meals: "Comidas",
         bath: "Baño",
         languages: "Idiomas",
       },
+      timeOfDay: {
+        morning: "Mañana",
+        afternoon: "Tarde",
+        night: "Noche",
+      },
       phrases: "frases",
       prerecordedPhrases: [
-        { text: "¡Buenos días, mi amor! ¡Hora de despertar!", category: "routine" },
-        { text: "¡Eres muy especial para mí!", category: "affection" },
-        { text: "¿Vamos a desayunar?", category: "meals" },
-        { text: "¡Hora del baño! ¡Va a ser divertido!", category: "bath" },
-        { text: "¡A es de amor, B es de bola, C es de casa!", category: "education" },
-        { text: "¡Buenas noches! ¡Ten sueños hermosos!", category: "bedtime" },
-        { text: "¿Qué tal jugar un poquito?", category: "routine" },
-        { text: "¡Te amo mucho!", category: "affection" },
-        { text: "¡Es hora del almuerzo!", category: "meals" },
-        { text: "¿Vamos a cepillar los dientes?", category: "bath" },
-        { text: "¡Felicitaciones! ¡Lo lograste!", category: "affection" },
-        { text: "Hora de descansar un poquito.", category: "bedtime" },
-        { text: "¿Vamos a cantar una canción?", category: "songs" },
-        { text: "¡Estás creciendo tan rápido!", category: "affection" },
-        { text: "¡Es hora de estudiar un poquito!", category: "education" },
+        { text: "¡Buenos días, mi amor! ¡Hora de despertar!", category: "daily", timeOfDay: "morning" },
+        { text: "¡Eres muy especial para mí!", category: "affection", timeOfDay: "morning" },
+        { text: "¿Vamos a desayunar?", category: "daily", timeOfDay: "morning" },
+        { text: "¡Hora del baño! ¡Va a ser divertido!", category: "daily", timeOfDay: "night" },
+        { text: "¡A es de amor, B es de bola, C es de casa!", category: "education", timeOfDay: "morning" },
+        { text: "¡Buenas noches! ¡Ten sueños hermosos!", category: "daily", timeOfDay: "night" },
+        { text: "¿Qué tal jugar un poquito?", category: "daily", timeOfDay: "afternoon" },
+        { text: "¡Te amo mucho!", category: "affection", timeOfDay: "afternoon" },
+        { text: "¡Es hora del almuerzo!", category: "daily", timeOfDay: "afternoon" },
+        { text: "¿Vamos a cepillar los dientes?", category: "daily", timeOfDay: "night" },
+        { text: "¡Felicitaciones! ¡Lo lograste!", category: "affection", timeOfDay: "afternoon" },
+        { text: "Hora de descansar un poquito.", category: "daily", timeOfDay: "night" },
+        { text: "¿Vamos a cantar una canción?", category: "songs", timeOfDay: "afternoon" },
+        { text: "¡Estás creciendo tan rápido!", category: "affection", timeOfDay: "afternoon" },
+        { text: "¡Es hora de estudiar un poquito!", category: "education", timeOfDay: "morning" },
       ],
     },
+
+    // Routines
+    routines: {
+      title: "Mis Rutinas",
+      subtitle: "Tus secuencias de frases",
+      createRoutine: "Crear Rutina",
+      routineName: "Nombre de la rutina",
+      addPhrases: "Agregar frases",
+      playRandom: "Reproducir aleatorio",
+      interval: "Intervalo entre frases",
+      minutes: "minutos",
+      deleteRoutine: "Eliminar rutina",
+      editName: "Editar nombre",
+      noRoutines: "No hay rutinas creadas",
+      routineLimit: "Límite de 3 rutinas en plan básico",
+      dragToReorder: "Arrastra para reordenar",
+      playAll: "Reproducir todas",
+      emptyRoutine: "Rutina vacía",
+      addPhrasesHint: "Agrega frases de la biblioteca",
+    },
+
+    // Favorites
+    favorites: {
+      title: "Favoritas",
+      subtitle: "Tus frases favoritas",
+      yourFavorites: "Tus frases favoritas",
+      addPhrase: "Agregar frase",
+      dragToReorder: "Arrastra para reordenar",
+      playAll: "Reproducir todas",
+      noFavorites: "No hay frases favoritas aún",
+      addFromLibrary: "Agregar de la biblioteca",
+    },
+
+    // Premium
+    premium: {
+      title: "Función Premium",
+      description: "Para usar esta función, adquiere la versión premium",
+      upgrade: "Ver Planes",
+      badge: "PAGO",
+      premiumOnly: "Solo premium",
+    },
     
-    // Schedule Page
+    // Schedule Page (legacy)
     schedule: {
       title: "Programar Mensajes",
       createNew: "Crear Nueva Programación",
