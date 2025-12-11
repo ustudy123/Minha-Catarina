@@ -5,54 +5,49 @@ import { Textarea } from "@/components/ui/textarea";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useTextToSpeech } from "@/hooks/useTextToSpeech";
 import { useSavedPhrases } from "@/hooks/useSavedPhrases";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useLanguage, Language } from "@/contexts/LanguageContext";
+import { useSubscription } from "@/hooks/useSubscription";
 import { getTranslations } from "@/translations";
 import { toast } from "sonner";
 import { PlayButton } from "@/components/audio/PlayButton";
 import { AudioControls } from "@/components/audio/AudioControls";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { PremiumGate } from "@/components/PremiumGate";
 import {
   ArrowLeft,
   Sparkles,
   Save,
   Volume2,
-  Globe,
-  Send,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const CreatePhrase = () => {
   const [phraseText, setPhraseText] = useState("");
+  const [generatingLang, setGeneratingLang] = useState<Language | null>(null);
   const maxChars = 200;
 
   const { generate, isGenerating, audioUrl, audioBlob, reset } = useTextToSpeech();
   const audioPlayer = useAudioPlayer();
   const { addPhrase } = useSavedPhrases();
-  const { language, setLanguage } = useLanguage();
+  const { language } = useLanguage();
+  const { isPremium, canCreatePhrases } = useSubscription();
   const t = getTranslations(language);
 
-  const handleGenerate = async () => {
+  const handleGenerateAndPlay = async (targetLang: Language) => {
     if (!phraseText.trim()) {
       toast.error(t.createPhrase.errorEnterPhrase);
       return;
     }
 
     try {
-      await generate({ text: phraseText, language });
+      setGeneratingLang(targetLang);
+      const { url } = await generate({ text: phraseText, language: targetLang });
+      if (url) {
+        await audioPlayer.play(url);
+      }
     } catch (error) {
       console.error('Error generating voice:', error);
-    }
-  };
-
-  const handlePlayPreview = () => {
-    if (audioUrl) {
-      audioPlayer.play(audioUrl);
+    } finally {
+      setGeneratingLang(null);
     }
   };
 
@@ -77,9 +72,37 @@ const CreatePhrase = () => {
     audioPlayer.stop();
   };
 
-  const handleSendToDoll = () => {
-    toast.info(t.createPhrase.whatsappSoon);
-  };
+  const languageButtons = [
+    { lang: 'pt' as Language, flag: '🇧🇷', label: 'Português' },
+    { lang: 'en' as Language, flag: '🇺🇸', label: 'English' },
+    { lang: 'es' as Language, flag: '🇪🇸', label: 'Español' },
+  ];
+
+  // Show premium gate for non-premium users
+  if (!canCreatePhrases) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-muted via-background to-secondary/10">
+        {/* Header */}
+        <header className="sticky top-0 z-50 glass border-b border-border/50 backdrop-blur-lg">
+          <div className="container mx-auto px-4 py-4">
+            <div className="flex items-center gap-3">
+              <Button variant="ghost" size="icon" onClick={() => window.history.back()}>
+                <ArrowLeft className="w-5 h-5" />
+              </Button>
+              <div>
+                <h1 className="text-xl font-bold">{t.createPhrase.title}</h1>
+                <p className="text-xs text-muted-foreground">{t.createPhrase.subtitle}</p>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <main className="container mx-auto px-4 py-6 max-w-2xl">
+          <PremiumGate featureName={t.createPhrase.title} />
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-muted via-background to-secondary/10">
@@ -101,28 +124,8 @@ const CreatePhrase = () => {
       </header>
 
       <main className="container mx-auto px-4 py-6 max-w-2xl space-y-6">
-        {/* Language Selection */}
-        <Card className="p-5 border-2 animate-fade-in" style={{ animationDelay: "0.1s" }}>
-          <div className="space-y-3">
-            <div className="flex items-center gap-2 text-sm font-semibold">
-              <Globe className="w-4 h-4" />
-              {t.createPhrase.language}
-            </div>
-            <Select value={language} onValueChange={(value) => setLanguage(value as "pt" | "en" | "es")}>
-              <SelectTrigger className="h-12 rounded-xl border-2">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="pt">🇧🇷 Português</SelectItem>
-                <SelectItem value="en">🇺🇸 English</SelectItem>
-                <SelectItem value="es">🇪🇸 Español</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </Card>
-
         {/* Text Input */}
-        <Card className="p-5 border-2 animate-fade-in" style={{ animationDelay: "0.2s" }}>
+        <Card className="p-5 border-2 animate-fade-in" style={{ animationDelay: "0.1s" }}>
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-sm font-semibold">
@@ -145,25 +148,27 @@ const CreatePhrase = () => {
               maxLength={maxChars}
             />
 
-            <div className="flex gap-2">
-              <Button 
-                size="lg" 
-                variant="gradient" 
-                className="flex-1"
-                disabled={!phraseText.trim() || isGenerating}
-                onClick={handleGenerate}
-              >
-                {isGenerating ? (
-                  <>
-                    <span className="animate-pulse">{t.createPhrase.generating}</span>
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="w-5 h-5" />
-                    {t.createPhrase.generateVoice}
-                  </>
-                )}
-              </Button>
+            {/* 3 Language Buttons */}
+            <div className="grid grid-cols-3 gap-2">
+              {languageButtons.map(({ lang, flag, label }) => (
+                <Button
+                  key={lang}
+                  size="lg"
+                  variant="outline"
+                  className="flex-1 gap-2"
+                  disabled={!phraseText.trim() || isGenerating}
+                  onClick={() => handleGenerateAndPlay(lang)}
+                >
+                  {generatingLang === lang ? (
+                    <span className="animate-pulse">...</span>
+                  ) : (
+                    <>
+                      <span className="text-lg">{flag}</span>
+                      <span className="hidden sm:inline text-xs">{label}</span>
+                    </>
+                  )}
+                </Button>
+              ))}
             </div>
           </div>
         </Card>
@@ -184,8 +189,8 @@ const CreatePhrase = () => {
               <div className="flex gap-2">
                 <PlayButton
                   isPlaying={audioPlayer.isPlaying}
-                  isLoading={audioPlayer.isLoading}
-                  onPlay={handlePlayPreview}
+                  isLoading={audioPlayer.isLoading || !audioUrl}
+                  onPlay={() => audioUrl && audioPlayer.play(audioUrl)}
                   onPause={audioPlayer.pause}
                   variant="secondary"
                   size="lg"
@@ -215,23 +220,12 @@ const CreatePhrase = () => {
                   onSeek={audioPlayer.seek}
                 />
               )}
-
-              <Button
-                size="lg" 
-                variant="default" 
-                className="w-full"
-                onClick={handleSendToDoll}
-                disabled={!audioBlob}
-              >
-                <Send className="w-5 h-5" />
-                {t.createPhrase.sendWhatsApp}
-              </Button>
             </div>
           </Card>
         )}
 
         {/* Tips */}
-        <Card className="p-5 border-2 bg-highlight/10 border-highlight/20 animate-fade-in" style={{ animationDelay: "0.3s" }}>
+        <Card className="p-5 border-2 bg-highlight/10 border-highlight/20 animate-fade-in" style={{ animationDelay: "0.2s" }}>
           <h3 className="font-semibold mb-3 flex items-center gap-2">
             <Sparkles className="w-4 h-4" />
             {t.createPhrase.tips.title}
