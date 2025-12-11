@@ -7,6 +7,7 @@ import { LanguageProvider } from "@/contexts/LanguageContext";
 import { VoiceProvider } from "@/contexts/VoiceContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
+import AdminRoute from "@/components/AdminRoute";
 import Index from "./pages/Index";
 import Library from "./pages/Library";
 import CreatePhrase from "./pages/CreatePhrase";
@@ -16,6 +17,9 @@ import Routines from "./pages/Routines";
 import Settings from "./pages/Settings";
 import Auth from "./pages/Auth";
 import Onboarding from "./pages/Onboarding";
+import Admin from "./pages/Admin";
+import AdminPhrases from "./pages/AdminPhrases";
+import AdminUsers from "./pages/AdminUsers";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -93,6 +97,31 @@ const App = () => (
                   <ProtectedRoute>
                     <Settings />
                   </ProtectedRoute>
+                }
+              />
+              {/* Admin Routes */}
+              <Route
+                path="/admin"
+                element={
+                  <AdminRoute>
+                    <Admin />
+                  </AdminRoute>
+                }
+              />
+              <Route
+                path="/admin/phrases"
+                element={
+                  <AdminRoute>
+                    <AdminPhrases />
+                  </AdminRoute>
+                }
+              />
+              <Route
+                path="/admin/users"
+                element={
+                  <AdminRoute>
+                    <AdminUsers />
+                  </AdminRoute>
                 }
               />
               <Route path="*" element={<NotFound />} />

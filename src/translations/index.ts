@@ -299,6 +299,18 @@ export const translations = {
       antonioDescription: "Boneco menino",
       dollChanged: "Boneca alterada com sucesso!",
     },
+
+    // Admin
+    admin: {
+      title: "Painel de Administração",
+      subtitle: "Gerencie o conteúdo e usuários",
+      manageLibrary: "Gerenciar Biblioteca",
+      manageLibraryDesc: "Adicionar, editar e excluir frases",
+      manageUsers: "Gerenciar Usuários",
+      manageUsersDesc: "Ver e gerenciar usuários",
+      statistics: "Estatísticas",
+      statisticsDesc: "Visualizar métricas do app",
+    },
     
     // Not Found Page
     notFound: {
@@ -606,6 +618,18 @@ export const translations = {
       antonioDescription: "Boy doll",
       dollChanged: "Doll changed successfully!",
     },
+
+    // Admin
+    admin: {
+      title: "Admin Panel",
+      subtitle: "Manage content and users",
+      manageLibrary: "Manage Library",
+      manageLibraryDesc: "Add, edit and delete phrases",
+      manageUsers: "Manage Users",
+      manageUsersDesc: "View and manage users",
+      statistics: "Statistics",
+      statisticsDesc: "View app metrics",
+    },
     
     // Not Found Page
     notFound: {
@@ -912,6 +936,18 @@ export const translations = {
       catarinaDescription: "Muñeca niña",
       antonioDescription: "Muñeco niño",
       dollChanged: "¡Muñeca cambiada con éxito!",
+    },
+
+    // Admin
+    admin: {
+      title: "Panel de Administración",
+      subtitle: "Gestiona contenido y usuarios",
+      manageLibrary: "Gestionar Biblioteca",
+      manageLibraryDesc: "Agregar, editar y eliminar frases",
+      manageUsers: "Gestionar Usuarios",
+      manageUsersDesc: "Ver y gestionar usuarios",
+      statistics: "Estadísticas",
+      statisticsDesc: "Ver métricas de la app",
     },
     
     // Not Found Page
