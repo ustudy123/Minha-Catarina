@@ -7,23 +7,23 @@ import { useVoice, DollType } from '@/contexts/VoiceContext';
 import { getTranslations } from '@/translations';
 import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
-
 export default function Onboarding() {
-  const { language } = useLanguage();
+  const {
+    language
+  } = useLanguage();
   const t = getTranslations(language);
-  const { completeOnboarding } = useVoice();
+  const {
+    completeOnboarding
+  } = useVoice();
   const navigate = useNavigate();
   const [selectedDoll, setSelectedDoll] = useState<DollType | null>(null);
-
   const handleContinue = () => {
     if (selectedDoll) {
       completeOnboarding(selectedDoll);
       navigate('/');
     }
   };
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-secondary/20 to-primary/10 flex flex-col items-center justify-center p-4">
+  return <div className="min-h-screen bg-gradient-to-br from-background via-secondary/20 to-primary/10 flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-md space-y-8">
         {/* Welcome Header */}
         <div className="text-center space-y-2">
@@ -38,15 +38,7 @@ export default function Onboarding() {
         {/* Doll Selection */}
         <div className="grid grid-cols-2 gap-4">
           {/* Catarina Option */}
-          <Card
-            className={cn(
-              'relative cursor-pointer transition-all hover:scale-105 border-2',
-              selectedDoll === 'catarina'
-                ? 'border-primary bg-primary/10 ring-2 ring-primary/30'
-                : 'border-border/50 hover:border-primary/50'
-            )}
-            onClick={() => setSelectedDoll('catarina')}
-          >
+          <Card className={cn('relative cursor-pointer transition-all hover:scale-105 border-2', selectedDoll === 'catarina' ? 'border-primary bg-primary/10 ring-2 ring-primary/30' : 'border-border/50 hover:border-primary/50')} onClick={() => setSelectedDoll('catarina')}>
             <div className="p-6 flex flex-col items-center space-y-4">
               {/* Pink ribbon icon */}
               <div className="w-20 h-20 rounded-full bg-gradient-to-br from-pink-400 to-pink-600 flex items-center justify-center shadow-lg">
@@ -54,28 +46,16 @@ export default function Onboarding() {
               </div>
               <div className="text-center">
                 <h3 className="font-bold text-lg">{t.onboarding?.catarina || 'Catarina'}</h3>
-                <p className="text-sm text-muted-foreground">
-                  {t.onboarding?.catarinaDescription || 'Boneca menina'}
-                </p>
+                
               </div>
-              {selectedDoll === 'catarina' && (
-                <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-primary flex items-center justify-center">
+              {selectedDoll === 'catarina' && <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-primary flex items-center justify-center">
                   <Check className="w-4 h-4 text-primary-foreground" />
-                </div>
-              )}
+                </div>}
             </div>
           </Card>
 
           {/* Antonio Option */}
-          <Card
-            className={cn(
-              'relative cursor-pointer transition-all hover:scale-105 border-2',
-              selectedDoll === 'antonio'
-                ? 'border-accent bg-accent/10 ring-2 ring-accent/30'
-                : 'border-border/50 hover:border-accent/50'
-            )}
-            onClick={() => setSelectedDoll('antonio')}
-          >
+          <Card className={cn('relative cursor-pointer transition-all hover:scale-105 border-2', selectedDoll === 'antonio' ? 'border-accent bg-accent/10 ring-2 ring-accent/30' : 'border-border/50 hover:border-accent/50')} onClick={() => setSelectedDoll('antonio')}>
             <div className="p-6 flex flex-col items-center space-y-4">
               {/* Blue cap icon */}
               <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center shadow-lg">
@@ -83,30 +63,19 @@ export default function Onboarding() {
               </div>
               <div className="text-center">
                 <h3 className="font-bold text-lg">{t.onboarding?.antonio || 'Antônio'}</h3>
-                <p className="text-sm text-muted-foreground">
-                  {t.onboarding?.antonioDescription || 'Boneco menino'}
-                </p>
+                
               </div>
-              {selectedDoll === 'antonio' && (
-                <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-accent flex items-center justify-center">
+              {selectedDoll === 'antonio' && <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-accent flex items-center justify-center">
                   <Check className="w-4 h-4 text-accent-foreground" />
-                </div>
-              )}
+                </div>}
             </div>
           </Card>
         </div>
 
         {/* Continue Button */}
-        <Button
-          variant="gradient"
-          size="lg"
-          className="w-full"
-          disabled={!selectedDoll}
-          onClick={handleContinue}
-        >
+        <Button variant="gradient" size="lg" className="w-full" disabled={!selectedDoll} onClick={handleContinue}>
           {t.onboarding?.continue || 'Continuar'}
         </Button>
       </div>
-    </div>
-  );
+    </div>;
 }
