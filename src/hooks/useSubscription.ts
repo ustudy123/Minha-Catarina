@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useAdmin } from './useAdmin';
 
 type PlanType = 'basic' | 'premium';
 
@@ -14,6 +15,7 @@ interface Subscription {
 
 export function useSubscription() {
   const { user } = useAuth();
+  const { isAdmin } = useAdmin();
   const [subscription, setSubscription] = useState<Subscription | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -77,15 +79,18 @@ export function useSubscription() {
 
   const plan = subscription?.plan_type || 'basic';
   const isPremium = plan === 'premium';
+  const hasFullAccess = isPremium || isAdmin;
 
   return {
     subscription,
     isLoading,
     plan,
     isPremium,
-    canCreatePhrases: isPremium,
-    canAccessMyPhrases: isPremium,
-    maxRoutines: isPremium ? Infinity : 3,
+    isAdmin,
+    hasFullAccess,
+    canCreatePhrases: hasFullAccess,
+    canAccessMyPhrases: hasFullAccess,
+    maxRoutines: hasFullAccess ? Infinity : 3,
     refetch: fetchSubscription,
   };
 }
