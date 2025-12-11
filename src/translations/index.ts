@@ -300,6 +300,19 @@ export const translations = {
       dollChanged: "Boneca alterada com sucesso!",
     },
 
+    // Profile Page
+    profile: {
+      title: "Meu Perfil",
+      personalInfo: "Informações Pessoais",
+      personalInfoDescription: "Gerencie suas informações pessoais",
+      fullName: "Nome Completo",
+      fullNamePlaceholder: "Seu nome completo",
+      email: "Email",
+      saveChanges: "Salvar Alterações",
+      saveSuccess: "Perfil salvo com sucesso!",
+      saveError: "Erro ao salvar perfil",
+    },
+
     // Admin
     admin: {
       title: "Painel de Administração",
@@ -619,6 +632,19 @@ export const translations = {
       dollChanged: "Doll changed successfully!",
     },
 
+    // Profile Page
+    profile: {
+      title: "My Profile",
+      personalInfo: "Personal Information",
+      personalInfoDescription: "Manage your personal information",
+      fullName: "Full Name",
+      fullNamePlaceholder: "Your full name",
+      email: "Email",
+      saveChanges: "Save Changes",
+      saveSuccess: "Profile saved successfully!",
+      saveError: "Error saving profile",
+    },
+
     // Admin
     admin: {
       title: "Admin Panel",
@@ -936,6 +962,19 @@ export const translations = {
       catarinaDescription: "Muñeca niña",
       antonioDescription: "Muñeco niño",
       dollChanged: "¡Muñeca cambiada con éxito!",
+    },
+
+    // Profile Page
+    profile: {
+      title: "Mi Perfil",
+      personalInfo: "Información Personal",
+      personalInfoDescription: "Gestiona tu información personal",
+      fullName: "Nombre Completo",
+      fullNamePlaceholder: "Tu nombre completo",
+      email: "Correo",
+      saveChanges: "Guardar Cambios",
+      saveSuccess: "¡Perfil guardado con éxito!",
+      saveError: "Error al guardar perfil",
     },
 
     // Admin

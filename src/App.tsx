@@ -14,7 +14,7 @@ import CreatePhrase from "./pages/CreatePhrase";
 import DailyPhrases from "./pages/DailyPhrases";
 import Favorites from "./pages/Favorites";
 import Routines from "./pages/Routines";
-import Settings from "./pages/Settings";
+import Profile from "./pages/Profile";
 import Auth from "./pages/Auth";
 import Onboarding from "./pages/Onboarding";
 import Admin from "./pages/Admin";
@@ -92,10 +92,10 @@ const App = () => (
                 }
               />
               <Route
-                path="/settings"
+                path="/profile"
                 element={
                   <ProtectedRoute>
-                    <Settings />
+                    <Profile />
                   </ProtectedRoute>
                 }
               />
