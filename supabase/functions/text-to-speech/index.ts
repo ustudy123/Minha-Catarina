@@ -19,13 +19,72 @@ function generateCacheKey(text: string, voiceId: string): string {
   return Math.abs(hash).toString(36);
 }
 
+// Translate text using Lovable AI Gateway
+async function translateText(text: string, targetLanguage: string): Promise<string> {
+  const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
+  if (!LOVABLE_API_KEY) {
+    console.warn('LOVABLE_API_KEY not configured, skipping translation');
+    return text;
+  }
+
+  const languageNames: Record<string, string> = {
+    pt: 'Brazilian Portuguese',
+    en: 'English',
+    es: 'Spanish',
+  };
+
+  const targetLangName = languageNames[targetLanguage] || 'English';
+
+  try {
+    const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'google/gemini-2.5-flash',
+        messages: [
+          {
+            role: 'system',
+            content: `You are a translator. Translate the user's text to ${targetLangName}. Only return the translated text, nothing else. Keep the same tone and style. If the text is already in ${targetLangName}, return it unchanged.`,
+          },
+          {
+            role: 'user',
+            content: text,
+          },
+        ],
+        max_tokens: 500,
+      }),
+    });
+
+    if (!response.ok) {
+      console.error('Translation API error:', response.status);
+      return text;
+    }
+
+    const data = await response.json();
+    const translatedText = data.choices?.[0]?.message?.content?.trim();
+    
+    if (translatedText) {
+      console.log('Translated text:', { original: text, translated: translatedText, targetLanguage });
+      return translatedText;
+    }
+    
+    return text;
+  } catch (error) {
+    console.error('Translation error:', error);
+    return text;
+  }
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
   }
 
   try {
-    const { text, voiceId = 'pFZP5JQG7iQjIQuC4Bku' } = await req.json();
+    const { text, voiceId = 'pFZP5JQG7iQjIQuC4Bku', targetLanguage } = await req.json();
 
     if (!text) {
       throw new Error('Text is required');
@@ -36,14 +95,20 @@ serve(async (req) => {
       throw new Error('ELEVENLABS_API_KEY not configured');
     }
 
+    // Translate text if target language is specified
+    let finalText = text;
+    if (targetLanguage) {
+      finalText = await translateText(text, targetLanguage);
+    }
+
     // Initialize Supabase client with service role for cache operations
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Generate cache key
-    const cacheKey = generateCacheKey(text, voiceId);
-    console.log('Cache key:', cacheKey, 'for text:', text.substring(0, 50));
+    // Generate cache key using translated text
+    const cacheKey = generateCacheKey(finalText, voiceId);
+    console.log('Cache key:', cacheKey, 'for text:', finalText);
 
     // Check cache first
     const { data: cachedAudio, error: cacheError } = await supabase
@@ -67,7 +132,7 @@ serve(async (req) => {
       );
     }
 
-    console.log('Cache MISS. Generating speech with ElevenLabs:', { textLength: text.length, voiceId });
+    console.log('Cache MISS. Generating speech with ElevenLabs:', { textLength: finalText.length, voiceId });
 
     // Generate speech from text using ElevenLabs
     const response = await fetch(
@@ -79,7 +144,7 @@ serve(async (req) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          text,
+          text: finalText,
           model_id: 'eleven_multilingual_v2',
           voice_settings: {
             stability: 0.35,
@@ -131,7 +196,7 @@ serve(async (req) => {
       .from('audio_cache')
       .insert({
         cache_key: cacheKey,
-        text_content: text,
+        text_content: finalText,
         voice_id: voiceId,
         audio_url: audioUrl,
       });
