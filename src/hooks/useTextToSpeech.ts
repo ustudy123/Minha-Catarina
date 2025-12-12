@@ -14,6 +14,7 @@ export interface TTSState {
   error: string | null;
   audioBlob: Blob | null;
   audioUrl: string | null;
+  cached: boolean;
 }
 
 export const useTextToSpeech = () => {
@@ -23,20 +24,19 @@ export const useTextToSpeech = () => {
     error: null,
     audioBlob: null,
     audioUrl: null,
+    cached: false,
   });
 
   const generate = useCallback(async ({ text, language = 'pt', voiceId }: TTSOptions) => {
     try {
       setState(prev => ({ ...prev, isGenerating: true, error: null }));
 
-      // Get current session for auth token
       const { data: { session } } = await supabase.auth.getSession();
       
       if (!session) {
         throw new Error('Você precisa estar logado para gerar voz');
       }
 
-      // Call Supabase Edge Function with user's JWT
       const response = await fetch(
         `https://vfhspeubasrdmwqxdcaw.supabase.co/functions/v1/text-to-speech`,
         {
@@ -64,25 +64,39 @@ export const useTextToSpeech = () => {
       }
 
       const data = await response.json();
+      const isCached = data.cached === true;
       
-      // Convert base64 to blob
-      const binaryString = atob(data.audioContent);
-      const bytes = new Uint8Array(binaryString.length);
-      for (let i = 0; i < binaryString.length; i++) {
-        bytes[i] = binaryString.charCodeAt(i);
+      let blob: Blob;
+      let url: string;
+
+      if (data.audioUrl) {
+        // Cached audio - fetch from URL
+        const audioResponse = await fetch(data.audioUrl);
+        blob = await audioResponse.blob();
+        url = data.audioUrl;
+      } else if (data.audioContent) {
+        // New audio - convert base64
+        const binaryString = atob(data.audioContent);
+        const bytes = new Uint8Array(binaryString.length);
+        for (let i = 0; i < binaryString.length; i++) {
+          bytes[i] = binaryString.charCodeAt(i);
+        }
+        blob = new Blob([bytes], { type: 'audio/mpeg' });
+        url = URL.createObjectURL(blob);
+      } else {
+        throw new Error('Invalid response from TTS service');
       }
-      const blob = new Blob([bytes], { type: 'audio/mpeg' });
-      const url = URL.createObjectURL(blob);
 
       setState({
         isGenerating: false,
         error: null,
         audioBlob: blob,
         audioUrl: url,
+        cached: isCached,
       });
 
-      toast.success('Voz gerada com sucesso!');
-      return { blob, url };
+      toast.success(isCached ? 'Áudio carregado do cache!' : 'Voz gerada com sucesso!');
+      return { blob, url, cached: isCached };
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
       setState(prev => ({
@@ -96,7 +110,7 @@ export const useTextToSpeech = () => {
   }, [selectedVoice]);
 
   const reset = useCallback(() => {
-    if (state.audioUrl) {
+    if (state.audioUrl && !state.cached) {
       URL.revokeObjectURL(state.audioUrl);
     }
     setState({
@@ -104,6 +118,7 @@ export const useTextToSpeech = () => {
       error: null,
       audioBlob: null,
       audioUrl: null,
+      cached: false,
     });
   }, [state.audioUrl]);
 

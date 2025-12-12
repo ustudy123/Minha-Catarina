@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      audio_cache: {
+        Row: {
+          audio_url: string
+          cache_key: string
+          created_at: string
+          id: string
+          last_accessed: string
+          text_content: string
+          voice_id: string
+        }
+        Insert: {
+          audio_url: string
+          cache_key: string
+          created_at?: string
+          id?: string
+          last_accessed?: string
+          text_content: string
+          voice_id: string
+        }
+        Update: {
+          audio_url?: string
+          cache_key?: string
+          created_at?: string
+          id?: string
+          last_accessed?: string
+          text_content?: string
+          voice_id?: string
+        }
+        Relationships: []
+      }
       library_phrases: {
         Row: {
           audio_url_en: string | null
