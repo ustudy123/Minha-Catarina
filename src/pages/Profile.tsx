@@ -1,4 +1,4 @@
-import { ArrowLeft, Volume2, Check, Play, Loader2, Ribbon, User, Save } from 'lucide-react';
+import { ArrowLeft, Volume2, Check, Play, Loader2, Ribbon, User, Save, Sun, Moon, Monitor, Palette } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -14,15 +14,22 @@ import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useTheme } from 'next-themes';
 
 export default function Profile() {
   const { language } = useLanguage();
   const t = useTranslations();
   const { selectedVoice, setSelectedVoice, selectedDoll, setSelectedDoll, availableVoices } = useVoice();
   const { session, user, profile } = useAuth();
+  const { theme, setTheme } = useTheme();
   const [previewingVoice, setPreviewingVoice] = useState<string | null>(null);
   const [fullName, setFullName] = useState('');
   const [isSaving, setIsSaving] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (profile?.full_name) {
@@ -38,6 +45,11 @@ export default function Profile() {
   const handleDollSelect = (doll: DollType) => {
     setSelectedDoll(doll);
     toast.success(t.settings.dollChanged || 'Boneca alterada com sucesso!');
+  };
+
+  const handleThemeSelect = (newTheme: string) => {
+    setTheme(newTheme);
+    toast.success(t.theme?.themeChanged || 'Tema alterado com sucesso!');
   };
 
   const handleSaveProfile = async () => {
@@ -361,6 +373,93 @@ export default function Profile() {
             <LanguageSelector />
           </CardContent>
         </Card>
+
+        {/* Theme Selection */}
+        {mounted && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Palette className="h-5 w-5 text-primary" />
+                {t.theme?.title || 'Tema'}
+              </CardTitle>
+              <CardDescription>
+                {t.theme?.description || 'Escolha o tema visual do aplicativo'}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-3 gap-4">
+                {/* Light Theme */}
+                <div
+                  className={cn(
+                    'relative cursor-pointer transition-all p-4 rounded-xl border-2 flex flex-col items-center gap-3',
+                    theme === 'light'
+                      ? 'border-primary bg-primary/10'
+                      : 'border-border/50 hover:border-primary/50 hover:bg-muted/50'
+                  )}
+                  onClick={() => handleThemeSelect('light')}
+                >
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-300 to-amber-500 flex items-center justify-center shadow-lg">
+                    <Sun className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="text-center">
+                    <p className="font-medium text-sm">{t.theme?.light || 'Claro'}</p>
+                  </div>
+                  {theme === 'light' && (
+                    <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-primary flex items-center justify-center">
+                      <Check className="w-3 h-3 text-primary-foreground" />
+                    </div>
+                  )}
+                </div>
+
+                {/* Dark Theme */}
+                <div
+                  className={cn(
+                    'relative cursor-pointer transition-all p-4 rounded-xl border-2 flex flex-col items-center gap-3',
+                    theme === 'dark'
+                      ? 'border-primary bg-primary/10'
+                      : 'border-border/50 hover:border-primary/50 hover:bg-muted/50'
+                  )}
+                  onClick={() => handleThemeSelect('dark')}
+                >
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-purple-700 flex items-center justify-center shadow-lg">
+                    <Moon className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="text-center">
+                    <p className="font-medium text-sm">{t.theme?.dark || 'Escuro'}</p>
+                  </div>
+                  {theme === 'dark' && (
+                    <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-primary flex items-center justify-center">
+                      <Check className="w-3 h-3 text-primary-foreground" />
+                    </div>
+                  )}
+                </div>
+
+                {/* System Theme */}
+                <div
+                  className={cn(
+                    'relative cursor-pointer transition-all p-4 rounded-xl border-2 flex flex-col items-center gap-3',
+                    theme === 'system'
+                      ? 'border-primary bg-primary/10'
+                      : 'border-border/50 hover:border-primary/50 hover:bg-muted/50'
+                  )}
+                  onClick={() => handleThemeSelect('system')}
+                >
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-slate-400 to-slate-600 flex items-center justify-center shadow-lg">
+                    <Monitor className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="text-center">
+                    <p className="font-medium text-sm">{t.theme?.system || 'Automático'}</p>
+                  </div>
+                  {theme === 'system' && (
+                    <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-primary flex items-center justify-center">
+                      <Check className="w-3 h-3 text-primary-foreground" />
+                    </div>
+                  )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
       </main>
     </div>
   );

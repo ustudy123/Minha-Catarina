@@ -313,6 +313,16 @@ export const translations = {
       saveError: "Erro ao salvar perfil",
     },
 
+    // Theme
+    theme: {
+      title: "Tema",
+      description: "Escolha o tema visual do aplicativo",
+      light: "Claro",
+      dark: "Escuro",
+      system: "Automático",
+      themeChanged: "Tema alterado com sucesso!",
+    },
+
     // Admin
     admin: {
       title: "Painel de Administração",
@@ -645,6 +655,16 @@ export const translations = {
       saveError: "Error saving profile",
     },
 
+    // Theme
+    theme: {
+      title: "Theme",
+      description: "Choose the app's visual theme",
+      light: "Light",
+      dark: "Dark",
+      system: "System",
+      themeChanged: "Theme changed successfully!",
+    },
+
     // Admin
     admin: {
       title: "Admin Panel",
@@ -975,6 +995,16 @@ export const translations = {
       saveChanges: "Guardar Cambios",
       saveSuccess: "¡Perfil guardado con éxito!",
       saveError: "Error al guardar perfil",
+    },
+
+    // Theme
+    theme: {
+      title: "Tema",
+      description: "Elige el tema visual de la aplicación",
+      light: "Claro",
+      dark: "Oscuro",
+      system: "Automático",
+      themeChanged: "¡Tema cambiado con éxito!",
     },
 
     // Admin
