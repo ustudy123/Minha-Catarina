@@ -1,4 +1,4 @@
-import { ArrowLeft, Volume2, Check, Play, Loader2, Ribbon, User, Save, Sun, Moon, Monitor, Palette } from 'lucide-react';
+import { ArrowLeft, Volume2, Check, Play, Loader2, Ribbon, User, Save, Sun, Moon, Monitor, Palette, Droplets } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -15,6 +15,7 @@ import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useTheme } from 'next-themes';
+import { useAccentColor, accentColors } from '@/hooks/useAccentColor';
 
 export default function Profile() {
   const { language } = useLanguage();
@@ -22,6 +23,7 @@ export default function Profile() {
   const { selectedVoice, setSelectedVoice, selectedDoll, setSelectedDoll, availableVoices } = useVoice();
   const { session, user, profile } = useAuth();
   const { theme, setTheme } = useTheme();
+  const { accentColor, setAccentColor } = useAccentColor();
   const [previewingVoice, setPreviewingVoice] = useState<string | null>(null);
   const [fullName, setFullName] = useState('');
   const [isSaving, setIsSaving] = useState(false);
@@ -50,6 +52,11 @@ export default function Profile() {
   const handleThemeSelect = (newTheme: string) => {
     setTheme(newTheme);
     toast.success(t.theme?.themeChanged || 'Tema alterado com sucesso!');
+  };
+
+  const handleAccentColorSelect = (color: typeof accentColors[0]) => {
+    setAccentColor(color);
+    toast.success(t.accentColor?.colorChanged || 'Cor alterada com sucesso!');
   };
 
   const handleSaveProfile = async () => {
@@ -456,6 +463,50 @@ export default function Profile() {
                     </div>
                   )}
                 </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Accent Color Selection */}
+        {mounted && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Droplets className="h-5 w-5 text-primary" />
+                {t.accentColor?.title || 'Cor de Destaque'}
+              </CardTitle>
+              <CardDescription>
+                {t.accentColor?.description || 'Personalize a cor principal do aplicativo'}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
+                {accentColors.map((color) => (
+                  <div
+                    key={color.id}
+                    className={cn(
+                      'relative cursor-pointer transition-all p-3 rounded-xl border-2 flex flex-col items-center gap-2',
+                      accentColor.id === color.id
+                        ? 'border-foreground bg-muted'
+                        : 'border-border/50 hover:border-foreground/50 hover:bg-muted/50'
+                    )}
+                    onClick={() => handleAccentColorSelect(color)}
+                  >
+                    <div
+                      className="w-10 h-10 rounded-full shadow-md"
+                      style={{ background: color.gradient }}
+                    />
+                    <p className="text-xs font-medium text-center leading-tight">
+                      {color.name[language]}
+                    </p>
+                    {accentColor.id === color.id && (
+                      <div className="absolute top-1 right-1 w-4 h-4 rounded-full bg-foreground flex items-center justify-center">
+                        <Check className="w-2.5 h-2.5 text-background" />
+                      </div>
+                    )}
+                  </div>
+                ))}
               </div>
             </CardContent>
           </Card>

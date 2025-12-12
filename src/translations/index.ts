@@ -323,6 +323,13 @@ export const translations = {
       themeChanged: "Tema alterado com sucesso!",
     },
 
+    // Accent Color
+    accentColor: {
+      title: "Cor de Destaque",
+      description: "Personalize a cor principal do aplicativo",
+      colorChanged: "Cor alterada com sucesso!",
+    },
+
     // Admin
     admin: {
       title: "Painel de Administração",
@@ -665,6 +672,13 @@ export const translations = {
       themeChanged: "Theme changed successfully!",
     },
 
+    // Accent Color
+    accentColor: {
+      title: "Accent Color",
+      description: "Customize the app's primary color",
+      colorChanged: "Color changed successfully!",
+    },
+
     // Admin
     admin: {
       title: "Admin Panel",
@@ -1005,6 +1019,13 @@ export const translations = {
       dark: "Oscuro",
       system: "Automático",
       themeChanged: "¡Tema cambiado con éxito!",
+    },
+
+    // Accent Color
+    accentColor: {
+      title: "Color de Acento",
+      description: "Personaliza el color principal de la aplicación",
+      colorChanged: "¡Color cambiado con éxito!",
     },
 
     // Admin
