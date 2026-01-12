@@ -12,7 +12,7 @@ import { useSubscription } from "@/hooks/useSubscription";
 import { getTranslations } from "@/translations";
 import { PlayButton } from "@/components/audio/PlayButton";
 import { AudioControls } from "@/components/audio/AudioControls";
-import { TimeOfDayFilter } from "@/components/TimeOfDayFilter";
+
 import { PhraseOptionsMenu } from "@/components/PhraseOptionsMenu";
 import { PremiumGate } from "@/components/PremiumGate";
 import {
@@ -40,7 +40,7 @@ interface Phrase {
 const Library = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [selectedTimeOfDay, setSelectedTimeOfDay] = useState<'all' | 'morning' | 'afternoon' | 'night'>('all');
+  
   const [playingId, setPlayingId] = useState<string | null>(null);
   
   const audioPlayer = useAudioPlayer();
@@ -117,12 +117,11 @@ const Library = () => {
   const filteredPhrases = samplePhrases.filter(phrase => {
     const matchesSearch = phrase.text.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = selectedCategory === "all" || phrase.category === selectedCategory;
-    const matchesTimeOfDay = selectedTimeOfDay === 'all' || phrase.timeOfDay === selectedTimeOfDay;
     
     // Don't show phrases if "myPhrases" category is selected (handled separately)
     if (selectedCategory === "myPhrases") return false;
     
-    return matchesSearch && matchesCategory && matchesTimeOfDay;
+    return matchesSearch && matchesCategory;
   });
 
   // Handle premium-only "Minhas Frases" category
@@ -146,12 +145,6 @@ const Library = () => {
       </header>
 
       <main className="container mx-auto px-4 py-6 max-w-2xl space-y-6">
-        {/* Time of Day Filter */}
-        <TimeOfDayFilter
-          value={selectedTimeOfDay}
-          onChange={setSelectedTimeOfDay}
-        />
-
         {/* Search */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
@@ -244,16 +237,9 @@ const Library = () => {
                         <p className="text-sm font-medium mb-1 break-words">
                           {phrase.text}
                         </p>
-                        <div className="flex gap-2">
-                          <Badge variant="secondary" className="text-xs">
-                            {categories.find(c => c.id === phrase.category)?.name || phrase.category}
-                          </Badge>
-                          {phrase.timeOfDay && (
-                            <Badge variant="outline" className="text-xs">
-                              {phrase.timeOfDay === 'morning' ? '🌅' : phrase.timeOfDay === 'afternoon' ? '☀️' : '🌙'}
-                            </Badge>
-                          )}
-                        </div>
+                        <Badge variant="secondary" className="text-xs">
+                          {categories.find(c => c.id === phrase.category)?.name || phrase.category}
+                        </Badge>
                       </div>
 
                       <Button
