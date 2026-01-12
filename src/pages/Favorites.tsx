@@ -316,52 +316,31 @@ const Favorites = () => {
                             </Badge>
                             
                             {/* Duration Dropdown */}
-                            <DropdownMenu>
+                            <DropdownMenu modal={false}>
                               <DropdownMenuTrigger asChild>
-                                <Badge 
-                                  variant="outline" 
-                                  className="text-xs cursor-pointer hover:bg-muted gap-1"
+                                <button 
+                                  type="button"
+                                  className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full border border-border bg-background hover:bg-muted cursor-pointer"
                                 >
                                   <Timer className="w-3 h-3" />
                                   {phrase.durationMinutes || 1} {t.minutes}
-                                </Badge>
+                                </button>
                               </DropdownMenuTrigger>
-                              <DropdownMenuContent align="start">
-                                <DropdownMenuItem 
-                                  onClick={() => handleDurationChange(phrase.id, 1)}
-                                  className={phrase.durationMinutes === 1 ? "bg-muted" : ""}
-                                >
-                                  <Clock className="w-4 h-4 mr-2" />
-                                  1 {t.minutes}
-                                </DropdownMenuItem>
-                                <DropdownMenuItem 
-                                  onClick={() => handleDurationChange(phrase.id, 2)}
-                                  className={phrase.durationMinutes === 2 ? "bg-muted" : ""}
-                                >
-                                  <Clock className="w-4 h-4 mr-2" />
-                                  2 {t.minutes}
-                                </DropdownMenuItem>
-                                <DropdownMenuItem 
-                                  onClick={() => handleDurationChange(phrase.id, 3)}
-                                  className={phrase.durationMinutes === 3 ? "bg-muted" : ""}
-                                >
-                                  <Clock className="w-4 h-4 mr-2" />
-                                  3 {t.minutes}
-                                </DropdownMenuItem>
-                                <DropdownMenuItem 
-                                  onClick={() => handleDurationChange(phrase.id, 4)}
-                                  className={phrase.durationMinutes === 4 ? "bg-muted" : ""}
-                                >
-                                  <Clock className="w-4 h-4 mr-2" />
-                                  4 {t.minutes}
-                                </DropdownMenuItem>
-                                <DropdownMenuItem 
-                                  onClick={() => handleDurationChange(phrase.id, 5)}
-                                  className={phrase.durationMinutes === 5 ? "bg-muted" : ""}
-                                >
-                                  <Clock className="w-4 h-4 mr-2" />
-                                  5 {t.minutes}
-                                </DropdownMenuItem>
+                              <DropdownMenuContent 
+                                align="start" 
+                                className="z-[100] bg-popover"
+                                sideOffset={5}
+                              >
+                                {[1, 2, 3, 4, 5].map((mins) => (
+                                  <DropdownMenuItem 
+                                    key={mins}
+                                    onClick={() => handleDurationChange(phrase.id, mins)}
+                                    className={phrase.durationMinutes === mins ? "bg-muted" : ""}
+                                  >
+                                    <Clock className="w-4 h-4 mr-2" />
+                                    {mins} {t.minutes}
+                                  </DropdownMenuItem>
+                                ))}
                               </DropdownMenuContent>
                             </DropdownMenu>
                           </div>
