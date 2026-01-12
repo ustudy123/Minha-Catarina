@@ -24,7 +24,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
+  DropdownMenuSubContent,
 } from '@/components/ui/dropdown-menu';
+import { Switch } from '@/components/ui/switch';
+import { Check } from 'lucide-react';
 import { SortablePhrase } from '@/components/SortablePhrase';
 import { PlayButton } from '@/components/audio/PlayButton';
 import { AudioControls } from '@/components/audio/AudioControls';
@@ -206,12 +211,40 @@ const Favorites = () => {
                   <MoreVertical className="w-5 h-5" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={handleToggleRandom}>
-                  <Shuffle className="w-4 h-4 mr-2" />
-                  {t.playRandom}
-                  {playRandom && <Badge className="ml-2">ON</Badge>}
+              <DropdownMenuContent align="end" className="w-56 bg-popover">
+                {/* Play Random Toggle */}
+                <DropdownMenuItem 
+                  onClick={handleToggleRandom}
+                  className="flex items-center justify-between cursor-pointer"
+                >
+                  <div className="flex items-center gap-2">
+                    <Shuffle className="w-4 h-4" />
+                    {t.playRandom}
+                  </div>
+                  <Switch checked={playRandom} />
                 </DropdownMenuItem>
+                
+                <DropdownMenuSeparator />
+                
+                {/* Interval Submenu */}
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger className="cursor-pointer">
+                    <Timer className="w-4 h-4 mr-2" />
+                    {t.interval}: {intervalMinutes} {t.minutes}
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuSubContent className="bg-popover">
+                    {[1, 3, 5].map((mins) => (
+                      <DropdownMenuItem
+                        key={mins}
+                        onClick={() => updateSettings(playRandom, mins)}
+                        className="flex items-center justify-between cursor-pointer"
+                      >
+                        <span>{mins} {t.minutes}</span>
+                        {intervalMinutes === mins && <Check className="w-4 h-4" />}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuSubContent>
+                </DropdownMenuSub>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
