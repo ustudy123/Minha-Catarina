@@ -156,18 +156,18 @@ const Index = () => {
         {/* Doll Status Card */}
         <Card className="relative overflow-hidden border-2 hover-lift">
           <div className="absolute inset-0 bg-gradient-primary opacity-10" />
-          <div className="relative p-6">
-            <div className="flex items-start gap-4">
-              <div className="relative">
-                {selectedDoll === 'catarina' ? <img src={catarinaMascot} alt="Catarina" className="w-24 h-24 rounded-2xl object-cover shadow-lg" /> : <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center shadow-lg">
-                    <span className="text-5xl">👦🏻</span>
+          <div className="relative p-4 sm:p-6">
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 text-center sm:text-left">
+              <div className="relative flex-shrink-0">
+                {selectedDoll === 'catarina' ? <img src={catarinaMascot} alt="Catarina" className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover shadow-lg" /> : <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center shadow-lg">
+                    <span className="text-4xl sm:text-5xl">👦🏻</span>
                   </div>}
-                <div className={cn("absolute -bottom-1 -right-1 w-6 h-6 rounded-full border-4 border-card", isConnected ? "bg-success animate-pulse-glow" : "bg-muted-foreground")} />
+                <div className={cn("absolute -bottom-1 -right-1 w-5 h-5 sm:w-6 sm:h-6 rounded-full border-4 border-card", isConnected ? "bg-success animate-pulse-glow" : "bg-muted-foreground")} />
               </div>
               
-              <div className="flex-1 space-y-3">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-2xl font-bold">{dollName}</h2>
+              <div className="flex-1 space-y-2 sm:space-y-3 min-w-0">
+                <div className="flex flex-col sm:flex-row items-center sm:justify-between gap-2">
+                  <h2 className="text-xl sm:text-2xl font-bold">{dollName}</h2>
                   <Badge variant={isConnected ? "default" : "secondary"} className="gap-1">
                     <Bluetooth className="w-3 h-3" />
                     {isConnected ? t.home.connected : t.home.disconnected}
@@ -178,7 +178,7 @@ const Index = () => {
                   {isConnected ? readyToTalk : t.home.tapToConnect}
                 </p>
 
-                {isConnected && <div className="flex items-center gap-3 text-sm">
+                {isConnected && <div className="flex items-center justify-center sm:justify-start gap-3 text-sm">
                     <div className="flex items-center gap-1 text-muted-foreground">
                       <Battery className="w-4 h-4" />
                       <span>85%</span>
