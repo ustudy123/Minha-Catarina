@@ -1,38 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  DragEndEvent,
-} from '@dnd-kit/core';
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
+import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragEndEvent } from '@dnd-kit/core';
+import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from '@/components/ui/dialog';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { SortablePhrase } from '@/components/SortablePhrase';
 import { PlayButton } from '@/components/audio/PlayButton';
 import { AudioControls } from '@/components/audio/AudioControls';
@@ -43,24 +18,12 @@ import { useAudioPlayer } from '@/hooks/useAudioPlayer';
 import { useTextToSpeech } from '@/hooks/useTextToSpeech';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { toast } from 'sonner';
-import {
-  ArrowLeft,
-  Plus,
-  MoreVertical,
-  Shuffle,
-  Clock,
-  Play,
-  Trash2,
-  Edit,
-  ListMusic,
-  ChevronRight,
-  Lock,
-  Crown,
-} from 'lucide-react';
+import { ArrowLeft, Plus, MoreVertical, Shuffle, Clock, Play, Trash2, Edit, ListMusic, ChevronRight, Lock, Crown } from 'lucide-react';
 import { cn } from '@/lib/utils';
-
 const Routines = () => {
-  const { language } = useLanguage();
+  const {
+    language
+  } = useLanguage();
   const {
     routines,
     isLoading,
@@ -69,12 +32,17 @@ const Routines = () => {
     deleteRoutine,
     getRoutinePhrases,
     removePhraseFromRoutine,
-    reorderRoutinePhrases,
+    reorderRoutinePhrases
   } = useRoutines();
-  const { isPremium, maxRoutines } = useSubscription();
+  const {
+    isPremium,
+    maxRoutines
+  } = useSubscription();
   const audioPlayer = useAudioPlayer();
-  const { generate, isGenerating } = useTextToSpeech();
-
+  const {
+    generate,
+    isGenerating
+  } = useTextToSpeech();
   const [selectedRoutine, setSelectedRoutine] = useState<Routine | null>(null);
   const [routinePhrases, setRoutinePhrases] = useState<RoutinePhrase[]>([]);
   const [showNewRoutineDialog, setShowNewRoutineDialog] = useState(false);
@@ -82,14 +50,9 @@ const Routines = () => {
   const [newRoutineName, setNewRoutineName] = useState('');
   const [editingRoutine, setEditingRoutine] = useState<Routine | null>(null);
   const [playingId, setPlayingId] = useState<string | null>(null);
-
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
-
+  const sensors = useSensors(useSensor(PointerSensor), useSensor(KeyboardSensor, {
+    coordinateGetter: sortableKeyboardCoordinates
+  }));
   const texts = {
     pt: {
       title: 'Minhas Rotinas',
@@ -113,7 +76,7 @@ const Routines = () => {
       updated: 'Rotina atualizada!',
       limitReached: 'Limite de rotinas atingido',
       limitMessage: 'Plano básico permite até 3 rotinas',
-      phrases: 'frases',
+      phrases: 'frases'
     },
     en: {
       title: 'My Routines',
@@ -137,7 +100,7 @@ const Routines = () => {
       updated: 'Routine updated!',
       limitReached: 'Routine limit reached',
       limitMessage: 'Basic plan allows up to 3 routines',
-      phrases: 'phrases',
+      phrases: 'phrases'
     },
     es: {
       title: 'Mis Rutinas',
@@ -161,32 +124,29 @@ const Routines = () => {
       updated: '¡Rutina actualizada!',
       limitReached: 'Límite de rutinas alcanzado',
       limitMessage: 'El plan básico permite hasta 3 rutinas',
-      phrases: 'frases',
-    },
+      phrases: 'frases'
+    }
   };
-
   const t = texts[language];
-
   useEffect(() => {
     if (selectedRoutine) {
       loadRoutinePhrases(selectedRoutine.id);
     }
   }, [selectedRoutine]);
-
   const loadRoutinePhrases = async (routineId: string) => {
     const phrases = await getRoutinePhrases(routineId);
     setRoutinePhrases(phrases);
   };
-
   const handleCreateRoutine = async () => {
     if (!newRoutineName.trim()) return;
 
     // Check limit for basic plan
     if (!isPremium && routines.length >= maxRoutines) {
-      toast.error(t.limitReached, { description: t.limitMessage });
+      toast.error(t.limitReached, {
+        description: t.limitMessage
+      });
       return;
     }
-
     const routine = await createRoutine(newRoutineName.trim());
     if (routine) {
       toast.success(t.created);
@@ -194,7 +154,6 @@ const Routines = () => {
       setNewRoutineName('');
     }
   };
-
   const handleDeleteRoutine = async (routine: Routine) => {
     const success = await deleteRoutine(routine.id);
     if (success) {
@@ -205,50 +164,59 @@ const Routines = () => {
       }
     }
   };
-
   const handleUpdateSettings = async (routine: Routine, updates: Partial<Pick<Routine, 'play_random' | 'interval_minutes'>>) => {
     await updateRoutine(routine.id, updates);
     if (selectedRoutine?.id === routine.id) {
-      setSelectedRoutine({ ...selectedRoutine, ...updates });
+      setSelectedRoutine({
+        ...selectedRoutine,
+        ...updates
+      });
     }
     toast.success(t.updated);
   };
-
   const handleEditName = async () => {
     if (!editingRoutine || !newRoutineName.trim()) return;
-
-    await updateRoutine(editingRoutine.id, { name: newRoutineName.trim() });
+    await updateRoutine(editingRoutine.id, {
+      name: newRoutineName.trim()
+    });
     if (selectedRoutine?.id === editingRoutine.id) {
-      setSelectedRoutine({ ...selectedRoutine, name: newRoutineName.trim() });
+      setSelectedRoutine({
+        ...selectedRoutine,
+        name: newRoutineName.trim()
+      });
     }
     toast.success(t.updated);
     setShowEditDialog(false);
     setEditingRoutine(null);
     setNewRoutineName('');
   };
-
   const handleDragEnd = async (event: DragEndEvent) => {
-    const { active, over } = event;
-
+    const {
+      active,
+      over
+    } = event;
     if (over && active.id !== over.id && selectedRoutine) {
-      const oldIndex = routinePhrases.findIndex((p) => p.id === active.id);
-      const newIndex = routinePhrases.findIndex((p) => p.id === over.id);
+      const oldIndex = routinePhrases.findIndex(p => p.id === active.id);
+      const newIndex = routinePhrases.findIndex(p => p.id === over.id);
       const newOrder = arrayMove(routinePhrases, oldIndex, newIndex);
       setRoutinePhrases(newOrder);
-      await reorderRoutinePhrases(selectedRoutine.id, newOrder.map((p) => p.id));
+      await reorderRoutinePhrases(selectedRoutine.id, newOrder.map(p => p.id));
     }
   };
-
   const handlePlay = async (phrase: RoutinePhrase) => {
     if (playingId === phrase.id && audioPlayer.isPlaying) {
       audioPlayer.pause();
       setPlayingId(null);
       return;
     }
-
     try {
       setPlayingId(phrase.id);
-      const { url } = await generate({ text: phrase.phrase_text, language });
+      const {
+        url
+      } = await generate({
+        text: phrase.phrase_text,
+        language
+      });
       if (url) {
         await audioPlayer.play(url);
       }
@@ -257,19 +225,16 @@ const Routines = () => {
       setPlayingId(null);
     }
   };
-
   const handleRemovePhrase = async (phraseId: string) => {
     if (!selectedRoutine) return;
     await removePhraseFromRoutine(phraseId);
-    setRoutinePhrases((prev) => prev.filter((p) => p.id !== phraseId));
+    setRoutinePhrases(prev => prev.filter(p => p.id !== phraseId));
   };
-
   const canCreateMore = isPremium || routines.length < maxRoutines;
 
   // Routine detail view
   if (selectedRoutine) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-muted via-background to-secondary/10">
+    return <div className="min-h-screen bg-gradient-to-br from-muted via-background to-secondary/10">
         <header className="sticky top-0 z-50 glass border-b border-border/50 backdrop-blur-lg">
           <div className="container mx-auto px-4 py-4">
             <div className="flex items-center justify-between">
@@ -292,47 +257,31 @@ const Routines = () => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem
-                    onClick={() => {
-                      setEditingRoutine(selectedRoutine);
-                      setNewRoutineName(selectedRoutine.name);
-                      setShowEditDialog(true);
-                    }}
-                  >
+                  <DropdownMenuItem onClick={() => {
+                  setEditingRoutine(selectedRoutine);
+                  setNewRoutineName(selectedRoutine.name);
+                  setShowEditDialog(true);
+                }}>
                     <Edit className="w-4 h-4 mr-2" />
                     {t.editName}
                   </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() =>
-                      handleUpdateSettings(selectedRoutine, {
-                        play_random: !selectedRoutine.play_random,
-                      })
-                    }
-                  >
+                  <DropdownMenuItem onClick={() => handleUpdateSettings(selectedRoutine, {
+                  play_random: !selectedRoutine.play_random
+                })}>
                     <Shuffle className="w-4 h-4 mr-2" />
                     {t.playRandom}
                     {selectedRoutine.play_random && <Badge className="ml-2">ON</Badge>}
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  {[1, 3, 5].map((interval) => (
-                    <DropdownMenuItem
-                      key={interval}
-                      onClick={() =>
-                        handleUpdateSettings(selectedRoutine, { interval_minutes: interval })
-                      }
-                    >
+                  {[1, 3, 5].map(interval => <DropdownMenuItem key={interval} onClick={() => handleUpdateSettings(selectedRoutine, {
+                  interval_minutes: interval
+                })}>
                       <Clock className="w-4 h-4 mr-2" />
                       {t.interval}: {interval} {t.minutes}
-                      {selectedRoutine.interval_minutes === interval && (
-                        <Badge className="ml-2">✓</Badge>
-                      )}
-                    </DropdownMenuItem>
-                  ))}
+                      {selectedRoutine.interval_minutes === interval && <Badge className="ml-2">✓</Badge>}
+                    </DropdownMenuItem>)}
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    className="text-destructive"
-                    onClick={() => handleDeleteRoutine(selectedRoutine)}
-                  >
+                  <DropdownMenuItem className="text-destructive" onClick={() => handleDeleteRoutine(selectedRoutine)}>
                     <Trash2 className="w-4 h-4 mr-2" />
                     {t.deleteRoutine}
                   </DropdownMenuItem>
@@ -345,20 +294,17 @@ const Routines = () => {
         <main className="container mx-auto px-4 py-6 max-w-2xl space-y-6">
           {/* Settings Bar */}
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            {selectedRoutine.play_random && (
-              <Badge variant="secondary" className="gap-1">
+            {selectedRoutine.play_random && <Badge variant="secondary" className="gap-1">
                 <Shuffle className="w-3 h-3" />
                 {t.playRandom}
-              </Badge>
-            )}
+              </Badge>}
             <Badge variant="outline" className="gap-1">
               <Clock className="w-3 h-3" />
               {selectedRoutine.interval_minutes} {t.minutes}
             </Badge>
           </div>
 
-          {routinePhrases.length === 0 ? (
-            <Card className="p-8 text-center border-2 border-dashed">
+          {routinePhrases.length === 0 ? <Card className="p-8 text-center border-2 border-dashed">
               <ListMusic className="w-16 h-16 mx-auto mb-4 text-muted-foreground/50" />
               <p className="text-muted-foreground mb-4">{t.noPhrases}</p>
               <Link to="/library">
@@ -367,71 +313,30 @@ const Routines = () => {
                   {t.addPhrases}
                 </Button>
               </Link>
-            </Card>
-          ) : (
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragEnd={handleDragEnd}
-            >
-              <SortableContext
-                items={routinePhrases.map((p) => p.id)}
-                strategy={verticalListSortingStrategy}
-              >
+            </Card> : <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+              <SortableContext items={routinePhrases.map(p => p.id)} strategy={verticalListSortingStrategy}>
                 <div className="space-y-2">
-                  {routinePhrases.map((phrase) => (
-                    <SortablePhrase key={phrase.id} id={phrase.id}>
+                  {routinePhrases.map(phrase => <SortablePhrase key={phrase.id} id={phrase.id}>
                       <div className="flex items-start gap-3">
-                        <PlayButton
-                          isPlaying={playingId === phrase.id && audioPlayer.isPlaying}
-                          isLoading={isGenerating && playingId === phrase.id}
-                          onPlay={() => handlePlay(phrase)}
-                          onPause={audioPlayer.pause}
-                          variant="secondary"
-                          size="icon"
-                          className="flex-shrink-0"
-                        />
+                        <PlayButton isPlaying={playingId === phrase.id && audioPlayer.isPlaying} isLoading={isGenerating && playingId === phrase.id} onPlay={() => handlePlay(phrase)} onPause={audioPlayer.pause} variant="secondary" size="icon" className="flex-shrink-0" />
 
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium break-words">{phrase.phrase_text}</p>
                         </div>
 
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="flex-shrink-0 text-destructive hover:text-destructive"
-                          onClick={() => handleRemovePhrase(phrase.id)}
-                        >
+                        <Button variant="ghost" size="icon" className="flex-shrink-0 text-destructive hover:text-destructive" onClick={() => handleRemovePhrase(phrase.id)}>
                           <Trash2 className="w-4 h-4" />
                         </Button>
                       </div>
 
-                      {playingId === phrase.id && audioPlayer.duration > 0 && (
-                        <AudioControls
-                          volume={audioPlayer.volume}
-                          playbackRate={audioPlayer.playbackRate}
-                          currentTime={audioPlayer.currentTime}
-                          duration={audioPlayer.duration}
-                          onVolumeChange={audioPlayer.setVolume}
-                          onPlaybackRateChange={audioPlayer.setPlaybackRate}
-                          onSeek={audioPlayer.seek}
-                          className="mt-3"
-                        />
-                      )}
-                    </SortablePhrase>
-                  ))}
+                      {playingId === phrase.id && audioPlayer.duration > 0 && <AudioControls volume={audioPlayer.volume} playbackRate={audioPlayer.playbackRate} currentTime={audioPlayer.currentTime} duration={audioPlayer.duration} onVolumeChange={audioPlayer.setVolume} onPlaybackRateChange={audioPlayer.setPlaybackRate} onSeek={audioPlayer.seek} className="mt-3" />}
+                    </SortablePhrase>)}
                 </div>
               </SortableContext>
-            </DndContext>
-          )}
+            </DndContext>}
 
           <Link to="/library">
-            <Card className="p-4 border-2 border-dashed cursor-pointer hover:bg-muted/50 transition-colors">
-              <div className="flex items-center justify-center gap-2 text-muted-foreground">
-                <Plus className="w-5 h-5" />
-                <span>{t.addPhrases}</span>
-              </div>
-            </Card>
+            
           </Link>
 
           <div className="h-20" />
@@ -443,12 +348,7 @@ const Routines = () => {
             <DialogHeader>
               <DialogTitle>{t.editName}</DialogTitle>
             </DialogHeader>
-            <Input
-              value={newRoutineName}
-              onChange={(e) => setNewRoutineName(e.target.value)}
-              placeholder={t.routineName}
-              className="mt-4"
-            />
+            <Input value={newRoutineName} onChange={e => setNewRoutineName(e.target.value)} placeholder={t.routineName} className="mt-4" />
             <DialogFooter className="mt-4">
               <Button variant="outline" onClick={() => setShowEditDialog(false)}>
                 {t.cancel}
@@ -459,13 +359,11 @@ const Routines = () => {
             </DialogFooter>
           </DialogContent>
         </Dialog>
-      </div>
-    );
+      </div>;
   }
 
   // Routines list view
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-muted via-background to-secondary/10">
+  return <div className="min-h-screen bg-gradient-to-br from-muted via-background to-secondary/10">
       <header className="sticky top-0 z-50 glass border-b border-border/50 backdrop-blur-lg">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
@@ -482,48 +380,36 @@ const Routines = () => {
               </div>
             </div>
 
-            {!isPremium && (
-              <Badge variant="outline" className="gap-1">
+            {!isPremium && <Badge variant="outline" className="gap-1">
                 {routines.length}/{maxRoutines}
-              </Badge>
-            )}
+              </Badge>}
           </div>
         </div>
       </header>
 
       <main className="container mx-auto px-4 py-6 max-w-2xl space-y-6">
         {/* Create Button */}
-        <Button
-          variant="gradient"
-          size="lg"
-          className="w-full gap-2"
-          onClick={() => {
-            if (canCreateMore) {
-              setShowNewRoutineDialog(true);
-            } else {
-              toast.error(t.limitReached, { description: t.limitMessage });
-            }
-          }}
-        >
+        <Button variant="gradient" size="lg" className="w-full gap-2" onClick={() => {
+        if (canCreateMore) {
+          setShowNewRoutineDialog(true);
+        } else {
+          toast.error(t.limitReached, {
+            description: t.limitMessage
+          });
+        }
+      }}>
           <Plus className="w-5 h-5" />
           {t.createRoutine}
           {!canCreateMore && <Lock className="w-4 h-4 ml-2" />}
         </Button>
 
-        {routines.length === 0 ? (
-          <Card className="p-8 text-center border-2 border-dashed">
+        {routines.length === 0 ? <Card className="p-8 text-center border-2 border-dashed">
             <ListMusic className="w-16 h-16 mx-auto mb-4 text-muted-foreground/50" />
             <p className="text-muted-foreground">{t.empty}</p>
-          </Card>
-        ) : (
-          <div className="space-y-3">
-            {routines.map((routine, index) => (
-              <Card
-                key={routine.id}
-                className="p-4 border-2 cursor-pointer hover-lift animate-fade-in"
-                style={{ animationDelay: `${index * 0.05}s` }}
-                onClick={() => setSelectedRoutine(routine)}
-              >
+          </Card> : <div className="space-y-3">
+            {routines.map((routine, index) => <Card key={routine.id} className="p-4 border-2 cursor-pointer hover-lift animate-fade-in" style={{
+          animationDelay: `${index * 0.05}s`
+        }} onClick={() => setSelectedRoutine(routine)}>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-secondary to-accent flex items-center justify-center">
@@ -532,11 +418,9 @@ const Routines = () => {
                     <div>
                       <h3 className="font-semibold">{routine.name}</h3>
                       <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                        {routine.play_random && (
-                          <span className="flex items-center gap-1">
+                        {routine.play_random && <span className="flex items-center gap-1">
                             <Shuffle className="w-3 h-3" />
-                          </span>
-                        )}
+                          </span>}
                         <span className="flex items-center gap-1">
                           <Clock className="w-3 h-3" />
                           {routine.interval_minutes}min
@@ -547,31 +431,26 @@ const Routines = () => {
 
                   <div className="flex items-center gap-2">
                     <DropdownMenu>
-                      <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+                      <DropdownMenuTrigger asChild onClick={e => e.stopPropagation()}>
                         <Button variant="ghost" size="icon">
                           <MoreVertical className="w-5 h-5" />
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setEditingRoutine(routine);
-                            setNewRoutineName(routine.name);
-                            setShowEditDialog(true);
-                          }}
-                        >
+                        <DropdownMenuItem onClick={e => {
+                    e.stopPropagation();
+                    setEditingRoutine(routine);
+                    setNewRoutineName(routine.name);
+                    setShowEditDialog(true);
+                  }}>
                           <Edit className="w-4 h-4 mr-2" />
                           {t.editName}
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                          className="text-destructive"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDeleteRoutine(routine);
-                          }}
-                        >
+                        <DropdownMenuItem className="text-destructive" onClick={e => {
+                    e.stopPropagation();
+                    handleDeleteRoutine(routine);
+                  }}>
                           <Trash2 className="w-4 h-4 mr-2" />
                           {t.deleteRoutine}
                         </DropdownMenuItem>
@@ -580,14 +459,11 @@ const Routines = () => {
                     <ChevronRight className="w-5 h-5 text-muted-foreground" />
                   </div>
                 </div>
-              </Card>
-            ))}
-          </div>
-        )}
+              </Card>)}
+          </div>}
 
         {/* Premium Upsell */}
-        {!isPremium && routines.length >= maxRoutines && (
-          <Card className="p-6 border-2 border-highlight/30 bg-highlight/5">
+        {!isPremium && routines.length >= maxRoutines && <Card className="p-6 border-2 border-highlight/30 bg-highlight/5">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-full bg-highlight/20 flex items-center justify-center">
                 <Crown className="w-6 h-6 text-highlight" />
@@ -597,8 +473,7 @@ const Routines = () => {
                 <p className="text-sm text-muted-foreground">{t.limitMessage}</p>
               </div>
             </div>
-          </Card>
-        )}
+          </Card>}
 
         <div className="h-20" />
       </main>
@@ -609,12 +484,7 @@ const Routines = () => {
           <DialogHeader>
             <DialogTitle>{t.newRoutine}</DialogTitle>
           </DialogHeader>
-          <Input
-            value={newRoutineName}
-            onChange={(e) => setNewRoutineName(e.target.value)}
-            placeholder={t.routineName}
-            className="mt-4"
-          />
+          <Input value={newRoutineName} onChange={e => setNewRoutineName(e.target.value)} placeholder={t.routineName} className="mt-4" />
           <DialogFooter className="mt-4">
             <Button variant="outline" onClick={() => setShowNewRoutineDialog(false)}>
               {t.cancel}
@@ -632,12 +502,7 @@ const Routines = () => {
           <DialogHeader>
             <DialogTitle>{t.editName}</DialogTitle>
           </DialogHeader>
-          <Input
-            value={newRoutineName}
-            onChange={(e) => setNewRoutineName(e.target.value)}
-            placeholder={t.routineName}
-            className="mt-4"
-          />
+          <Input value={newRoutineName} onChange={e => setNewRoutineName(e.target.value)} placeholder={t.routineName} className="mt-4" />
           <DialogFooter className="mt-4">
             <Button variant="outline" onClick={() => setShowEditDialog(false)}>
               {t.cancel}
@@ -648,8 +513,6 @@ const Routines = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
-  );
+    </div>;
 };
-
 export default Routines;
