@@ -145,7 +145,7 @@ const Index = () => {
       <header className="sticky top-0 z-50 glass border-b border-border/50 backdrop-blur-lg">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 ml-auto">
             <LanguageSelector />
             <UserMenu />
           </div>
