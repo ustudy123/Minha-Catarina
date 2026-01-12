@@ -7,7 +7,8 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenuSub, DropdownMenuSubTrigger, DropdownMenuSubContent } from '@/components/ui/dropdown-menu';
+import { Switch } from '@/components/ui/switch';
 import { SortablePhrase } from '@/components/SortablePhrase';
 import { PlayButton } from '@/components/audio/PlayButton';
 import { AudioControls } from '@/components/audio/AudioControls';
@@ -18,7 +19,7 @@ import { useAudioPlayer } from '@/hooks/useAudioPlayer';
 import { useTextToSpeech } from '@/hooks/useTextToSpeech';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { toast } from 'sonner';
-import { ArrowLeft, Plus, MoreVertical, Shuffle, Clock, Play, Trash2, Edit, ListMusic, ChevronRight, Lock, Crown } from 'lucide-react';
+import { ArrowLeft, Plus, MoreVertical, Shuffle, Clock, Play, Trash2, Edit, ListMusic, ChevronRight, Lock, Crown, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 const Routines = () => {
   const {
@@ -256,30 +257,54 @@ const Routines = () => {
                     <MoreVertical className="w-5 h-5" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
+                <DropdownMenuContent align="end" className="bg-popover">
                   <DropdownMenuItem onClick={() => {
-                  setEditingRoutine(selectedRoutine);
-                  setNewRoutineName(selectedRoutine.name);
-                  setShowEditDialog(true);
-                }}>
+                    setEditingRoutine(selectedRoutine);
+                    setNewRoutineName(selectedRoutine.name);
+                    setShowEditDialog(true);
+                  }}>
                     <Edit className="w-4 h-4 mr-2" />
                     {t.editName}
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => handleUpdateSettings(selectedRoutine, {
-                  play_random: !selectedRoutine.play_random
-                })}>
-                    <Shuffle className="w-4 h-4 mr-2" />
-                    {t.playRandom}
-                    {selectedRoutine.play_random && <Badge className="ml-2">ON</Badge>}
-                  </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  {[1, 3, 5].map(interval => <DropdownMenuItem key={interval} onClick={() => handleUpdateSettings(selectedRoutine, {
-                  interval_minutes: interval
-                })}>
+                  <DropdownMenuItem 
+                    className="flex items-center justify-between"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleUpdateSettings(selectedRoutine, {
+                        play_random: !selectedRoutine.play_random
+                      });
+                    }}
+                  >
+                    <div className="flex items-center">
+                      <Shuffle className="w-4 h-4 mr-2" />
+                      {t.playRandom}
+                    </div>
+                    <Switch 
+                      checked={selectedRoutine.play_random} 
+                      onCheckedChange={(checked) => handleUpdateSettings(selectedRoutine, { play_random: checked })}
+                    />
+                  </DropdownMenuItem>
+                  <DropdownMenuSub>
+                    <DropdownMenuSubTrigger>
                       <Clock className="w-4 h-4 mr-2" />
-                      {t.interval}: {interval} {t.minutes}
-                      {selectedRoutine.interval_minutes === interval && <Badge className="ml-2">✓</Badge>}
-                    </DropdownMenuItem>)}
+                      {t.interval}
+                    </DropdownMenuSubTrigger>
+                    <DropdownMenuSubContent className="bg-popover">
+                      {[1, 3, 5].map(interval => (
+                        <DropdownMenuItem 
+                          key={interval} 
+                          onClick={() => handleUpdateSettings(selectedRoutine, { interval_minutes: interval })}
+                          className="flex items-center justify-between"
+                        >
+                          <span>{interval} {t.minutes}</span>
+                          {selectedRoutine.interval_minutes === interval && (
+                            <Check className="w-4 h-4 ml-2 text-primary" />
+                          )}
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuSubContent>
+                  </DropdownMenuSub>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem className="text-destructive" onClick={() => handleDeleteRoutine(selectedRoutine)}>
                     <Trash2 className="w-4 h-4 mr-2" />
@@ -436,21 +461,65 @@ const Routines = () => {
                           <MoreVertical className="w-5 h-5" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
+                      <DropdownMenuContent align="end" className="bg-popover">
                         <DropdownMenuItem onClick={e => {
-                    e.stopPropagation();
-                    setEditingRoutine(routine);
-                    setNewRoutineName(routine.name);
-                    setShowEditDialog(true);
-                  }}>
+                          e.stopPropagation();
+                          setEditingRoutine(routine);
+                          setNewRoutineName(routine.name);
+                          setShowEditDialog(true);
+                        }}>
                           <Edit className="w-4 h-4 mr-2" />
                           {t.editName}
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
+                        <DropdownMenuItem 
+                          className="flex items-center justify-between"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            handleUpdateSettings(routine, { play_random: !routine.play_random });
+                          }}
+                        >
+                          <div className="flex items-center">
+                            <Shuffle className="w-4 h-4 mr-2" />
+                            {t.playRandom}
+                          </div>
+                          <Switch 
+                            checked={routine.play_random} 
+                            onCheckedChange={(checked) => {
+                              handleUpdateSettings(routine, { play_random: checked });
+                            }}
+                            onClick={(e) => e.stopPropagation()}
+                          />
+                        </DropdownMenuItem>
+                        <DropdownMenuSub>
+                          <DropdownMenuSubTrigger onClick={(e) => e.stopPropagation()}>
+                            <Clock className="w-4 h-4 mr-2" />
+                            {t.interval}
+                          </DropdownMenuSubTrigger>
+                          <DropdownMenuSubContent className="bg-popover">
+                            {[1, 3, 5].map(interval => (
+                              <DropdownMenuItem 
+                                key={interval} 
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleUpdateSettings(routine, { interval_minutes: interval });
+                                }}
+                                className="flex items-center justify-between"
+                              >
+                                <span>{interval} {t.minutes}</span>
+                                {routine.interval_minutes === interval && (
+                                  <Check className="w-4 h-4 ml-2 text-primary" />
+                                )}
+                              </DropdownMenuItem>
+                            ))}
+                          </DropdownMenuSubContent>
+                        </DropdownMenuSub>
+                        <DropdownMenuSeparator />
                         <DropdownMenuItem className="text-destructive" onClick={e => {
-                    e.stopPropagation();
-                    handleDeleteRoutine(routine);
-                  }}>
+                          e.stopPropagation();
+                          handleDeleteRoutine(routine);
+                        }}>
                           <Trash2 className="w-4 h-4 mr-2" />
                           {t.deleteRoutine}
                         </DropdownMenuItem>
