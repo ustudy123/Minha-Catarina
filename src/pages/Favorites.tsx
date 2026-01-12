@@ -23,6 +23,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 import { SortablePhrase } from '@/components/SortablePhrase';
 import { PlayButton } from '@/components/audio/PlayButton';
@@ -30,6 +31,7 @@ import { AudioControls } from '@/components/audio/AudioControls';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useAudioPlayer } from '@/hooks/useAudioPlayer';
 import { useTextToSpeech } from '@/hooks/useTextToSpeech';
+import { useSequentialPlayer } from '@/hooks/useSequentialPlayer';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { toast } from 'sonner';
 import {
@@ -41,6 +43,8 @@ import {
   Clock,
   Play,
   Trash2,
+  Square,
+  Timer,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -53,9 +57,11 @@ const Favorites = () => {
     reorderFavorites,
     removeFavorite,
     updateSettings,
+    updatePhraseDuration,
   } = useFavorites();
   const audioPlayer = useAudioPlayer();
   const { generate, isGenerating } = useTextToSpeech();
+  const sequentialPlayer = useSequentialPlayer();
   const [playingId, setPlayingId] = useState<string | null>(null);
 
   const sensors = useSensors(
@@ -72,10 +78,15 @@ const Favorites = () => {
       empty: 'Nenhuma frase favorita ainda',
       addPhrases: 'Adicionar Frases',
       playAll: 'Tocar Todas',
+      stopAll: 'Parar',
       playRandom: 'Tocar Aleatório',
       interval: 'Intervalo',
       minutes: 'min',
       removed: 'Removido dos favoritos',
+      duration: 'Duração',
+      durationSet: 'Duração definida para',
+      playing: 'Tocando',
+      remaining: 'restante',
     },
     en: {
       title: 'Favorites',
@@ -83,10 +94,15 @@ const Favorites = () => {
       empty: 'No favorite phrases yet',
       addPhrases: 'Add Phrases',
       playAll: 'Play All',
+      stopAll: 'Stop',
       playRandom: 'Play Random',
       interval: 'Interval',
       minutes: 'min',
       removed: 'Removed from favorites',
+      duration: 'Duration',
+      durationSet: 'Duration set to',
+      playing: 'Playing',
+      remaining: 'remaining',
     },
     es: {
       title: 'Favoritas',
@@ -94,10 +110,15 @@ const Favorites = () => {
       empty: 'No hay frases favoritas aún',
       addPhrases: 'Agregar Frases',
       playAll: 'Reproducir Todas',
+      stopAll: 'Parar',
       playRandom: 'Reproducir Aleatorio',
       interval: 'Intervalo',
       minutes: 'min',
       removed: 'Eliminado de favoritos',
+      duration: 'Duración',
+      durationSet: 'Duración definida para',
+      playing: 'Reproduciendo',
+      remaining: 'restante',
     },
   };
 
@@ -137,12 +158,27 @@ const Favorites = () => {
     toast.success(t.removed);
   };
 
-  const handleIntervalChange = (interval: number) => {
-    updateSettings(playRandom, interval);
-  };
-
   const handleToggleRandom = () => {
     updateSettings(!playRandom, intervalMinutes);
+  };
+
+  const handleDurationChange = (phraseId: string, minutes: number) => {
+    updatePhraseDuration(phraseId, minutes);
+    toast.success(`${t.durationSet} ${minutes} ${t.minutes}`);
+  };
+
+  const handlePlayAll = () => {
+    if (sequentialPlayer.isPlaying) {
+      sequentialPlayer.stop();
+    } else {
+      sequentialPlayer.startPlayAll(favorites, playRandom);
+    }
+  };
+
+  const formatTimeRemaining = (seconds: number): string => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
   return (
@@ -176,21 +212,6 @@ const Favorites = () => {
                   {t.playRandom}
                   {playRandom && <Badge className="ml-2">ON</Badge>}
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleIntervalChange(1)}>
-                  <Clock className="w-4 h-4 mr-2" />
-                  {t.interval}: 1 {t.minutes}
-                  {intervalMinutes === 1 && <Badge className="ml-2">✓</Badge>}
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleIntervalChange(3)}>
-                  <Clock className="w-4 h-4 mr-2" />
-                  {t.interval}: 3 {t.minutes}
-                  {intervalMinutes === 3 && <Badge className="ml-2">✓</Badge>}
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleIntervalChange(5)}>
-                  <Clock className="w-4 h-4 mr-2" />
-                  {t.interval}: 5 {t.minutes}
-                  {intervalMinutes === 5 && <Badge className="ml-2">✓</Badge>}
-                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -211,19 +232,51 @@ const Favorites = () => {
           </Card>
         ) : (
           <>
-            {/* Settings Bar */}
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              {playRandom && (
-                <Badge variant="secondary" className="gap-1">
-                  <Shuffle className="w-3 h-3" />
-                  {t.playRandom}
-                </Badge>
-              )}
-              <Badge variant="outline" className="gap-1">
-                <Clock className="w-3 h-3" />
-                {intervalMinutes} {t.minutes}
-              </Badge>
-            </div>
+            {/* Play All Button */}
+            <Card className={cn(
+              "p-4 transition-colors",
+              sequentialPlayer.isPlaying && "bg-primary/10 border-primary"
+            )}>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Button 
+                    variant={sequentialPlayer.isPlaying ? "destructive" : "gradient"}
+                    onClick={handlePlayAll}
+                    className="gap-2"
+                  >
+                    {sequentialPlayer.isPlaying ? (
+                      <>
+                        <Square className="w-4 h-4" />
+                        {t.stopAll}
+                      </>
+                    ) : (
+                      <>
+                        <Play className="w-4 h-4" />
+                        {t.playAll}
+                      </>
+                    )}
+                  </Button>
+                  
+                  {playRandom && (
+                    <Badge variant="secondary" className="gap-1">
+                      <Shuffle className="w-3 h-3" />
+                      {t.playRandom}
+                    </Badge>
+                  )}
+                </div>
+
+                {sequentialPlayer.isPlaying && (
+                  <div className="text-right">
+                    <p className="text-sm font-medium text-primary">
+                      {t.playing} {sequentialPlayer.currentIndex + 1}/{favorites.length}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {formatTimeRemaining(sequentialPlayer.timeRemaining)} {t.remaining}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </Card>
 
             {/* Sortable List */}
             <DndContext
@@ -238,9 +291,15 @@ const Favorites = () => {
                 <div className="space-y-2">
                   {favorites.map((phrase) => (
                     <SortablePhrase key={phrase.id} id={phrase.id}>
-                      <div className="flex items-start gap-3">
+                      <div className={cn(
+                        "flex items-start gap-3 transition-colors",
+                        sequentialPlayer.currentPhraseId === phrase.id && "bg-primary/5 -mx-3 px-3 py-2 rounded-lg"
+                      )}>
                         <PlayButton
-                          isPlaying={playingId === phrase.id && audioPlayer.isPlaying}
+                          isPlaying={
+                            (playingId === phrase.id && audioPlayer.isPlaying) ||
+                            sequentialPlayer.currentPhraseId === phrase.id
+                          }
                           isLoading={isGenerating && playingId === phrase.id}
                           onPlay={() => handlePlay(phrase.id, phrase.text)}
                           onPause={audioPlayer.pause}
@@ -251,9 +310,61 @@ const Favorites = () => {
 
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium break-words">{phrase.text}</p>
-                          <Badge variant="secondary" className="text-xs mt-1">
-                            {phrase.category}
-                          </Badge>
+                          <div className="flex items-center gap-2 mt-1">
+                            <Badge variant="secondary" className="text-xs">
+                              {phrase.category}
+                            </Badge>
+                            
+                            {/* Duration Dropdown */}
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Badge 
+                                  variant="outline" 
+                                  className="text-xs cursor-pointer hover:bg-muted gap-1"
+                                >
+                                  <Timer className="w-3 h-3" />
+                                  {phrase.durationMinutes || 1} {t.minutes}
+                                </Badge>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="start">
+                                <DropdownMenuItem 
+                                  onClick={() => handleDurationChange(phrase.id, 1)}
+                                  className={phrase.durationMinutes === 1 ? "bg-muted" : ""}
+                                >
+                                  <Clock className="w-4 h-4 mr-2" />
+                                  1 {t.minutes}
+                                </DropdownMenuItem>
+                                <DropdownMenuItem 
+                                  onClick={() => handleDurationChange(phrase.id, 2)}
+                                  className={phrase.durationMinutes === 2 ? "bg-muted" : ""}
+                                >
+                                  <Clock className="w-4 h-4 mr-2" />
+                                  2 {t.minutes}
+                                </DropdownMenuItem>
+                                <DropdownMenuItem 
+                                  onClick={() => handleDurationChange(phrase.id, 3)}
+                                  className={phrase.durationMinutes === 3 ? "bg-muted" : ""}
+                                >
+                                  <Clock className="w-4 h-4 mr-2" />
+                                  3 {t.minutes}
+                                </DropdownMenuItem>
+                                <DropdownMenuItem 
+                                  onClick={() => handleDurationChange(phrase.id, 4)}
+                                  className={phrase.durationMinutes === 4 ? "bg-muted" : ""}
+                                >
+                                  <Clock className="w-4 h-4 mr-2" />
+                                  4 {t.minutes}
+                                </DropdownMenuItem>
+                                <DropdownMenuItem 
+                                  onClick={() => handleDurationChange(phrase.id, 5)}
+                                  className={phrase.durationMinutes === 5 ? "bg-muted" : ""}
+                                >
+                                  <Clock className="w-4 h-4 mr-2" />
+                                  5 {t.minutes}
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </div>
                         </div>
 
                         <Button
@@ -266,7 +377,7 @@ const Favorites = () => {
                         </Button>
                       </div>
 
-                      {playingId === phrase.id && audioPlayer.duration > 0 && (
+                      {playingId === phrase.id && audioPlayer.duration > 0 && !sequentialPlayer.isPlaying && (
                         <AudioControls
                           volume={audioPlayer.volume}
                           playbackRate={audioPlayer.playbackRate}

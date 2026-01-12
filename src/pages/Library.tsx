@@ -111,6 +111,7 @@ const Library = () => {
       text: phrase.text,
       category: phrase.category,
       source: 'library',
+      durationMinutes: 1,
     });
   };
 

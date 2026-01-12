@@ -6,6 +6,7 @@ export interface FavoritePhrase {
   text: string;
   category: string;
   source: 'library' | 'saved';
+  durationMinutes: number; // duração individual em minutos (padrão: 1)
 }
 
 const FAVORITES_KEY = 'catarina_favorites';
@@ -49,13 +50,17 @@ export function useFavorites() {
     localStorage.setItem(storageKey, JSON.stringify(data));
   }, [user, playRandom, intervalMinutes]);
 
-  const addFavorite = useCallback((phrase: FavoritePhrase) => {
+  const addFavorite = useCallback((phrase: Omit<FavoritePhrase, 'durationMinutes'> & { durationMinutes?: number }) => {
     setFavorites(prev => {
       // Check if already exists
       if (prev.some(f => f.id === phrase.id)) {
         return prev;
       }
-      const updated = [...prev, phrase];
+      const newPhrase: FavoritePhrase = {
+        ...phrase,
+        durationMinutes: phrase.durationMinutes ?? 1, // default 1 minuto
+      };
+      const updated = [...prev, newPhrase];
       saveFavorites(updated);
       return updated;
     });
@@ -94,6 +99,16 @@ export function useFavorites() {
     saveFavorites(favorites, random, interval);
   }, [favorites, saveFavorites]);
 
+  const updatePhraseDuration = useCallback((phraseId: string, minutes: number) => {
+    setFavorites(prev => {
+      const updated = prev.map(f => 
+        f.id === phraseId ? { ...f, durationMinutes: minutes } : f
+      );
+      saveFavorites(updated);
+      return updated;
+    });
+  }, [saveFavorites]);
+
   return {
     favorites,
     isLoading,
@@ -105,5 +120,6 @@ export function useFavorites() {
     toggleFavorite,
     reorderFavorites,
     updateSettings,
+    updatePhraseDuration,
   };
 }
