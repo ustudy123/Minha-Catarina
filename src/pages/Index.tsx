@@ -219,24 +219,24 @@ const Index = () => {
           <h3 className="text-lg font-semibold px-1">{t.home.quickActions}</h3>
           <div className="grid grid-cols-2 gap-3">
             {quickActions.map((action, index) => <Link key={index} to={action.href}>
-                <Card className={cn("relative overflow-hidden border-2 cursor-pointer group hover-lift", "animate-fade-in-scale")} style={{
+                <Card className={cn("relative overflow-hidden border-2 cursor-pointer group hover-lift h-full", "animate-fade-in-scale")} style={{
               animationDelay: `${index * 0.1}s`
             }}>
                   <div className={cn("absolute inset-0 bg-gradient-to-br opacity-10 group-hover:opacity-20 transition-opacity", action.gradient)} />
                   
-                  <div className="relative p-5 space-y-3">
+                  <div className="relative p-4 sm:p-5 space-y-3 h-full flex flex-col">
                     <div className="flex items-start justify-between">
-                      <div className={cn("w-12 h-12 rounded-xl bg-gradient-to-br flex items-center justify-center shadow-md", action.gradient)}>
-                        <action.icon className="w-6 h-6 text-white" />
+                      <div className={cn("w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br flex items-center justify-center shadow-md", action.gradient)}>
+                        <action.icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                       </div>
                       {action.isPremium && !isPremium && <Badge variant="secondary" className="gap-1 text-xs">
                           <Crown className="w-3 h-3" />
                         </Badge>}
                     </div>
                     
-                    <div>
-                      <h4 className="font-semibold mb-0.5">{action.title}</h4>
-                      <p className="text-xs text-muted-foreground">
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-sm sm:text-base mb-0.5 leading-tight">{action.title}</h4>
+                      <p className="text-xs text-muted-foreground line-clamp-2">
                         {action.description}
                       </p>
                     </div>
