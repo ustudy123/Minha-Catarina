@@ -6,18 +6,22 @@ import { PlayButton } from "@/components/audio/PlayButton";
 import { AudioControls } from "@/components/audio/AudioControls";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { UserMenu } from "@/components/UserMenu";
-import { BookOpen, Sparkles, Star, ListMusic, Bluetooth, Battery, Volume2, Lock, Crown } from "lucide-react";
+import { BluetoothGuide } from "@/components/BluetoothGuide";
+import { BookOpen, Sparkles, Star, ListMusic, Bluetooth, Battery, Volume2, Crown, WifiOff } from "lucide-react";
 import { useState } from "react";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useTextToSpeech } from "@/hooks/useTextToSpeech";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useVoice } from "@/contexts/VoiceContext";
 import { useSubscription } from "@/hooks/useSubscription";
+import { useBluetooth } from "@/hooks/useBluetooth";
 import { cn } from "@/lib/utils";
 import catarinaMascot from "@/assets/catarina-mascot.png";
 import { getTranslations } from "@/translations";
+
 const Index = () => {
-  const [isConnected, setIsConnected] = useState(false);
+  const [showBluetoothGuide, setShowBluetoothGuide] = useState(false);
+  const { isConnected, deviceName, confirmConnection, disconnect } = useBluetooth();
   const audioPlayer = useAudioPlayer();
   const {
     generate,
@@ -191,12 +195,40 @@ const Index = () => {
               </div>
             </div>
 
-            {!isConnected && <Button size="lg" className="w-full mt-4" variant="gradient" onClick={() => setIsConnected(true)}>
+            {!isConnected ? (
+              <Button 
+                size="lg" 
+                className="w-full mt-4" 
+                variant="gradient" 
+                onClick={() => setShowBluetoothGuide(true)}
+              >
                 <Bluetooth className="w-5 h-5" />
                 {t.home.connectBluetooth}
-              </Button>}
+              </Button>
+            ) : (
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="w-full mt-4" 
+                onClick={disconnect}
+              >
+                <WifiOff className="w-5 h-5" />
+                {t.bluetooth.disconnect}
+              </Button>
+            )}
           </div>
         </Card>
+
+        {/* Bluetooth Guide Drawer */}
+        <BluetoothGuide
+          open={showBluetoothGuide}
+          onOpenChange={setShowBluetoothGuide}
+          dollName={dollName}
+          onConfirmConnection={() => {
+            confirmConnection(`${dollName} Speaker`);
+            setShowBluetoothGuide(false);
+          }}
+        />
 
         {/* Phrase of the Day */}
         {isConnected && <Card className="p-6 bg-gradient-accent text-accent-foreground border-2 animate-fade-in-scale">
