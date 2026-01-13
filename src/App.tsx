@@ -21,6 +21,7 @@ import Onboarding from "./pages/Onboarding";
 import Admin from "./pages/Admin";
 import AdminPhrases from "./pages/AdminPhrases";
 import AdminUsers from "./pages/AdminUsers";
+import AdminAudio from "./pages/AdminAudio";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -123,6 +124,14 @@ const App = () => (
                     element={
                       <AdminRoute>
                         <AdminUsers />
+                      </AdminRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/audio"
+                    element={
+                      <AdminRoute>
+                        <AdminAudio />
                       </AdminRoute>
                     }
                   />

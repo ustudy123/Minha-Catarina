@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useTextToSpeech } from "@/hooks/useTextToSpeech";
 import { useSoundEffects } from "@/hooks/useSoundEffects";
+import { useLibraryAudio } from "@/hooks/useLibraryAudio";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useFavorites } from "@/hooks/useFavorites";
 import { useSubscription } from "@/hooks/useSubscription";
@@ -42,6 +43,7 @@ interface Phrase {
   category: string;
   timeOfDay?: 'morning' | 'afternoon' | 'night';
   soundPrompt?: string;
+  phraseKey?: string; // Key for preloaded audio lookup
 }
 
 const Library = () => {
@@ -53,6 +55,7 @@ const Library = () => {
   const audioPlayer = useAudioPlayer();
   const { generate: generateTTS, isGenerating: isGeneratingTTS } = useTextToSpeech();
   const { generate: generateSFX, isGenerating: isGeneratingSFX } = useSoundEffects();
+  const { getAudioUrl, hasPreloadedAudio } = useLibraryAudio();
   const { language } = useLanguage();
   const { isFavorite, toggleFavorite } = useFavorites();
   const { isPremium, canAccessMyPhrases } = useSubscription();
@@ -87,12 +90,16 @@ const Library = () => {
     const timeOfDayOptions: Array<'morning' | 'afternoon' | 'night'> = ['morning', 'afternoon', 'night'];
     const timeOfDay = phrase.timeOfDay as 'morning' | 'afternoon' | 'night' || timeOfDayOptions[index % 3];
     
+    // Generate phraseKey for preloaded audio lookup
+    const phraseKey = `${language}_${mappedCategory}_${index}`;
+    
     return {
       id: `phrase-${index}`,
       text: phrase.text,
       category: mappedCategory,
       timeOfDay,
       soundPrompt: (phrase as { soundPrompt?: string }).soundPrompt,
+      phraseKey,
     };
   });
 
@@ -109,6 +116,16 @@ const Library = () => {
     try {
       setPlayingId(phrase.id);
       
+      // First check for preloaded audio (instant playback)
+      if (phrase.phraseKey) {
+        const preloadedUrl = getAudioUrl(phrase.phraseKey);
+        if (preloadedUrl) {
+          await audioPlayer.play(preloadedUrl);
+          return;
+        }
+      }
+      
+      // Fallback: Generate on-demand
       // Use sound effects API for sounds category, otherwise use TTS
       if (phrase.category === 'sounds' && phrase.soundPrompt) {
         const { url } = await generateSFX({ prompt: phrase.soundPrompt, duration: 10 });
