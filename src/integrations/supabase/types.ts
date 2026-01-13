@@ -44,6 +44,33 @@ export type Database = {
         }
         Relationships: []
       }
+      library_audio: {
+        Row: {
+          audio_url: string
+          category: string
+          created_at: string | null
+          id: string
+          language: string
+          phrase_key: string
+        }
+        Insert: {
+          audio_url: string
+          category: string
+          created_at?: string | null
+          id?: string
+          language: string
+          phrase_key: string
+        }
+        Update: {
+          audio_url?: string
+          category?: string
+          created_at?: string | null
+          id?: string
+          language?: string
+          phrase_key?: string
+        }
+        Relationships: []
+      }
       library_phrases: {
         Row: {
           audio_url_en: string | null

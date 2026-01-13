@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { BookOpen, Users, BarChart3, ArrowLeft, Shield } from 'lucide-react';
+import { BookOpen, Users, BarChart3, ArrowLeft, Shield, Volume2 } from 'lucide-react';
 import { useTranslations } from '@/contexts/LanguageContext';
 
 const Admin = () => {
@@ -29,6 +29,13 @@ const Admin = () => {
       icon: BarChart3,
       path: '/admin/stats',
       color: 'bg-accent/10 text-accent-foreground',
+    },
+    {
+      title: 'Gerenciar Áudios',
+      description: 'Pré-gerar áudios para reprodução instantânea',
+      icon: Volume2,
+      path: '/admin/audio',
+      color: 'bg-highlight/10 text-highlight',
     },
   ];
 

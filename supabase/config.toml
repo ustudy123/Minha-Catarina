@@ -11,3 +11,6 @@ verify_jwt = true
 
 [functions.elevenlabs-sfx]
 verify_jwt = false
+
+[functions.generate-library-audio]
+verify_jwt = true
