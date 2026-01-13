@@ -9,9 +9,11 @@ import { useTextToSpeech } from "@/hooks/useTextToSpeech";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useFavorites } from "@/hooks/useFavorites";
 import { useSubscription } from "@/hooks/useSubscription";
+import { useSavedPhrases } from "@/hooks/useSavedPhrases";
 import { getTranslations } from "@/translations";
 import { PlayButton } from "@/components/audio/PlayButton";
 import { AudioControls } from "@/components/audio/AudioControls";
+import { Link } from "react-router-dom";
 
 import { PhraseOptionsMenu } from "@/components/PhraseOptionsMenu";
 import { PremiumGate } from "@/components/PremiumGate";
@@ -27,6 +29,9 @@ import {
   Bell,
   Sparkles,
   Lock,
+  Trash2,
+  Plus,
+  Loader2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -48,6 +53,7 @@ const Library = () => {
   const { language } = useLanguage();
   const { isFavorite, toggleFavorite } = useFavorites();
   const { isPremium, canAccessMyPhrases } = useSubscription();
+  const { phrases: savedPhrases, isLoading: loadingSaved, removePhrase, toggleFavorite: toggleSavedFavorite } = useSavedPhrases();
   const t = getTranslations(language);
 
   // New 8 categories
@@ -188,13 +194,143 @@ const Library = () => {
 
           {/* My Phrases - Premium Content */}
           {isMyPhrasesSelected && canAccessMyPhrases && (
-            <div className="mt-6 text-center py-12">
-              <Sparkles className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-              <p className="text-muted-foreground">
-                {language === 'pt' ? 'Suas frases personalizadas aparecerão aqui' :
-                 language === 'en' ? 'Your custom phrases will appear here' :
-                 'Tus frases personalizadas aparecerán aquí'}
-              </p>
+            <div className="mt-6 space-y-3">
+              {loadingSaved ? (
+                <div className="text-center py-12">
+                  <Loader2 className="w-8 h-8 mx-auto text-primary animate-spin mb-4" />
+                  <p className="text-muted-foreground">
+                    {language === 'pt' ? 'Carregando suas frases...' :
+                     language === 'en' ? 'Loading your phrases...' :
+                     'Cargando tus frases...'}
+                  </p>
+                </div>
+              ) : savedPhrases.length === 0 ? (
+                <div className="text-center py-12">
+                  <Sparkles className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+                  <p className="text-muted-foreground mb-4">
+                    {language === 'pt' ? 'Você ainda não criou nenhuma frase' :
+                     language === 'en' ? 'You haven\'t created any phrases yet' :
+                     'Aún no has creado ninguna frase'}
+                  </p>
+                  <Link to="/create-phrase">
+                    <Button className="gap-2">
+                      <Plus className="w-4 h-4" />
+                      {language === 'pt' ? 'Criar Frase' :
+                       language === 'en' ? 'Create Phrase' :
+                       'Crear Frase'}
+                    </Button>
+                  </Link>
+                </div>
+              ) : (
+                <>
+                  <div className="flex items-center justify-between px-1">
+                    <h3 className="text-sm font-semibold text-muted-foreground">
+                      {savedPhrases.length} {savedPhrases.length === 1 ? 
+                        (language === 'pt' ? 'frase' : language === 'en' ? 'phrase' : 'frase') :
+                        (language === 'pt' ? 'frases' : language === 'en' ? 'phrases' : 'frases')}
+                    </h3>
+                    <Link to="/create-phrase">
+                      <Button variant="ghost" size="sm" className="gap-1">
+                        <Plus className="w-4 h-4" />
+                        {language === 'pt' ? 'Nova' : language === 'en' ? 'New' : 'Nueva'}
+                      </Button>
+                    </Link>
+                  </div>
+                  <div className="space-y-2">
+                    {savedPhrases.map((phrase, index) => (
+                      <Card 
+                        key={phrase.id}
+                        className="p-4 border-2 hover-lift animate-fade-in"
+                        style={{ animationDelay: `${index * 0.05}s` }}
+                      >
+                        <div className="flex items-start gap-3">
+                          <PlayButton
+                            isPlaying={playingId === phrase.id && audioPlayer.isPlaying}
+                            isLoading={isGenerating && playingId === phrase.id}
+                            onPlay={async () => {
+                              if (playingId === phrase.id && audioPlayer.isPlaying) {
+                                audioPlayer.pause();
+                                setPlayingId(null);
+                                return;
+                              }
+                              try {
+                                setPlayingId(phrase.id);
+                                if (phrase.audioUrl) {
+                                  await audioPlayer.play(phrase.audioUrl);
+                                } else {
+                                  const { url } = await generate({ text: phrase.text, language: phrase.language as 'pt' | 'en' | 'es' });
+                                  if (url) {
+                                    await audioPlayer.play(url);
+                                  }
+                                }
+                              } catch (error) {
+                                console.error('Error playing saved phrase:', error);
+                                setPlayingId(null);
+                              }
+                            }}
+                            onPause={audioPlayer.pause}
+                            variant="secondary"
+                            size="icon"
+                            className="flex-shrink-0"
+                          />
+                          
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium mb-1 break-words">
+                              {phrase.text}
+                            </p>
+                            <Badge variant="secondary" className="text-xs">
+                              {phrase.language === 'pt' ? 'Português' : 
+                               phrase.language === 'en' ? 'English' : 'Español'}
+                            </Badge>
+                          </div>
+
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            className="flex-shrink-0"
+                            onClick={() => toggleSavedFavorite(phrase.id)}
+                          >
+                            <Star 
+                              className={cn(
+                                "w-5 h-5",
+                                phrase.isFavorite && "fill-highlight text-highlight"
+                              )}
+                            />
+                          </Button>
+
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            className="flex-shrink-0 text-destructive hover:text-destructive"
+                            onClick={() => removePhrase(phrase.id)}
+                          >
+                            <Trash2 className="w-5 h-5" />
+                          </Button>
+
+                          <PhraseOptionsMenu
+                            phraseId={phrase.id}
+                            phraseText={phrase.text}
+                            phraseSource="saved"
+                          />
+                        </div>
+
+                        {playingId === phrase.id && audioPlayer.duration > 0 && (
+                          <AudioControls
+                            volume={audioPlayer.volume}
+                            playbackRate={audioPlayer.playbackRate}
+                            currentTime={audioPlayer.currentTime}
+                            duration={audioPlayer.duration}
+                            onVolumeChange={audioPlayer.setVolume}
+                            onPlaybackRateChange={audioPlayer.setPlaybackRate}
+                            onSeek={audioPlayer.seek}
+                            className="mt-3"
+                          />
+                        )}
+                      </Card>
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
           )}
 
