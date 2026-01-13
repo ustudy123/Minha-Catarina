@@ -59,6 +59,30 @@ const steps: Step[] = [
   },
 ];
 
+// Default translations fallback
+const defaultBt = {
+  title: "Conectar ao Speaker",
+  subtitle: "Siga os passos para conectar",
+  step1Title: "Ligue o Speaker",
+  step1Desc: "Pressione o botão de energia do speaker da boneca até ouvir o som de confirmação",
+  step2Title: "Abra o Bluetooth",
+  step2Desc: "Acesse Configurações > Bluetooth no seu celular",
+  step3Title: "Encontre o Dispositivo",
+  step3Desc: "Procure por '{dollName} Speaker' na lista de dispositivos",
+  step4Title: "Conecte!",
+  step4Desc: "Toque no nome do speaker para conectar",
+  next: "Próximo",
+  back: "Voltar",
+  done: "Pronto, conectei!",
+  skip: "Pular",
+  stepOf: "Passo {current} de {total}",
+  troubleshooting: "Não encontrou o speaker?",
+  troubleshootingTip: "Certifique-se que o speaker está ligado e próximo do celular",
+  disconnect: "Desconectar",
+  connectedTo: "Conectado a {deviceName}",
+  soundConfirmation: "Você ouvirá um som de confirmação",
+};
+
 export const BluetoothGuide = ({
   open,
   onOpenChange,
@@ -69,7 +93,7 @@ export const BluetoothGuide = ({
   const [showTroubleshooting, setShowTroubleshooting] = useState(false);
   const { language } = useLanguage();
   const t = getTranslations(language);
-  const bt = t.bluetooth;
+  const bt = (t as any).bluetooth || defaultBt;
 
   const handleNext = () => {
     if (currentStep < steps.length - 1) {
