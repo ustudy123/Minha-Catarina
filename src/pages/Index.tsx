@@ -224,6 +224,7 @@ const Index = () => {
           open={showBluetoothGuide}
           onOpenChange={setShowBluetoothGuide}
           dollName={dollName}
+          language={language}
           onConfirmConnection={() => {
             confirmConnection(`${dollName} Speaker`);
             setShowBluetoothGuide(false);

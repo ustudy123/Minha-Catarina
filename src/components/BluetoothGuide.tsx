@@ -20,13 +20,14 @@ import {
   Volume2
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useLanguage } from "@/contexts/LanguageContext";
 import { getTranslations } from "@/translations";
+import type { Language } from "@/contexts/LanguageContext";
 
 interface BluetoothGuideProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   dollName: string;
+  language: Language;
   onConfirmConnection: () => void;
 }
 
@@ -87,11 +88,11 @@ export const BluetoothGuide = ({
   open,
   onOpenChange,
   dollName,
+  language,
   onConfirmConnection,
 }: BluetoothGuideProps) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [showTroubleshooting, setShowTroubleshooting] = useState(false);
-  const { language } = useLanguage();
   const t = getTranslations(language);
   const bt = (t as any).bluetooth || defaultBt;
 
