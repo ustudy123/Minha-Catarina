@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useTextToSpeech } from "@/hooks/useTextToSpeech";
+import { useSoundEffects } from "@/hooks/useSoundEffects";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useFavorites } from "@/hooks/useFavorites";
 import { useSubscription } from "@/hooks/useSubscription";
@@ -40,6 +41,7 @@ interface Phrase {
   text: string;
   category: string;
   timeOfDay?: 'morning' | 'afternoon' | 'night';
+  soundPrompt?: string;
 }
 
 const Library = () => {
@@ -49,7 +51,8 @@ const Library = () => {
   const [playingId, setPlayingId] = useState<string | null>(null);
   
   const audioPlayer = useAudioPlayer();
-  const { generate, isGenerating } = useTextToSpeech();
+  const { generate: generateTTS, isGenerating: isGeneratingTTS } = useTextToSpeech();
+  const { generate: generateSFX, isGenerating: isGeneratingSFX } = useSoundEffects();
   const { language } = useLanguage();
   const { isFavorite, toggleFavorite } = useFavorites();
   const { isPremium, canAccessMyPhrases } = useSubscription();
@@ -80,17 +83,21 @@ const Library = () => {
     };
     const mappedCategory = categoryMap[phrase.category] || phrase.category;
     
-    // Assign timeOfDay based on index for demo
+    // Use timeOfDay from phrase if available, otherwise assign based on index
     const timeOfDayOptions: Array<'morning' | 'afternoon' | 'night'> = ['morning', 'afternoon', 'night'];
-    const timeOfDay = timeOfDayOptions[index % 3];
+    const timeOfDay = phrase.timeOfDay as 'morning' | 'afternoon' | 'night' || timeOfDayOptions[index % 3];
     
     return {
       id: `phrase-${index}`,
       text: phrase.text,
       category: mappedCategory,
       timeOfDay,
+      soundPrompt: (phrase as { soundPrompt?: string }).soundPrompt,
     };
   });
+
+  // Combined loading state
+  const isGenerating = isGeneratingTTS || isGeneratingSFX;
 
   const handlePlayPhrase = async (phrase: Phrase) => {
     if (playingId === phrase.id && audioPlayer.isPlaying) {
@@ -101,9 +108,18 @@ const Library = () => {
 
     try {
       setPlayingId(phrase.id);
-      const { url } = await generate({ text: phrase.text, language });
-      if (url) {
-        await audioPlayer.play(url);
+      
+      // Use sound effects API for sounds category, otherwise use TTS
+      if (phrase.category === 'sounds' && phrase.soundPrompt) {
+        const { url } = await generateSFX({ prompt: phrase.soundPrompt, duration: 10 });
+        if (url) {
+          await audioPlayer.play(url);
+        }
+      } else {
+        const { url } = await generateTTS({ text: phrase.text, language });
+        if (url) {
+          await audioPlayer.play(url);
+        }
       }
     } catch (error) {
       console.error('Error playing phrase:', error);
@@ -258,7 +274,7 @@ const Library = () => {
                                 if (phrase.audioUrl) {
                                   await audioPlayer.play(phrase.audioUrl);
                                 } else {
-                                  const { url } = await generate({ text: phrase.text, language: phrase.language as 'pt' | 'en' | 'es' });
+                                  const { url } = await generateTTS({ text: phrase.text, language: phrase.language as 'pt' | 'en' | 'es' });
                                   if (url) {
                                     await audioPlayer.play(url);
                                   }
