@@ -266,7 +266,7 @@ const Library = () => {
                     <Link to="/create-phrase">
                       <Button variant="ghost" size="sm" className="gap-1">
                         <Plus className="w-4 h-4" />
-                        {language === 'pt' ? 'Nova' : language === 'en' ? 'New' : 'Nueva'}
+                        {language === 'pt' ? 'Nova Frase' : language === 'en' ? 'New Phrase' : 'Nueva Frase'}
                       </Button>
                     </Link>
                   </div>
