@@ -23,7 +23,7 @@ export const translations = {
 
     // Auth
     auth: {
-      title: "Minha Catarina",
+      title: "Minha Bebê",
       subtitle: "Entre para acessar sua conta",
       login: "Entrar",
       signup: "Cadastrar",
@@ -811,7 +811,7 @@ export const translations = {
 
     // Auth
     auth: {
-      title: "My Catarina",
+      title: "My Baby",
       subtitle: "Sign in to access your account",
       login: "Login",
       signup: "Sign Up",
@@ -1253,7 +1253,7 @@ export const translations = {
 
     // Auth
     auth: {
-      title: "Mi Catarina",
+      title: "Mi Bebé",
       subtitle: "Inicia sesión para acceder a tu cuenta",
       login: "Iniciar Sesión",
       signup: "Registrarse",
