@@ -263,7 +263,7 @@ const Library = () => {
                         (language === 'pt' ? 'frase' : language === 'en' ? 'phrase' : 'frase') :
                         (language === 'pt' ? 'frases' : language === 'en' ? 'phrases' : 'frases')}
                     </h3>
-                    <Link to="/create-phrase">
+                    <Link to="/create">
                       <Button variant="ghost" size="sm" className="gap-1">
                         <Plus className="w-4 h-4" />
                         {language === 'pt' ? 'Nova Frase' : language === 'en' ? 'New Phrase' : 'Nueva Frase'}
