@@ -106,7 +106,7 @@ export default function Auth() {
             <Crown className="w-8 h-8 text-primary-foreground" />
           </div>
           <div>
-            <CardTitle className="text-2xl bg-gradient-primary bg-clip-text text-transparent">
+            <CardTitle className="text-2xl bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
               {t.auth.title}
             </CardTitle>
             <CardDescription className="mt-2">
