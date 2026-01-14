@@ -100,9 +100,9 @@ export default function Auth() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-muted via-background to-secondary/20 p-4">
-      <Card className="w-full max-w-md border-2">
+      <Card className="w-full max-w-md border-2 animate-[bounce-in_0.6s_ease-out]">
         <CardHeader className="text-center space-y-4">
-          <div className="mx-auto w-16 h-16 rounded-full bg-gradient-primary flex items-center justify-center">
+          <div className="mx-auto w-16 h-16 rounded-full bg-gradient-primary flex items-center justify-center animate-[scale-bounce_0.5s_ease-out_0.3s_both]">
             <Crown className="w-8 h-8 text-primary-foreground" />
           </div>
           <div>
