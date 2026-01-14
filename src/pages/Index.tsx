@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { PageTransition } from "@/components/PageTransition";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -145,7 +146,8 @@ const Index = () => {
     href: "/routines",
     isPremium: false
   }];
-  return <div className="min-h-screen bg-gradient-to-br from-muted via-background to-secondary/20">
+  return <PageTransition>
+    <div className="min-h-screen bg-gradient-to-br from-muted via-background to-secondary/20">
       <header className="sticky top-0 z-50 glass border-b border-border/50 backdrop-blur-lg">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           
@@ -281,6 +283,7 @@ const Index = () => {
 
         <div className="h-20" />
       </main>
-    </div>;
+    </div>
+  </PageTransition>;
 };
 export default Index;

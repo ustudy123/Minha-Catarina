@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { PageTransition } from "@/components/PageTransition";
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragEndEvent } from '@dnd-kit/core';
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { Button } from '@/components/ui/button';
@@ -235,7 +236,8 @@ const Routines = () => {
 
   // Routine detail view
   if (selectedRoutine) {
-    return <div className="min-h-screen bg-gradient-to-br from-muted via-background to-secondary/10">
+    return <PageTransition>
+      <div className="min-h-screen bg-gradient-to-br from-muted via-background to-secondary/10">
         <header className="sticky top-0 z-50 glass border-b border-border/50 backdrop-blur-lg">
           <div className="container mx-auto px-4 py-4">
             <div className="flex items-center justify-between">
@@ -390,11 +392,13 @@ const Routines = () => {
             </DialogFooter>
           </DialogContent>
         </Dialog>
-      </div>;
+      </div>
+    </PageTransition>;
   }
 
   // Routines list view
-  return <div className="min-h-screen bg-gradient-to-br from-muted via-background to-secondary/10">
+  return <PageTransition>
+    <div className="min-h-screen bg-gradient-to-br from-muted via-background to-secondary/10">
       <header className="sticky top-0 z-50 glass border-b border-border/50 backdrop-blur-lg">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
@@ -588,6 +592,7 @@ const Routines = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>;
+    </div>
+  </PageTransition>;
 };
 export default Routines;

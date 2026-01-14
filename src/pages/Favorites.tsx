@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { PageTransition } from "@/components/PageTransition";
 import {
   DndContext,
   closestCenter,
@@ -187,9 +188,10 @@ const Favorites = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-muted via-background to-highlight/10">
-      {/* Header */}
-      <header className="sticky top-0 z-50 glass border-b border-border/50 backdrop-blur-lg">
+    <PageTransition>
+      <div className="min-h-screen bg-gradient-to-br from-muted via-background to-highlight/10">
+        {/* Header */}
+        <header className="sticky top-0 z-50 glass border-b border-border/50 backdrop-blur-lg">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -420,8 +422,9 @@ const Favorites = () => {
         )}
 
         <div className="h-20" />
-      </main>
-    </div>
+        </main>
+      </div>
+    </PageTransition>
   );
 };
 
