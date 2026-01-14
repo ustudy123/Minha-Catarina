@@ -1,5 +1,6 @@
 import { ArrowLeft, Volume2, Check, Play, Loader2, Ribbon, User, Save, Sun, Moon, Monitor, Palette, Droplets } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { PageTransition } from "@/components/PageTransition";
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -161,9 +162,10 @@ export default function Profile() {
   const dollName = selectedDoll === 'catarina' ? 'Catarina' : 'Antônio';
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-secondary/20 to-primary/10">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/50">
+    <PageTransition>
+      <div className="min-h-screen bg-gradient-to-br from-background via-secondary/20 to-primary/10">
+        {/* Header */}
+        <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/50">
         <div className="container mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Link to="/">
@@ -512,6 +514,7 @@ export default function Profile() {
           </Card>
         )}
       </main>
-    </div>
+      </div>
+    </PageTransition>
   );
 }

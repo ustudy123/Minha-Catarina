@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { PageTransition } from "@/components/PageTransition";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
@@ -88,9 +89,10 @@ const CreatePhrase = () => {
   // Show premium gate for non-premium users
   if (!canCreatePhrases) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-muted via-background to-secondary/10">
-        {/* Header */}
-        <header className="sticky top-0 z-50 glass border-b border-border/50 backdrop-blur-lg">
+      <PageTransition>
+        <div className="min-h-screen bg-gradient-to-br from-muted via-background to-secondary/10">
+          {/* Header */}
+          <header className="sticky top-0 z-50 glass border-b border-border/50 backdrop-blur-lg">
           <div className="container mx-auto px-4 py-4">
             <div className="flex items-center gap-3">
               <Button variant="ghost" size="icon" onClick={() => window.history.back()}>
@@ -106,15 +108,17 @@ const CreatePhrase = () => {
 
         <main className="container mx-auto px-4 py-6 max-w-2xl">
           <PremiumGate featureName={t.createPhrase.title} />
-        </main>
-      </div>
+          </main>
+        </div>
+      </PageTransition>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-muted via-background to-secondary/10">
-      {/* Header */}
-      <header className="sticky top-0 z-50 glass border-b border-border/50 backdrop-blur-lg">
+    <PageTransition>
+      <div className="min-h-screen bg-gradient-to-br from-muted via-background to-secondary/10">
+        {/* Header */}
+        <header className="sticky top-0 z-50 glass border-b border-border/50 backdrop-blur-lg">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -254,8 +258,9 @@ const CreatePhrase = () => {
         </Card>
 
         <div className="h-20" />
-      </main>
-    </div>
+        </main>
+      </div>
+    </PageTransition>
   );
 };
 
