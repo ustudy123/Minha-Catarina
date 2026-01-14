@@ -358,10 +358,16 @@ const Routines = () => {
                     </SortablePhrase>)}
                 </div>
               </SortableContext>
-            </DndContext>}
+          </DndContext>}
 
+          {/* Add Phrases Button */}
           <Link to="/library">
-            
+            <Card className="p-4 border-2 border-dashed cursor-pointer hover:bg-muted/50 transition-colors">
+              <div className="flex items-center justify-center gap-2 text-muted-foreground">
+                <Plus className="w-5 h-5" />
+                <span>{t.addPhrases}</span>
+              </div>
+            </Card>
           </Link>
 
           <div className="h-20" />
