@@ -176,6 +176,7 @@ export const translations = {
         daily: "Dia a Dia",
         education: "Educação",
         sounds: "Sons",
+        prayers: "Orações",
         myPhrases: "Minhas Frases",
         // Legacy categories
         routine: "Rotina Diária",
@@ -963,6 +964,7 @@ export const translations = {
         daily: "Daily Life",
         education: "Education",
         sounds: "Sounds",
+        prayers: "Prayers",
         myPhrases: "My Phrases",
         // Legacy categories
         routine: "Daily Routine",
@@ -1404,6 +1406,7 @@ export const translations = {
         daily: "Día a Día",
         education: "Educación",
         sounds: "Sonidos",
+        prayers: "Oraciones",
         myPhrases: "Mis Frases",
         // Legacy categories
         routine: "Rutina Diaria",
