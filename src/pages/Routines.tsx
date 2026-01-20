@@ -20,8 +20,9 @@ import { useAudioPlayer } from '@/hooks/useAudioPlayer';
 import { useTextToSpeech } from '@/hooks/useTextToSpeech';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { toast } from 'sonner';
-import { ArrowLeft, Plus, MoreVertical, Shuffle, Clock, Play, Trash2, Edit, ListMusic, ChevronRight, Lock, Crown, Check } from 'lucide-react';
+import { ArrowLeft, Plus, MoreVertical, Shuffle, Clock, Play, Trash2, Edit, ListMusic, ChevronRight, Lock, Crown, Check, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { presetRoutines, PresetRoutine } from '@/data/presetRoutines';
 const Routines = () => {
   const {
     language
@@ -33,6 +34,7 @@ const Routines = () => {
     updateRoutine,
     deleteRoutine,
     getRoutinePhrases,
+    addPhraseToRoutine,
     removePhraseFromRoutine,
     reorderRoutinePhrases
   } = useRoutines();
@@ -55,6 +57,8 @@ const Routines = () => {
   const sensors = useSensors(useSensor(PointerSensor), useSensor(KeyboardSensor, {
     coordinateGetter: sortableKeyboardCoordinates
   }));
+  const [isAddingPreset, setIsAddingPreset] = useState(false);
+
   const texts = {
     pt: {
       title: 'Minhas Rotinas',
@@ -78,7 +82,11 @@ const Routines = () => {
       updated: 'Rotina atualizada!',
       limitReached: 'Limite de rotinas atingido',
       limitMessage: 'Plano básico permite até 3 rotinas',
-      phrases: 'frases'
+      phrases: 'frases',
+      presetRoutines: 'Rotinas Sugeridas',
+      presetSubtitle: 'Adicione rotinas prontas com um toque',
+      adding: 'Adicionando...',
+      added: 'Rotina adicionada!'
     },
     en: {
       title: 'My Routines',
@@ -102,7 +110,11 @@ const Routines = () => {
       updated: 'Routine updated!',
       limitReached: 'Routine limit reached',
       limitMessage: 'Basic plan allows up to 3 routines',
-      phrases: 'phrases'
+      phrases: 'phrases',
+      presetRoutines: 'Suggested Routines',
+      presetSubtitle: 'Add ready-made routines with a tap',
+      adding: 'Adding...',
+      added: 'Routine added!'
     },
     es: {
       title: 'Mis Rutinas',
@@ -126,7 +138,11 @@ const Routines = () => {
       updated: '¡Rutina actualizada!',
       limitReached: 'Límite de rutinas alcanzado',
       limitMessage: 'El plan básico permite hasta 3 rutinas',
-      phrases: 'frases'
+      phrases: 'frases',
+      presetRoutines: 'Rutinas Sugeridas',
+      presetSubtitle: 'Agrega rutinas listas con un toque',
+      adding: 'Agregando...',
+      added: '¡Rutina agregada!'
     }
   };
   const t = texts[language];
@@ -232,8 +248,36 @@ const Routines = () => {
     await removePhraseFromRoutine(phraseId);
     setRoutinePhrases(prev => prev.filter(p => p.id !== phraseId));
   };
-  const canCreateMore = isPremium || routines.length < maxRoutines;
 
+  const handleAddPresetRoutine = async (preset: PresetRoutine) => {
+    if (!canCreateMore) {
+      toast.error(t.limitReached, { description: t.limitMessage });
+      return;
+    }
+
+    setIsAddingPreset(true);
+    try {
+      const routine = await createRoutine(preset.name[language]);
+      if (routine) {
+        // Add all phrases to the routine
+        for (let i = 0; i < preset.phrases.length; i++) {
+          await addPhraseToRoutine(
+            routine.id,
+            `preset-${preset.id}-${i}`,
+            preset.phrases[i],
+            'library'
+          );
+        }
+        toast.success(t.added);
+      }
+    } catch (error) {
+      console.error('Error adding preset routine:', error);
+    } finally {
+      setIsAddingPreset(false);
+    }
+  };
+
+  const canCreateMore = isPremium || routines.length < maxRoutines;
   // Routine detail view
   if (selectedRoutine) {
     return <PageTransition>
@@ -540,6 +584,52 @@ const Routines = () => {
                 </div>
               </Card>)}
           </div>}
+
+        {/* Preset Routines Section */}
+        <div className="space-y-4">
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-5 h-5 text-primary" />
+            <div>
+              <h2 className="font-semibold">{t.presetRoutines}</h2>
+              <p className="text-xs text-muted-foreground">{t.presetSubtitle}</p>
+            </div>
+          </div>
+          
+          <div className="grid gap-3">
+            {presetRoutines.map((preset, index) => (
+              <Card 
+                key={preset.id} 
+                className="p-4 border-2 cursor-pointer hover-lift animate-fade-in transition-all"
+                style={{ animationDelay: `${index * 0.05}s` }}
+                onClick={() => handleAddPresetRoutine(preset)}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center text-xl">
+                    {preset.icon}
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-semibold">{preset.name[language]}</h3>
+                    <p className="text-xs text-muted-foreground">
+                      {preset.phrases.length} {t.phrases}
+                    </p>
+                  </div>
+                  <Button 
+                    variant="outline" 
+                    size="icon" 
+                    className="flex-shrink-0"
+                    disabled={isAddingPreset || !canCreateMore}
+                  >
+                    {isAddingPreset ? (
+                      <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      <Plus className="w-4 h-4" />
+                    )}
+                  </Button>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
 
         {/* Premium Upsell */}
         {!isPremium && routines.length >= maxRoutines && <Card className="p-6 border-2 border-highlight/30 bg-highlight/5">
