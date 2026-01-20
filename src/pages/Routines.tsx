@@ -18,9 +18,10 @@ import { useRoutines, Routine, RoutinePhrase } from '@/hooks/useRoutines';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useAudioPlayer } from '@/hooks/useAudioPlayer';
 import { useTextToSpeech } from '@/hooks/useTextToSpeech';
+import { useSequentialPlayer, PlayablePhrase } from '@/hooks/useSequentialPlayer';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { toast } from 'sonner';
-import { ArrowLeft, Plus, MoreVertical, Shuffle, Clock, Play, Trash2, Edit, ListMusic, ChevronRight, Lock, Crown, Check, Sparkles } from 'lucide-react';
+import { ArrowLeft, Plus, MoreVertical, Shuffle, Clock, Play, Trash2, Edit, ListMusic, ChevronRight, Lock, Crown, Check, Sparkles, Square } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { presetRoutines, PresetRoutine } from '@/data/presetRoutines';
 const Routines = () => {
@@ -47,6 +48,7 @@ const Routines = () => {
     generate,
     isGenerating
   } = useTextToSpeech();
+  const sequentialPlayer = useSequentialPlayer();
   const [selectedRoutine, setSelectedRoutine] = useState<Routine | null>(null);
   const [routinePhrases, setRoutinePhrases] = useState<RoutinePhrase[]>([]);
   const [showNewRoutineDialog, setShowNewRoutineDialog] = useState(false);
@@ -86,6 +88,10 @@ const Routines = () => {
       presetRoutines: 'Rotinas Sugeridas',
       presetSubtitle: 'Adicione rotinas prontas com um toque',
       adding: 'Adicionando...',
+      playAll: 'Tocar Todas',
+      stopAll: 'Parar',
+      playing: 'Tocando',
+      remaining: 'restante',
       added: 'Rotina adicionada!'
     },
     en: {
@@ -114,7 +120,11 @@ const Routines = () => {
       presetRoutines: 'Suggested Routines',
       presetSubtitle: 'Add ready-made routines with a tap',
       adding: 'Adding...',
-      added: 'Routine added!'
+      added: 'Routine added!',
+      playAll: 'Play All',
+      stopAll: 'Stop',
+      playing: 'Playing',
+      remaining: 'remaining',
     },
     es: {
       title: 'Mis Rutinas',
@@ -142,10 +152,37 @@ const Routines = () => {
       presetRoutines: 'Rutinas Sugeridas',
       presetSubtitle: 'Agrega rutinas listas con un toque',
       adding: 'Agregando...',
-      added: '¡Rutina agregada!'
+      added: '¡Rutina agregada!',
+      playAll: 'Reproducir Todas',
+      stopAll: 'Parar',
+      playing: 'Reproduciendo',
+      remaining: 'restante',
     }
   };
   const t = texts[language];
+
+  const handlePlayAll = () => {
+    if (sequentialPlayer.isPlaying) {
+      sequentialPlayer.stop();
+    } else {
+      // Convert routine phrases to playable format
+      const playablePhrases: PlayablePhrase[] = routinePhrases.map(phrase => ({
+        id: phrase.id,
+        text: phrase.phrase_text,
+      }));
+      sequentialPlayer.startPlayAll(
+        playablePhrases, 
+        selectedRoutine?.play_random || false,
+        selectedRoutine?.interval_minutes || 1
+      );
+    }
+  };
+
+  const formatTimeRemaining = (seconds: number): string => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
   useEffect(() => {
     if (selectedRoutine) {
       loadRoutinePhrases(selectedRoutine.id);
@@ -388,6 +425,45 @@ const Routines = () => {
             </Badge>
           </div>
 
+          {/* Play All Button */}
+          {routinePhrases.length > 0 && (
+            <Card className={cn(
+              "p-4 transition-colors",
+              sequentialPlayer.isPlaying && "bg-primary/10 border-primary"
+            )}>
+              <div className="flex items-center justify-between">
+                <Button 
+                  variant={sequentialPlayer.isPlaying ? "destructive" : "gradient"}
+                  onClick={handlePlayAll}
+                  className="gap-2"
+                >
+                  {sequentialPlayer.isPlaying ? (
+                    <>
+                      <Square className="w-4 h-4" />
+                      {t.stopAll}
+                    </>
+                  ) : (
+                    <>
+                      <Play className="w-4 h-4" />
+                      {t.playAll}
+                    </>
+                  )}
+                </Button>
+                
+                {sequentialPlayer.isPlaying && (
+                  <div className="text-right">
+                    <p className="text-sm font-medium text-primary">
+                      {t.playing} {sequentialPlayer.currentIndex + 1}/{sequentialPlayer.totalPhrases}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {formatTimeRemaining(sequentialPlayer.timeRemaining)} {t.remaining}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </Card>
+          )}
+
           {routinePhrases.length === 0 ? <Card className="p-8 text-center border-2 border-dashed">
               <ListMusic className="w-16 h-16 mx-auto mb-4 text-muted-foreground/50" />
               <p className="text-muted-foreground mb-4">{t.noPhrases}</p>
@@ -401,11 +477,17 @@ const Routines = () => {
               <SortableContext items={routinePhrases.map(p => p.id)} strategy={verticalListSortingStrategy}>
                 <div className="space-y-2">
                   {routinePhrases.map(phrase => <SortablePhrase key={phrase.id} id={phrase.id}>
-                      <div className="flex items-start gap-3">
-                        <PlayButton isPlaying={playingId === phrase.id && audioPlayer.isPlaying} isLoading={isGenerating && playingId === phrase.id} onPlay={() => handlePlay(phrase)} onPause={audioPlayer.pause} variant="secondary" size="icon" className="flex-shrink-0" />
+                      <div className={cn(
+                        "flex items-start gap-3 transition-colors",
+                        sequentialPlayer.currentPhraseId === phrase.id && "bg-primary/5 -mx-3 px-3 py-2 rounded-lg ring-1 ring-primary/20"
+                      )}>
+                        <PlayButton isPlaying={(playingId === phrase.id && audioPlayer.isPlaying) || sequentialPlayer.currentPhraseId === phrase.id} isLoading={isGenerating && playingId === phrase.id} onPlay={() => handlePlay(phrase)} onPause={audioPlayer.pause} variant="secondary" size="icon" className="flex-shrink-0" />
 
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium break-words">{phrase.phrase_text}</p>
+                          <p className={cn(
+                            "text-sm font-medium break-words",
+                            sequentialPlayer.currentPhraseId === phrase.id && "text-primary"
+                          )}>{phrase.phrase_text}</p>
                         </div>
 
                         <Button variant="ghost" size="icon" className="flex-shrink-0 text-destructive hover:text-destructive" onClick={() => handleRemovePhrase(phrase.id)}>

@@ -1,14 +1,21 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
-import { FavoritePhrase } from './useFavorites';
 import { useTextToSpeech } from './useTextToSpeech';
 import { useAudioPlayer } from './useAudioPlayer';
 import { useLanguage } from '@/contexts/LanguageContext';
+
+// Generic interface for any playable phrase
+export interface PlayablePhrase {
+  id: string;
+  text: string;
+  durationMinutes?: number;
+}
 
 interface SequentialPlayerState {
   isPlaying: boolean;
   currentIndex: number;
   timeRemaining: number; // segundos restantes
   currentPhraseId: string | null;
+  totalPhrases: number;
 }
 
 export function useSequentialPlayer() {
@@ -21,9 +28,10 @@ export function useSequentialPlayer() {
     currentIndex: 0,
     timeRemaining: 0,
     currentPhraseId: null,
+    totalPhrases: 0,
   });
 
-  const phrasesRef = useRef<FavoritePhrase[]>([]);
+  const phrasesRef = useRef<PlayablePhrase[]>([]);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const phraseEndTimeRef = useRef<number>(0);
   const isPlayingRef = useRef(false);
@@ -37,7 +45,7 @@ export function useSequentialPlayer() {
     };
   }, []);
 
-  const playPhrase = useCallback(async (phrase: FavoritePhrase) => {
+  const playPhrase = useCallback(async (phrase: PlayablePhrase) => {
     try {
       const { url } = await generate({ text: phrase.text, language });
       if (url && isPlayingRef.current) {
@@ -72,7 +80,7 @@ export function useSequentialPlayer() {
     }, 1000);
   }, []);
 
-  const playNext = useCallback(async (index: number, phrases: FavoritePhrase[], random: boolean) => {
+  const playNext = useCallback(async (index: number, phrases: PlayablePhrase[], random: boolean, defaultDuration: number) => {
     if (!isPlayingRef.current || index >= phrases.length) {
       // Fim da sequência
       setState({
@@ -80,6 +88,7 @@ export function useSequentialPlayer() {
         currentIndex: 0,
         timeRemaining: 0,
         currentPhraseId: null,
+        totalPhrases: 0,
       });
       isPlayingRef.current = false;
       audioPlayer.stop();
@@ -97,8 +106,11 @@ export function useSequentialPlayer() {
     // Tocar a frase
     await playPhrase(currentPhrase);
 
+    // Usar duração da frase ou duração padrão
+    const duration = currentPhrase.durationMinutes || defaultDuration;
+
     // Iniciar timer para esta frase
-    startTimer(currentPhrase.durationMinutes || 1, () => {
+    startTimer(duration, () => {
       // Quando o timer acabar, avançar para próxima
       let nextIndex = index + 1;
       
@@ -109,7 +121,7 @@ export function useSequentialPlayer() {
         } while (nextIndex === index && phrases.length > 1);
       }
 
-      playNext(nextIndex, phrases, random);
+      playNext(nextIndex, phrases, random, defaultDuration);
     });
 
     // Loop: repetir a mesma frase durante o período do timer
@@ -136,7 +148,7 @@ export function useSequentialPlayer() {
     repeatPhrase();
   }, [playPhrase, startTimer, audioPlayer]);
 
-  const startPlayAll = useCallback((phrases: FavoritePhrase[], random: boolean = false) => {
+  const startPlayAll = useCallback((phrases: PlayablePhrase[], random: boolean = false, defaultDuration: number = 1) => {
     if (phrases.length === 0) return;
 
     phrasesRef.current = phrases;
@@ -147,10 +159,11 @@ export function useSequentialPlayer() {
       currentIndex: 0,
       timeRemaining: 0,
       currentPhraseId: null,
+      totalPhrases: phrases.length,
     });
 
     const startIndex = random ? Math.floor(Math.random() * phrases.length) : 0;
-    playNext(startIndex, phrases, random);
+    playNext(startIndex, phrases, random, defaultDuration);
   }, [playNext]);
 
   const stop = useCallback(() => {
@@ -168,6 +181,7 @@ export function useSequentialPlayer() {
       currentIndex: 0,
       timeRemaining: 0,
       currentPhraseId: null,
+      totalPhrases: 0,
     });
   }, [audioPlayer]);
 
