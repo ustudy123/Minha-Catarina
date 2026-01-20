@@ -278,6 +278,19 @@ const Routines = () => {
   };
 
   const canCreateMore = isPremium || routines.length < maxRoutines;
+
+  // Filter out preset routines that have already been added
+  const addedPresetNames = routines.map(r => r.name.toLowerCase());
+  const availablePresets = presetRoutines.filter(preset => {
+    // Check if any language variant of the preset name matches an existing routine
+    const presetNames = [
+      preset.name.pt.toLowerCase(),
+      preset.name.en.toLowerCase(),
+      preset.name.es.toLowerCase()
+    ];
+    return !presetNames.some(name => addedPresetNames.includes(name));
+  });
+
   // Routine detail view
   if (selectedRoutine) {
     return <PageTransition>
@@ -586,50 +599,52 @@ const Routines = () => {
           </div>}
 
         {/* Preset Routines Section */}
-        <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-primary" />
-            <div>
-              <h2 className="font-semibold">{t.presetRoutines}</h2>
-              <p className="text-xs text-muted-foreground">{t.presetSubtitle}</p>
+        {availablePresets.length > 0 && (
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-primary" />
+              <div>
+                <h2 className="font-semibold">{t.presetRoutines}</h2>
+                <p className="text-xs text-muted-foreground">{t.presetSubtitle}</p>
+              </div>
+            </div>
+            
+            <div className="grid gap-3">
+              {availablePresets.map((preset, index) => (
+                <Card 
+                  key={preset.id} 
+                  className="p-4 border-2 cursor-pointer hover-lift animate-fade-in transition-all"
+                  style={{ animationDelay: `${index * 0.05}s` }}
+                  onClick={() => handleAddPresetRoutine(preset)}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center text-xl">
+                      {preset.icon}
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-semibold">{preset.name[language]}</h3>
+                      <p className="text-xs text-muted-foreground">
+                        {preset.phrases.length} {t.phrases}
+                      </p>
+                    </div>
+                    <Button 
+                      variant="outline" 
+                      size="icon" 
+                      className="flex-shrink-0"
+                      disabled={isAddingPreset || !canCreateMore}
+                    >
+                      {isAddingPreset ? (
+                        <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                      ) : (
+                        <Plus className="w-4 h-4" />
+                      )}
+                    </Button>
+                  </div>
+                </Card>
+              ))}
             </div>
           </div>
-          
-          <div className="grid gap-3">
-            {presetRoutines.map((preset, index) => (
-              <Card 
-                key={preset.id} 
-                className="p-4 border-2 cursor-pointer hover-lift animate-fade-in transition-all"
-                style={{ animationDelay: `${index * 0.05}s` }}
-                onClick={() => handleAddPresetRoutine(preset)}
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center text-xl">
-                    {preset.icon}
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-semibold">{preset.name[language]}</h3>
-                    <p className="text-xs text-muted-foreground">
-                      {preset.phrases.length} {t.phrases}
-                    </p>
-                  </div>
-                  <Button 
-                    variant="outline" 
-                    size="icon" 
-                    className="flex-shrink-0"
-                    disabled={isAddingPreset || !canCreateMore}
-                  >
-                    {isAddingPreset ? (
-                      <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                    ) : (
-                      <Plus className="w-4 h-4" />
-                    )}
-                  </Button>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </div>
+        )}
 
         {/* Premium Upsell */}
         {!isPremium && routines.length >= maxRoutines && <Card className="p-6 border-2 border-highlight/30 bg-highlight/5">
