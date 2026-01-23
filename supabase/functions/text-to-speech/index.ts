@@ -147,10 +147,11 @@ serve(async (req) => {
           text: finalText,
           model_id: 'eleven_multilingual_v2',
           voice_settings: {
-            stability: 0.35,
-            similarity_boost: 0.75,
-            style: 0.4,
+            stability: 0.25,
+            similarity_boost: 0.85,
+            style: 0.6,
             use_speaker_boost: true,
+            speed: 1.1,
           },
         }),
       }

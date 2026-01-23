@@ -65,23 +65,12 @@ export const FEMALE_VOICES: ChildVoice[] = [
 // Vozes masculinas para Antônio
 export const MALE_VOICES: ChildVoice[] = [
   {
-    id: 'the-kid',
-    name: 'The Kid',
-    description: {
-      pt: 'Voz infantil neutra e alegre',
-      en: 'Neutral and cheerful child voice',
-      es: 'Voz infantil neutra y alegre',
-    },
-    voiceId: 'qHjcDL87pelA6RkUz0Ij',
-    gender: 'male',
-  },
-  {
     id: 'junior',
     name: 'Junior',
     description: {
-      pt: 'Voz de menino estudante jovem',
-      en: 'Young student boy voice',
-      es: 'Voz de niño estudiante joven',
+      pt: 'Voz de menino animada',
+      en: 'Animated boy voice',
+      es: 'Voz de niño animada',
     },
     voiceId: '4g0zcFn3Yhp86jjySzFf',
     gender: 'male',
@@ -95,17 +84,6 @@ export const MALE_VOICES: ChildVoice[] = [
       es: 'Voz joven para historias infantiles',
     },
     voiceId: 'VyTe5Cy1ZXnpHrKVrxwk',
-    gender: 'male',
-  },
-  {
-    id: 'charlie',
-    name: 'Charlie',
-    description: {
-      pt: 'Voz masculina jovem e amigável',
-      en: 'Young and friendly boy voice',
-      es: 'Voz masculina joven y amigable',
-    },
-    voiceId: 'IKne3meq5aSn9XLyUdCD',
     gender: 'male',
   },
 ];
