@@ -76,14 +76,25 @@ export const MALE_VOICES: ChildVoice[] = [
     gender: 'male',
   },
   {
-    id: 'river',
-    name: 'River',
+    id: 'junior',
+    name: 'Junior',
     description: {
-      pt: 'Voz calma e gentil',
-      en: 'Calm and gentle voice',
-      es: 'Voz calmada y gentil',
+      pt: 'Voz de menino estudante jovem',
+      en: 'Young student boy voice',
+      es: 'Voz de niño estudiante joven',
     },
-    voiceId: 'SAz9YHcvj6GT2YYXdXww',
+    voiceId: '4g0zcFn3Yhp86jjySzFf',
+    gender: 'male',
+  },
+  {
+    id: 'a-chan',
+    name: 'A-Chan',
+    description: {
+      pt: 'Voz jovem para histórias infantis',
+      en: 'Young voice for children stories',
+      es: 'Voz joven para historias infantiles',
+    },
+    voiceId: 'VyTe5Cy1ZXnpHrKVrxwk',
     gender: 'male',
   },
   {
