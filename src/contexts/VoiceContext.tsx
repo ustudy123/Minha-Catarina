@@ -62,28 +62,28 @@ export const FEMALE_VOICES: ChildVoice[] = [
   },
 ];
 
-// Vozes masculinas para Antônio
+// Vozes para Antônio (usando vozes neutras que soam infantis)
 export const MALE_VOICES: ChildVoice[] = [
   {
-    id: 'junior',
-    name: 'Junior',
+    id: 'gigi-boy',
+    name: 'Gigi',
     description: {
-      pt: 'Voz de menino animada',
-      en: 'Animated boy voice',
-      es: 'Voz de niño animada',
+      pt: 'Voz neutra e animada',
+      en: 'Neutral animated voice',
+      es: 'Voz neutra y animada',
     },
-    voiceId: '4g0zcFn3Yhp86jjySzFf',
+    voiceId: 'jBpfuIE2acCO8z3wKNLl',
     gender: 'male',
   },
   {
-    id: 'a-chan',
-    name: 'A-Chan',
+    id: 'mimi-boy',
+    name: 'Mimi',
     description: {
-      pt: 'Voz jovem para histórias infantis',
-      en: 'Young voice for children stories',
-      es: 'Voz joven para historias infantiles',
+      pt: 'Voz doce e suave',
+      en: 'Sweet and soft voice',
+      es: 'Voz dulce y suave',
     },
-    voiceId: 'VyTe5Cy1ZXnpHrKVrxwk',
+    voiceId: 'zrHiDhphv9ZnVXBqCLjz',
     gender: 'male',
   },
 ];
