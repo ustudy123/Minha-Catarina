@@ -122,21 +122,31 @@ export default function Profile() {
 
       const data = await response.json();
       
-      const binaryString = atob(data.audioContent);
-      const bytes = new Uint8Array(binaryString.length);
-      for (let i = 0; i < binaryString.length; i++) {
-        bytes[i] = binaryString.charCodeAt(i);
-      }
-      const blob = new Blob([bytes], { type: 'audio/mpeg' });
-      const url = URL.createObjectURL(blob);
+      let audioUrl: string;
       
-      const audio = new Audio(url);
+      if (data.audioUrl) {
+        // Use cached audio URL directly
+        audioUrl = data.audioUrl;
+      } else if (data.audioContent) {
+        // Fallback: Convert base64 to blob
+        const binaryString = atob(data.audioContent);
+        const bytes = new Uint8Array(binaryString.length);
+        for (let i = 0; i < binaryString.length; i++) {
+          bytes[i] = binaryString.charCodeAt(i);
+        }
+        const blob = new Blob([bytes], { type: 'audio/mpeg' });
+        audioUrl = URL.createObjectURL(blob);
+      } else {
+        throw new Error('No audio data received');
+      }
+      
+      const audio = new Audio(audioUrl);
       audio.onended = () => {
-        URL.revokeObjectURL(url);
+        if (!data.audioUrl) URL.revokeObjectURL(audioUrl);
         setPreviewingVoice(null);
       };
       audio.onerror = () => {
-        URL.revokeObjectURL(url);
+        if (!data.audioUrl) URL.revokeObjectURL(audioUrl);
         setPreviewingVoice(null);
       };
       await audio.play();
