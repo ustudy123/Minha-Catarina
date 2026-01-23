@@ -65,14 +65,14 @@ export const FEMALE_VOICES: ChildVoice[] = [
 // Vozes para Antônio (usando vozes neutras que soam infantis)
 export const MALE_VOICES: ChildVoice[] = [
   {
-    id: 'gigi-boy',
-    name: 'Gigi',
+    id: 'lily-boy',
+    name: 'Lily',
     description: {
-      pt: 'Voz neutra e animada',
-      en: 'Neutral animated voice',
-      es: 'Voz neutra y animada',
+      pt: 'Voz suave e neutra',
+      en: 'Soft and neutral voice',
+      es: 'Voz suave y neutra',
     },
-    voiceId: 'jBpfuIE2acCO8z3wKNLl',
+    voiceId: 'pFZP5JQG7iQjIQuC4Bku',
     gender: 'male',
   },
   {
