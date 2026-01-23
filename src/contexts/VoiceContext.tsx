@@ -17,14 +17,25 @@ export interface ChildVoice {
 // Vozes femininas para Catarina
 export const FEMALE_VOICES: ChildVoice[] = [
   {
-    id: 'alice',
-    name: 'Alice',
+    id: 'gigi',
+    name: 'Gigi',
     description: {
-      pt: 'Voz jovem e expressiva',
-      en: 'Young and expressive voice',
-      es: 'Voz joven y expresiva',
+      pt: 'Voz infantil animada',
+      en: 'Childish animated voice',
+      es: 'Voz infantil animada',
     },
-    voiceId: 'Xb7hH8MSUJpSbSDYk0k2',
+    voiceId: 'jBpfuIE2acCO8z3wKNLl',
+    gender: 'female',
+  },
+  {
+    id: 'mimi',
+    name: 'Mimi',
+    description: {
+      pt: 'Voz de criança doce',
+      en: 'Sweet child voice',
+      es: 'Voz de niña dulce',
+    },
+    voiceId: 'zrHiDhphv9ZnVXBqCLjz',
     gender: 'female',
   },
   {
@@ -36,17 +47,6 @@ export const FEMALE_VOICES: ChildVoice[] = [
       es: 'Voz animada y divertida',
     },
     voiceId: 'cgSgspJ2msm6clMCkdW9',
-    gender: 'female',
-  },
-  {
-    id: 'aria',
-    name: 'Aria',
-    description: {
-      pt: 'Voz meiga e infantil',
-      en: 'Sweet and childlike voice',
-      es: 'Voz tierna e infantil',
-    },
-    voiceId: '9BWtsMINqrJLrRacOk9x',
     gender: 'female',
   },
 ];
