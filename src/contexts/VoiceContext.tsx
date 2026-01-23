@@ -39,6 +39,17 @@ export const FEMALE_VOICES: ChildVoice[] = [
     gender: 'female',
   },
   {
+    id: 'aerisita',
+    name: 'Aerisita',
+    description: {
+      pt: 'Voz fofa estilo kawaii',
+      en: 'Cute kawaii-style voice',
+      es: 'Voz tierna estilo kawaii',
+    },
+    voiceId: 'vGQNBgLaiM3EdZtxIiuY',
+    gender: 'female',
+  },
+  {
     id: 'jessica',
     name: 'Jessica',
     description: {
