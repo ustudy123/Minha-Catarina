@@ -67,7 +67,7 @@ async function translateText(text: string, targetLanguage: string): Promise<stri
     const translatedText = data.choices?.[0]?.message?.content?.trim();
     
     if (translatedText) {
-      console.log('Translated text:', { original: text, translated: translatedText, targetLanguage });
+      console.log('Translation processed', { originalLength: text.length, translatedLength: translatedText.length, targetLanguage });
       return translatedText;
     }
     
@@ -108,7 +108,7 @@ serve(async (req) => {
 
     // Generate cache key using translated text
     const cacheKey = generateCacheKey(finalText, voiceId);
-    console.log('Cache key:', cacheKey, 'for text:', finalText);
+    console.log('Cache lookup', { cacheKey, textLength: finalText.length });
 
     // Check cache first
     const { data: cachedAudio, error: cacheError } = await supabase

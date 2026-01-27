@@ -131,8 +131,8 @@ serve(async (req) => {
       );
     }
 
-    // Log sanitized data only (no sensitive details)
-    console.log(`Processing message from ${phone.substring(0, 4)}***: length=${message.length}`);
+    // Log only metadata, no personal data
+    console.log('Processing webhook message', { messageLength: message.length });
 
     // Call OpenAI for conversational response
     const openAIResponse = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -169,7 +169,7 @@ serve(async (req) => {
 
     const aiData = await openAIResponse.json();
     const reply = aiData.choices[0].message.content;
-    console.log(`Reply generated, length: ${reply.length}`);
+    console.log('Reply generated', { replyLength: reply.length });
 
     // Send response via Z-API (only if credentials are configured)
     const zapiInstanceId = Deno.env.get('ZAPI_INSTANCE_ID');

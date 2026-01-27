@@ -61,7 +61,7 @@ serve(async (req) => {
       );
     }
 
-    console.log(`Generating sound effect for user ${userId}: "${prompt}" (duration: ${duration || 'auto'}s)`);
+    console.log('Generating sound effect', { promptLength: prompt.length, duration: duration || 'auto' });
 
     const response = await fetch(
       "https://api.elevenlabs.io/v1/sound-generation",

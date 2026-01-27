@@ -60,7 +60,7 @@ serve(async (req) => {
       );
     }
 
-    console.log(`User ${userId} sending message to ${phone}`);
+    console.log('Processing WhatsApp message request', { messageLength: message.length });
 
     const response = await fetch(
       `https://api.z-api.io/instances/${zapiInstanceId}/token/${zapiToken}/send-text`,
