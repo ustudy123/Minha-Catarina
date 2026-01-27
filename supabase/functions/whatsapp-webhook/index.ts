@@ -5,26 +5,62 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-webhook-secret',
 };
 
-// Simple webhook secret verification
-// In production, use Z-API's actual signature verification if available
-const verifyWebhookRequest = (req: Request): boolean => {
+// Validate phone number format (E.164)
+const isValidPhoneNumber = (phone: string): boolean => {
+  const phoneRegex = /^\+?[1-9]\d{1,14}$/;
+  return phoneRegex.test(phone.replace(/\s/g, ''));
+};
+
+// Validate and sanitize message
+const validateMessage = (message: unknown): { valid: boolean; sanitized: string; error?: string } => {
+  if (typeof message !== 'string') {
+    return { valid: false, sanitized: '', error: 'Message must be a string' };
+  }
+  
+  const trimmed = message.trim();
+  
+  if (trimmed.length === 0) {
+    return { valid: false, sanitized: '', error: 'Message cannot be empty' };
+  }
+  
+  if (trimmed.length > 1000) {
+    return { valid: false, sanitized: '', error: 'Message too long (max 1000 characters)' };
+  }
+  
+  return { valid: true, sanitized: trimmed };
+};
+
+// Webhook secret verification - REQUIRED
+const verifyWebhookRequest = (req: Request): { valid: boolean; error?: string } => {
   const webhookSecret = Deno.env.get('WEBHOOK_SECRET');
   
-  // If no secret is configured, allow the request but log a warning
+  // If no secret is configured, reject all requests for security
   if (!webhookSecret) {
-    console.warn('WEBHOOK_SECRET not configured - webhook verification disabled');
-    return true;
+    console.error('WEBHOOK_SECRET not configured - webhook disabled for security');
+    return { valid: false, error: 'Webhook not configured' };
   }
   
   const providedSecret = req.headers.get('x-webhook-secret');
   
-  if (!providedSecret || providedSecret !== webhookSecret) {
-    console.error('Invalid webhook secret provided');
-    return false;
+  if (!providedSecret) {
+    console.error('No webhook secret provided in request');
+    return { valid: false, error: 'Missing webhook secret' };
   }
   
-  return true;
+  if (providedSecret !== webhookSecret) {
+    console.error('Invalid webhook secret provided');
+    return { valid: false, error: 'Invalid webhook secret' };
+  }
+  
+  return { valid: true };
 };
+
+interface WebhookPayload {
+  text?: { message?: string };
+  message?: { text?: string };
+  phone?: string;
+  from?: string;
+}
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -32,29 +68,71 @@ serve(async (req) => {
   }
 
   try {
-    // Verify webhook authenticity
-    if (!verifyWebhookRequest(req)) {
+    // Verify webhook authenticity - REQUIRED
+    const verification = verifyWebhookRequest(req);
+    if (!verification.valid) {
       return new Response(
-        JSON.stringify({ error: 'Unauthorized: Invalid webhook secret' }),
+        JSON.stringify({ error: `Unauthorized: ${verification.error}` }),
         { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    const webhookData = await req.json();
-    console.log('Received webhook:', JSON.stringify(webhookData, null, 2));
-
-    // Extract message data from Z-API webhook
-    const message = webhookData.text?.message || webhookData.message?.text || '';
-    const phone = webhookData.phone || webhookData.from;
-
-    if (!message || !phone) {
-      console.log('No message or phone found in webhook');
-      return new Response(JSON.stringify({ status: 'ignored' }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+    // Parse and validate JSON payload
+    let webhookData: WebhookPayload;
+    try {
+      const rawData = await req.json();
+      
+      // Validate it's an object
+      if (typeof rawData !== 'object' || rawData === null || Array.isArray(rawData)) {
+        return new Response(
+          JSON.stringify({ error: 'Invalid payload: expected object' }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+      
+      webhookData = rawData as WebhookPayload;
+    } catch {
+      return new Response(
+        JSON.stringify({ error: 'Invalid JSON payload' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
-    console.log(`Processing message from ${phone}: ${message.substring(0, 50)}...`);
+    // Extract and validate message
+    const rawMessage = webhookData.text?.message || webhookData.message?.text;
+    const messageValidation = validateMessage(rawMessage);
+    
+    if (!messageValidation.valid) {
+      console.log(`Message validation failed: ${messageValidation.error}`);
+      return new Response(
+        JSON.stringify({ status: 'ignored', reason: messageValidation.error }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const message = messageValidation.sanitized;
+
+    // Extract and validate phone number
+    const phone = webhookData.phone || webhookData.from;
+    
+    if (!phone || typeof phone !== 'string') {
+      console.log('No phone found in webhook');
+      return new Response(
+        JSON.stringify({ status: 'ignored', reason: 'Missing phone number' }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    if (!isValidPhoneNumber(phone)) {
+      console.log('Invalid phone number format');
+      return new Response(
+        JSON.stringify({ status: 'ignored', reason: 'Invalid phone number format' }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Log sanitized data only (no sensitive details)
+    console.log(`Processing message from ${phone.substring(0, 4)}***: length=${message.length}`);
 
     // Call OpenAI for conversational response
     const openAIResponse = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -91,7 +169,7 @@ serve(async (req) => {
 
     const aiData = await openAIResponse.json();
     const reply = aiData.choices[0].message.content;
-    console.log('Generated reply:', reply.substring(0, 50) + '...');
+    console.log(`Reply generated, length: ${reply.length}`);
 
     // Send response via Z-API (only if credentials are configured)
     const zapiInstanceId = Deno.env.get('ZAPI_INSTANCE_ID');
