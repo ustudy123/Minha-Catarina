@@ -40,13 +40,46 @@ serve(async (req) => {
     }
 
     const userId = claimsData.claims.sub;
-    console.log(`Authenticated user: ${userId}`);
+
+    // Check user subscription - only premium users can generate sound effects
+    const { data: subscription, error: subError } = await supabase
+      .from('user_subscriptions')
+      .select('plan_type')
+      .eq('user_id', userId)
+      .single();
+
+    if (subError || !subscription) {
+      console.error('Subscription check failed:', subError);
+      return new Response(
+        JSON.stringify({ error: 'Unable to verify subscription status' }),
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Check if user is admin (admins have full access)
+    const { data: isAdmin } = await supabase.rpc('has_role', { _user_id: userId, _role: 'admin' });
+
+    if (subscription.plan_type !== 'premium' && !isAdmin) {
+      return new Response(
+        JSON.stringify({ error: 'Premium subscription required to generate sound effects' }),
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
 
     const { prompt, duration } = await req.json();
     
-    if (!prompt) {
+    if (!prompt || typeof prompt !== 'string') {
       return new Response(
-        JSON.stringify({ error: 'Prompt is required' }),
+        JSON.stringify({ error: 'Valid prompt is required' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Validate prompt length (max 500 characters for sound effect descriptions)
+    const MAX_PROMPT_LENGTH = 500;
+    if (prompt.length > MAX_PROMPT_LENGTH) {
+      return new Response(
+        JSON.stringify({ error: `Prompt exceeds maximum length of ${MAX_PROMPT_LENGTH} characters` }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }

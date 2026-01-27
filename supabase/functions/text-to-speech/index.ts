@@ -86,8 +86,21 @@ serve(async (req) => {
   try {
     const { text, voiceId = 'pFZP5JQG7iQjIQuC4Bku', targetLanguage } = await req.json();
 
-    if (!text) {
-      throw new Error('Text is required');
+    // Validate text input
+    if (!text || typeof text !== 'string') {
+      return new Response(
+        JSON.stringify({ error: 'Valid text is required' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Validate text length (max 5000 characters as per ElevenLabs best practices)
+    const MAX_TEXT_LENGTH = 5000;
+    if (text.length > MAX_TEXT_LENGTH) {
+      return new Response(
+        JSON.stringify({ error: `Text exceeds maximum length of ${MAX_TEXT_LENGTH} characters` }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
     const ELEVENLABS_API_KEY = Deno.env.get('ELEVENLABS_API_KEY');
