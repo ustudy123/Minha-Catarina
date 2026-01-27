@@ -2,7 +2,28 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-webhook-secret',
+};
+
+// Simple webhook secret verification
+// In production, use Z-API's actual signature verification if available
+const verifyWebhookRequest = (req: Request): boolean => {
+  const webhookSecret = Deno.env.get('WEBHOOK_SECRET');
+  
+  // If no secret is configured, allow the request but log a warning
+  if (!webhookSecret) {
+    console.warn('WEBHOOK_SECRET not configured - webhook verification disabled');
+    return true;
+  }
+  
+  const providedSecret = req.headers.get('x-webhook-secret');
+  
+  if (!providedSecret || providedSecret !== webhookSecret) {
+    console.error('Invalid webhook secret provided');
+    return false;
+  }
+  
+  return true;
 };
 
 serve(async (req) => {
@@ -11,6 +32,14 @@ serve(async (req) => {
   }
 
   try {
+    // Verify webhook authenticity
+    if (!verifyWebhookRequest(req)) {
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized: Invalid webhook secret' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     const webhookData = await req.json();
     console.log('Received webhook:', JSON.stringify(webhookData, null, 2));
 
@@ -25,7 +54,7 @@ serve(async (req) => {
       });
     }
 
-    console.log(`Processing message from ${phone}: ${message}`);
+    console.log(`Processing message from ${phone}: ${message.substring(0, 50)}...`);
 
     // Call OpenAI for conversational response
     const openAIResponse = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -54,12 +83,15 @@ serve(async (req) => {
     if (!openAIResponse.ok) {
       const error = await openAIResponse.text();
       console.error('OpenAI error:', error);
-      throw new Error('Failed to generate response');
+      return new Response(
+        JSON.stringify({ error: 'Failed to generate response' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
     const aiData = await openAIResponse.json();
     const reply = aiData.choices[0].message.content;
-    console.log('Generated reply:', reply);
+    console.log('Generated reply:', reply.substring(0, 50) + '...');
 
     // Send response via Z-API (only if credentials are configured)
     const zapiInstanceId = Deno.env.get('ZAPI_INSTANCE_ID');
@@ -87,7 +119,7 @@ serve(async (req) => {
         console.log('Message sent successfully via Z-API');
       }
     } else {
-      console.log('Z-API credentials not configured, reply not sent:', reply);
+      console.log('Z-API credentials not configured, reply not sent');
     }
 
     return new Response(
