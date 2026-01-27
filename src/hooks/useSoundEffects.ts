@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
 
 interface SFXOptions {
   prompt: string;
@@ -23,17 +24,20 @@ export const useSoundEffects = () => {
     setState(prev => ({ ...prev, isGenerating: true, error: null }));
 
     try {
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-      const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+      // Get the current session for authentication
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        throw new Error('Você precisa estar logado para gerar efeitos sonoros');
+      }
 
       const response = await fetch(
-        `${supabaseUrl}/functions/v1/elevenlabs-sfx`,
+        `https://vfhspeubasrdmwqxdcaw.supabase.co/functions/v1/elevenlabs-sfx`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'apikey': supabaseKey,
-            'Authorization': `Bearer ${supabaseKey}`,
+            'Authorization': `Bearer ${session.access_token}`,
           },
           body: JSON.stringify({ prompt, duration }),
         }
