@@ -36,6 +36,7 @@ import {
   Plus,
   Loader2,
   HandHeart,
+  Gamepad2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -73,6 +74,7 @@ const Library = () => {
     { id: "affection", name: t.library.categories.affection || "Carinho", icon: Heart },
     { id: "daily", name: t.library.categories.daily || "Dia a Dia", icon: Sun },
     { id: "education", name: t.library.categories.education || "Educação", icon: GraduationCap },
+    { id: "playtime", name: t.library.categories.playtime || "Brincadeiras", icon: Gamepad2 },
     { id: "sounds", name: t.library.categories.sounds || "Sons", icon: Bell },
     { id: "prayers", name: t.library.categories.prayers || "Orações", icon: HandHeart },
     { id: "myPhrases", name: t.library.categories.myPhrases || "Minhas Frases", icon: Sparkles, premium: true },
