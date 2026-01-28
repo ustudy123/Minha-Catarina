@@ -17,17 +17,6 @@ export interface ChildVoice {
 // Vozes femininas para Catarina
 export const FEMALE_VOICES: ChildVoice[] = [
   {
-    id: 'gigi',
-    name: 'Gigi',
-    description: {
-      pt: 'Voz infantil animada',
-      en: 'Childish animated voice',
-      es: 'Voz infantil animada',
-    },
-    voiceId: 'jBpfuIE2acCO8z3wKNLl',
-    gender: 'female',
-  },
-  {
     id: 'mimi',
     name: 'Mimi',
     description: {
@@ -36,51 +25,6 @@ export const FEMALE_VOICES: ChildVoice[] = [
       es: 'Voz de niña dulce',
     },
     voiceId: 'zrHiDhphv9ZnVXBqCLjz',
-    gender: 'female',
-  },
-  {
-    id: 'aerisita',
-    name: 'Aerisita',
-    description: {
-      pt: 'Voz fofa estilo kawaii',
-      en: 'Cute kawaii-style voice',
-      es: 'Voz tierna estilo kawaii',
-    },
-    voiceId: 'vGQNBgLaiM3EdZtxIiuY',
-    gender: 'female',
-  },
-  {
-    id: 'jessica',
-    name: 'Jessica',
-    description: {
-      pt: 'Voz animada e divertida',
-      en: 'Animated and fun voice',
-      es: 'Voz animada y divertida',
-    },
-    voiceId: 'cgSgspJ2msm6clMCkdW9',
-    gender: 'female',
-  },
-  // Novas vozes com estilos infantis distintos
-  {
-    id: 'luna',
-    name: 'Luna',
-    description: {
-      pt: 'Criança curiosa e calma',
-      en: 'Curious and calm child',
-      es: 'Niña curiosa y tranquila',
-    },
-    voiceId: 'Xb7hH8MSUJpSbSDYk0k2',
-    gender: 'female',
-  },
-  {
-    id: 'lara',
-    name: 'Lara',
-    description: {
-      pt: 'Criança brincalhona e animada',
-      en: 'Playful and energetic child',
-      es: 'Niña juguetona y animada',
-    },
-    voiceId: 'XrExE9yKIg1WjnnlVkGX',
     gender: 'female',
   },
 ];
