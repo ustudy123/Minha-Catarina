@@ -88,8 +88,23 @@ export const VoiceProvider = ({ children }: { children: ReactNode }) => {
     const savedDoll = localStorage.getItem('selected-doll-type') as DollType || 'catarina';
     const voicesForDoll = savedDoll === 'catarina' ? FEMALE_VOICES : MALE_VOICES;
     const foundVoice = voicesForDoll.find((v) => v.id === savedVoiceId);
+    
+    // Se a voz salva não existe mais, limpa o localStorage e usa a primeira disponível
+    if (!foundVoice && savedVoiceId) {
+      localStorage.removeItem('selected-voice-id');
+    }
+    
     return foundVoice || voicesForDoll[0];
   });
+  
+  // Garante que a voz selecionada sempre seja válida quando as vozes disponíveis mudam
+  React.useEffect(() => {
+    const isVoiceValid = availableVoices.some(v => v.id === selectedVoice.id);
+    if (!isVoiceValid && availableVoices.length > 0) {
+      setSelectedVoiceState(availableVoices[0]);
+      localStorage.setItem('selected-voice-id', availableVoices[0].id);
+    }
+  }, [availableVoices, selectedVoice.id]);
 
   useEffect(() => {
     localStorage.setItem('selected-voice-id', selectedVoice.id);
