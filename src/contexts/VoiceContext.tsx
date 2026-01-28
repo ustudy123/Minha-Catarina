@@ -15,30 +15,7 @@ export interface ChildVoice {
 }
 
 // Vozes femininas para Catarina
-export const FEMALE_VOICES: ChildVoice[] = [
-  {
-    id: 'mimi',
-    name: 'Mimi',
-    description: {
-      pt: 'Voz de criança doce',
-      en: 'Sweet child voice',
-      es: 'Voz de niña dulce',
-    },
-    voiceId: 'zrHiDhphv9ZnVXBqCLjz',
-    gender: 'female',
-  },
-  {
-    id: 'menina1',
-    name: 'Menina 1',
-    description: {
-      pt: 'Voz fofa mais infantil',
-      en: 'Cute childish voice',
-      es: 'Voz tierna más infantil',
-    },
-    voiceId: 'z57igK5sdjPnjDX9Wyf8',
-    gender: 'female',
-  },
-];
+export const FEMALE_VOICES: ChildVoice[] = [];
 
 // Vozes para Antônio (usando vozes neutras que soam infantis)
 export const MALE_VOICES: ChildVoice[] = [
