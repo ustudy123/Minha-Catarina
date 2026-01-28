@@ -60,6 +60,40 @@ export const FEMALE_VOICES: ChildVoice[] = [
     voiceId: 'cgSgspJ2msm6clMCkdW9',
     gender: 'female',
   },
+  // Novas vozes com estilos infantis distintos
+  {
+    id: 'sofia',
+    name: 'Sofia',
+    description: {
+      pt: 'Criança alegre e empolgada',
+      en: 'Happy and excited child',
+      es: 'Niña alegre y emocionada',
+    },
+    voiceId: 'EXAVITQu4vr4xnSDxMaL',
+    gender: 'female',
+  },
+  {
+    id: 'luna',
+    name: 'Luna',
+    description: {
+      pt: 'Criança curiosa e calma',
+      en: 'Curious and calm child',
+      es: 'Niña curiosa y tranquila',
+    },
+    voiceId: 'Xb7hH8MSUJpSbSDYk0k2',
+    gender: 'female',
+  },
+  {
+    id: 'lara',
+    name: 'Lara',
+    description: {
+      pt: 'Criança brincalhona e animada',
+      en: 'Playful and energetic child',
+      es: 'Niña juguetona y animada',
+    },
+    voiceId: 'XrExE9yKIg1WjnnlVkGX',
+    gender: 'female',
+  },
 ];
 
 // Vozes para Antônio (usando vozes neutras que soam infantis)
