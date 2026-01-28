@@ -160,11 +160,11 @@ serve(async (req) => {
           text: finalText,
           model_id: 'eleven_multilingual_v2',
           voice_settings: {
-            stability: 0.25,
-            similarity_boost: 0.85,
-            style: 0.6,
+            stability: 0.15,        // Muito baixo para variação natural de tom (como criança)
+            similarity_boost: 0.9,  // Alto para manter características da voz
+            style: 0.85,            // Alto para expressividade e emoção infantil
             use_speaker_boost: true,
-            speed: 1.1,
+            speed: 1.15,            // Ligeiramente mais rápido (crianças falam animadas)
           },
         }),
       }
