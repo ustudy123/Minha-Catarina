@@ -62,17 +62,6 @@ export const FEMALE_VOICES: ChildVoice[] = [
   },
   // Novas vozes com estilos infantis distintos
   {
-    id: 'sofia',
-    name: 'Sofia',
-    description: {
-      pt: 'Criança alegre e empolgada',
-      en: 'Happy and excited child',
-      es: 'Niña alegre y emocionada',
-    },
-    voiceId: 'EXAVITQu4vr4xnSDxMaL',
-    gender: 'female',
-  },
-  {
     id: 'luna',
     name: 'Luna',
     description: {
