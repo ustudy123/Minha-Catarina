@@ -1,15 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PageTransition } from "@/components/PageTransition";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { usePausableAudio, getTextWithoutPauses } from "@/hooks/usePausableAudio";
+import { useAudioPreloader } from "@/hooks/useAudioPreloader";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { getTranslations } from "@/translations";
 import { PlayButton } from "@/components/audio/PlayButton";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Timer } from "lucide-react";
+import { ArrowLeft, Timer, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface LanguagePhrase {
@@ -24,6 +25,7 @@ const Languages = () => {
   const [playingId, setPlayingId] = useState<string | null>(null);
   
   const pausableAudio = usePausableAudio();
+  const { preloadMany, isPreloading, preloadedCount, preloadingCount } = useAudioPreloader();
   const { language } = useLanguage();
   const t = getTranslations(language);
 
@@ -39,6 +41,26 @@ const Languages = () => {
     text: phrase.text,
     category: phrase.category,
   }));
+
+  // Pre-load audio for current phrases when tab changes or on mount
+  useEffect(() => {
+    const phrases = selectedLanguage === "english" ? englishPhrases : spanishPhrases;
+    
+    // Extract text segments (without pause markers) for preloading
+    const phrasesToPreload = phrases.flatMap(phrase => {
+      // Split by pause markers and filter non-empty segments
+      const segments = phrase.text
+        .split(/\[(?:pausa|pause):\d+s?\]/gi)
+        .map(s => s.trim())
+        .filter(s => s.length > 0);
+      
+      return segments.map(segment => ({ text: segment, language: 'pt' as const }));
+    });
+
+    if (phrasesToPreload.length > 0) {
+      preloadMany(phrasesToPreload, { delayMs: 150, maxConcurrent: 2 });
+    }
+  }, [selectedLanguage]);
 
   const handlePlayPhrase = async (phrase: LanguagePhrase) => {
     if (playingId === phrase.id && pausableAudio.isPlaying) {
@@ -93,7 +115,19 @@ const Languages = () => {
               </Button>
               <div>
                 <h1 className="text-xl font-bold">{t.languageLearning.title}</h1>
-                <p className="text-xs text-muted-foreground">{t.languageLearning.subtitle}</p>
+                <p className="text-xs text-muted-foreground">
+                  {t.languageLearning.subtitle}
+                  {isPreloading && (
+                    <span className="ml-2 inline-flex items-center gap-1">
+                      <Loader2 className="w-3 h-3 animate-spin" />
+                      <span className="text-primary">
+                        {language === 'pt' ? `Carregando ${preloadedCount}/${preloadingCount}...` :
+                         language === 'en' ? `Loading ${preloadedCount}/${preloadingCount}...` :
+                         `Cargando ${preloadedCount}/${preloadingCount}...`}
+                      </span>
+                    </span>
+                  )}
+                </p>
               </div>
             </div>
           </div>
