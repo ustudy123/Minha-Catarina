@@ -2,6 +2,8 @@ import { useState, useRef, useCallback } from 'react';
 import { useTextToSpeech } from './useTextToSpeech';
 import { useAudioPlayer } from './useAudioPlayer';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { audioCache } from './useAudioPreloader';
+import { useVoice } from '@/contexts/VoiceContext';
 
 // Regex to match pause syntax: [pausa:5s] or [pause:5s]
 const PAUSE_REGEX = /\[(?:pausa|pause):(\d+)s?\]/gi;
@@ -23,6 +25,7 @@ interface PausableAudioState {
 
 export function usePausableAudio() {
   const { language } = useLanguage();
+  const { selectedVoice } = useVoice();
   const { generate, isGenerating } = useTextToSpeech();
   const audioPlayer = useAudioPlayer();
 
@@ -142,18 +145,33 @@ export function usePausableAudio() {
         playSegment(index + 1, segments, targetLanguage);
       });
     } else {
-      // Handle text segment - generate and play audio
+      // Handle text segment - check cache first, then generate
       try {
         setState(prev => ({ ...prev, isLoading: true }));
         
-        const { url } = await generate({ 
-          text: segment.content, 
-          language: targetLanguage 
-        });
+        // Check if audio is in local cache
+        const cacheKey = `${segment.content}_${targetLanguage}_${selectedVoice.voiceId}`;
+        const cachedAudio = audioCache.get(cacheKey);
         
-        if (url && isPlayingRef.current) {
+        let audioUrl: string;
+        
+        if (cachedAudio) {
+          // Use cached audio - instant playback!
+          console.log('[PausableAudio] Using cached audio');
+          audioUrl = cachedAudio.url;
+          setState(prev => ({ ...prev, isLoading: false }));
+        } else {
+          // Generate new audio
+          const { url } = await generate({ 
+            text: segment.content, 
+            language: targetLanguage 
+          });
+          audioUrl = url;
+        }
+        
+        if (audioUrl && isPlayingRef.current) {
           // Create a promise that resolves when audio ends
-          const audio = new Audio(url);
+          const audio = new Audio(audioUrl);
           
           await new Promise<void>((resolve) => {
             audio.onended = () => resolve();
