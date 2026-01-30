@@ -40,7 +40,7 @@ const Languages = () => {
     category: phrase.category,
   }));
 
-  const handlePlayPhrase = async (phrase: LanguagePhrase, targetLanguage: 'en' | 'es') => {
+  const handlePlayPhrase = async (phrase: LanguagePhrase) => {
     if (playingId === phrase.id && pausableAudio.isPlaying) {
       pausableAudio.stop();
       setPlayingId(null);
@@ -49,8 +49,9 @@ const Languages = () => {
 
     try {
       setPlayingId(phrase.id);
-      // Use pausable audio which handles the [pausa:Xs] markers
-      await pausableAudio.play(phrase.text, targetLanguage);
+      // Play in Portuguese - the phrases already contain the foreign words embedded
+      // e.g., "Em inglês, vermelho é RED. Fala comigo: RED [pausa:5s] Muito bem!"
+      await pausableAudio.play(phrase.text, 'pt');
     } catch (error) {
       console.error('Error playing phrase:', error);
     }
@@ -62,7 +63,6 @@ const Languages = () => {
   }
 
   const currentPhrases = selectedLanguage === "english" ? englishPhrases : spanishPhrases;
-  const targetLanguage = selectedLanguage === "english" ? 'en' : 'es';
 
   // Group phrases by category
   const groupedPhrases = currentPhrases.reduce((acc, phrase) => {
@@ -151,7 +151,7 @@ const Languages = () => {
                             <PlayButton
                               isPlaying={playingId === phrase.id && pausableAudio.isPlaying}
                               isLoading={pausableAudio.isLoading && playingId === phrase.id}
-                              onPlay={() => handlePlayPhrase(phrase, 'en')}
+                              onPlay={() => handlePlayPhrase(phrase)}
                               onPause={() => { pausableAudio.stop(); setPlayingId(null); }}
                               variant="secondary"
                               size="icon"
@@ -217,7 +217,7 @@ const Languages = () => {
                             <PlayButton
                               isPlaying={playingId === phrase.id && pausableAudio.isPlaying}
                               isLoading={pausableAudio.isLoading && playingId === phrase.id}
-                              onPlay={() => handlePlayPhrase(phrase, 'es')}
+                              onPlay={() => handlePlayPhrase(phrase)}
                               onPause={() => { pausableAudio.stop(); setPlayingId(null); }}
                               variant="secondary"
                               size="icon"
