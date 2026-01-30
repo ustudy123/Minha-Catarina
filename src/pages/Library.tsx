@@ -15,6 +15,7 @@ import { useSubscription } from "@/hooks/useSubscription";
 import { useSavedPhrases } from "@/hooks/useSavedPhrases";
 import { getTranslations } from "@/translations";
 import { PlayButton } from "@/components/audio/PlayButton";
+import { usePausableAudio, hasPauseMarkers, getTextWithoutPauses } from "@/hooks/usePausableAudio";
 import { AudioControls } from "@/components/audio/AudioControls";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -38,6 +39,7 @@ import {
   HandHeart,
   Gamepad2,
   Languages,
+  Timer,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -58,6 +60,7 @@ const Library = () => {
   const [playingId, setPlayingId] = useState<string | null>(null);
   
   const audioPlayer = useAudioPlayer();
+  const pausableAudio = usePausableAudio();
   const { generate: generateTTS, isGenerating: isGeneratingTTS } = useTextToSpeech();
   const { generate: generateSFX, isGenerating: isGeneratingSFX } = useSoundEffects();
   const { getAudioUrl, hasPreloadedAudio } = useLibraryAudio();
@@ -112,17 +115,32 @@ const Library = () => {
   });
 
   // Combined loading state
-  const isGenerating = isGeneratingTTS || isGeneratingSFX;
+  const isGenerating = isGeneratingTTS || isGeneratingSFX || pausableAudio.isLoading;
 
   const handlePlayPhrase = async (phrase: Phrase) => {
-    if (playingId === phrase.id && audioPlayer.isPlaying) {
-      audioPlayer.pause();
+    // If currently playing this phrase, stop it
+    if (playingId === phrase.id) {
+      if (pausableAudio.isPlaying) {
+        pausableAudio.stop();
+      } else if (audioPlayer.isPlaying) {
+        audioPlayer.pause();
+      }
       setPlayingId(null);
       return;
     }
 
+    // Stop any current playback
+    pausableAudio.stop();
+    audioPlayer.stop();
+
     try {
       setPlayingId(phrase.id);
+      
+      // Check if phrase has pause markers - use pausable audio for these
+      if (hasPauseMarkers(phrase.text)) {
+        pausableAudio.play(phrase.text, language as 'pt' | 'en' | 'es');
+        return;
+      }
       
       // First check for preloaded audio (instant playback)
       if (phrase.phraseKey) {
@@ -410,10 +428,14 @@ const Library = () => {
                   >
                     <div className="flex items-start gap-3">
                       <PlayButton
-                        isPlaying={playingId === phrase.id && audioPlayer.isPlaying}
+                        isPlaying={playingId === phrase.id && (audioPlayer.isPlaying || pausableAudio.isPlaying)}
                         isLoading={isGenerating && playingId === phrase.id}
                         onPlay={() => handlePlayPhrase(phrase)}
-                        onPause={audioPlayer.pause}
+                        onPause={() => {
+                          pausableAudio.stop();
+                          audioPlayer.pause();
+                          setPlayingId(null);
+                        }}
                         variant="secondary"
                         size="icon"
                         className="flex-shrink-0"
@@ -421,11 +443,21 @@ const Library = () => {
                       
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium mb-1 break-words">
-                          {phrase.text}
+                          {getTextWithoutPauses(phrase.text)}
                         </p>
                         <Badge variant="secondary" className="text-xs">
                           {categories.find(c => c.id === phrase.category)?.name || phrase.category}
                         </Badge>
+                        
+                        {/* Pause indicator */}
+                        {playingId === phrase.id && pausableAudio.isPaused && (
+                          <div className="mt-2 flex items-center gap-2 text-xs text-primary animate-pulse">
+                            <Timer className="w-4 h-4" />
+                            <span>
+                              {language === 'pt' ? 'Sua vez de falar!' : language === 'en' ? 'Your turn to speak!' : '¡Tu turno de hablar!'} ({pausableAudio.pauseTimeRemaining}s)
+                            </span>
+                          </div>
+                        )}
                       </div>
 
                       <Button
