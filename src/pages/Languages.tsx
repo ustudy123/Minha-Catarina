@@ -121,111 +121,131 @@ const Languages = () => {
             </TabsList>
 
             <TabsContent value="english" className="space-y-6 mt-6">
-              {Object.entries(groupedPhrases).map(([category, phrases]) => (
-                <div key={category} className="space-y-3">
-                  <h3 className="text-sm font-semibold text-muted-foreground flex items-center gap-2">
-                    {categoryLabels[category] || category}
-                    <Badge variant="secondary" className="text-xs">
-                      {phrases.length}
-                    </Badge>
-                  </h3>
-                  <div className="space-y-2">
-                    {phrases.map((phrase, index) => (
-                      <Card 
-                        key={phrase.id}
-                        className="p-4 border-2 hover-lift animate-fade-in"
-                        style={{ animationDelay: `${index * 0.05}s` }}
-                      >
-                        <div className="flex items-start gap-3">
-                          <PlayButton
-                            isPlaying={playingId === phrase.id && audioPlayer.isPlaying}
-                            isLoading={isGenerating && playingId === phrase.id}
-                            onPlay={() => handlePlayPhrase(phrase, 'en')}
-                            onPause={audioPlayer.pause}
-                            variant="secondary"
-                            size="icon"
-                            className="flex-shrink-0"
-                          />
-                          
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium break-words">
-                              {phrase.text}
-                            </p>
-                          </div>
-                        </div>
-
-                        {playingId === phrase.id && audioPlayer.duration > 0 && (
-                          <AudioControls
-                            volume={audioPlayer.volume}
-                            playbackRate={audioPlayer.playbackRate}
-                            currentTime={audioPlayer.currentTime}
-                            duration={audioPlayer.duration}
-                            onVolumeChange={audioPlayer.setVolume}
-                            onPlaybackRateChange={audioPlayer.setPlaybackRate}
-                            onSeek={audioPlayer.seek}
-                            className="mt-3"
-                            compact
-                          />
-                        )}
-                      </Card>
-                    ))}
-                  </div>
+              {currentPhrases.length === 0 ? (
+                <div className="text-center py-12">
+                  <p className="text-muted-foreground">
+                    {language === 'pt' ? 'Nenhuma frase disponível ainda' :
+                     language === 'en' ? 'No phrases available yet' :
+                     'No hay frases disponibles todavía'}
+                  </p>
                 </div>
-              ))}
+              ) : (
+                Object.entries(groupedPhrases).map(([category, phrases]) => (
+                  <div key={category} className="space-y-3">
+                    <h3 className="text-sm font-semibold text-muted-foreground flex items-center gap-2">
+                      {categoryLabels[category] || category}
+                      <Badge variant="secondary" className="text-xs">
+                        {phrases.length}
+                      </Badge>
+                    </h3>
+                    <div className="space-y-2">
+                      {phrases.map((phrase, index) => (
+                        <Card 
+                          key={phrase.id}
+                          className="p-4 border-2 hover-lift animate-fade-in"
+                          style={{ animationDelay: `${index * 0.05}s` }}
+                        >
+                          <div className="flex items-start gap-3">
+                            <PlayButton
+                              isPlaying={playingId === phrase.id && audioPlayer.isPlaying}
+                              isLoading={isGenerating && playingId === phrase.id}
+                              onPlay={() => handlePlayPhrase(phrase, 'en')}
+                              onPause={audioPlayer.pause}
+                              variant="secondary"
+                              size="icon"
+                              className="flex-shrink-0"
+                            />
+                            
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium break-words">
+                                {phrase.text}
+                              </p>
+                            </div>
+                          </div>
+
+                          {playingId === phrase.id && audioPlayer.duration > 0 && (
+                            <AudioControls
+                              volume={audioPlayer.volume}
+                              playbackRate={audioPlayer.playbackRate}
+                              currentTime={audioPlayer.currentTime}
+                              duration={audioPlayer.duration}
+                              onVolumeChange={audioPlayer.setVolume}
+                              onPlaybackRateChange={audioPlayer.setPlaybackRate}
+                              onSeek={audioPlayer.seek}
+                              className="mt-3"
+                              compact
+                            />
+                          )}
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+                ))
+              )}
             </TabsContent>
 
             <TabsContent value="spanish" className="space-y-6 mt-6">
-              {Object.entries(groupedPhrases).map(([category, phrases]) => (
-                <div key={category} className="space-y-3">
-                  <h3 className="text-sm font-semibold text-muted-foreground flex items-center gap-2">
-                    {categoryLabels[category] || category}
-                    <Badge variant="secondary" className="text-xs">
-                      {phrases.length}
-                    </Badge>
-                  </h3>
-                  <div className="space-y-2">
-                    {phrases.map((phrase, index) => (
-                      <Card 
-                        key={phrase.id}
-                        className="p-4 border-2 hover-lift animate-fade-in"
-                        style={{ animationDelay: `${index * 0.05}s` }}
-                      >
-                        <div className="flex items-start gap-3">
-                          <PlayButton
-                            isPlaying={playingId === phrase.id && audioPlayer.isPlaying}
-                            isLoading={isGenerating && playingId === phrase.id}
-                            onPlay={() => handlePlayPhrase(phrase, 'es')}
-                            onPause={audioPlayer.pause}
-                            variant="secondary"
-                            size="icon"
-                            className="flex-shrink-0"
-                          />
-                          
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium break-words">
-                              {phrase.text}
-                            </p>
-                          </div>
-                        </div>
-
-                        {playingId === phrase.id && audioPlayer.duration > 0 && (
-                          <AudioControls
-                            volume={audioPlayer.volume}
-                            playbackRate={audioPlayer.playbackRate}
-                            currentTime={audioPlayer.currentTime}
-                            duration={audioPlayer.duration}
-                            onVolumeChange={audioPlayer.setVolume}
-                            onPlaybackRateChange={audioPlayer.setPlaybackRate}
-                            onSeek={audioPlayer.seek}
-                            className="mt-3"
-                            compact
-                          />
-                        )}
-                      </Card>
-                    ))}
-                  </div>
+              {currentPhrases.length === 0 ? (
+                <div className="text-center py-12">
+                  <p className="text-muted-foreground">
+                    {language === 'pt' ? 'Nenhuma frase disponível ainda' :
+                     language === 'en' ? 'No phrases available yet' :
+                     'No hay frases disponibles todavía'}
+                  </p>
                 </div>
-              ))}
+              ) : (
+                Object.entries(groupedPhrases).map(([category, phrases]) => (
+                  <div key={category} className="space-y-3">
+                    <h3 className="text-sm font-semibold text-muted-foreground flex items-center gap-2">
+                      {categoryLabels[category] || category}
+                      <Badge variant="secondary" className="text-xs">
+                        {phrases.length}
+                      </Badge>
+                    </h3>
+                    <div className="space-y-2">
+                      {phrases.map((phrase, index) => (
+                        <Card 
+                          key={phrase.id}
+                          className="p-4 border-2 hover-lift animate-fade-in"
+                          style={{ animationDelay: `${index * 0.05}s` }}
+                        >
+                          <div className="flex items-start gap-3">
+                            <PlayButton
+                              isPlaying={playingId === phrase.id && audioPlayer.isPlaying}
+                              isLoading={isGenerating && playingId === phrase.id}
+                              onPlay={() => handlePlayPhrase(phrase, 'es')}
+                              onPause={audioPlayer.pause}
+                              variant="secondary"
+                              size="icon"
+                              className="flex-shrink-0"
+                            />
+                            
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium break-words">
+                                {phrase.text}
+                              </p>
+                            </div>
+                          </div>
+
+                          {playingId === phrase.id && audioPlayer.duration > 0 && (
+                            <AudioControls
+                              volume={audioPlayer.volume}
+                              playbackRate={audioPlayer.playbackRate}
+                              currentTime={audioPlayer.currentTime}
+                              duration={audioPlayer.duration}
+                              onVolumeChange={audioPlayer.setVolume}
+                              onPlaybackRateChange={audioPlayer.setPlaybackRate}
+                              onSeek={audioPlayer.seek}
+                              className="mt-3"
+                              compact
+                            />
+                          )}
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+                ))
+              )}
             </TabsContent>
           </Tabs>
         </main>
