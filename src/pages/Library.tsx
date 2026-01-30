@@ -37,6 +37,7 @@ import {
   Loader2,
   HandHeart,
   Gamepad2,
+  Languages,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -66,7 +67,7 @@ const Library = () => {
   const { phrases: savedPhrases, isLoading: loadingSaved, removePhrase, toggleFavorite: toggleSavedFavorite } = useSavedPhrases();
   const t = getTranslations(language);
 
-  // New 8 categories
+  // Categories with Languages as a link
   const categories = [
     { id: "all", name: t.library.categories.all || "Todas", icon: null },
     { id: "songs", name: t.library.categories.songs || "Músicas", icon: Music },
@@ -77,6 +78,7 @@ const Library = () => {
     { id: "playtime", name: t.library.categories.playtime || "Brincadeiras", icon: Gamepad2 },
     { id: "sounds", name: t.library.categories.sounds || "Sons", icon: Bell },
     { id: "prayers", name: t.library.categories.prayers || "Orações", icon: HandHeart },
+    { id: "languages", name: t.library.categories.languagesCategory || "Idiomas", icon: Languages, isLink: true, linkTo: "/languages" },
     { id: "myPhrases", name: t.library.categories.myPhrases || "Minhas Frases", icon: Sparkles, premium: true },
   ];
 
@@ -203,21 +205,28 @@ const Library = () => {
           />
         </div>
 
-        {/* Categories Tabs - 8 new categories */}
-        <Tabs value={selectedCategory} onValueChange={setSelectedCategory}>
+        {/* Categories Tabs */}
+        <Tabs value={selectedCategory} onValueChange={(value) => {
+          const cat = categories.find(c => c.id === value);
+          if (cat && (cat as any).isLink && (cat as any).linkTo) {
+            navigate((cat as any).linkTo);
+          } else {
+            setSelectedCategory(value);
+          }
+        }}>
           <TabsList className="w-full h-auto flex flex-wrap gap-2 bg-transparent p-0 justify-start">
             {categories.map(cat => (
               <TabsTrigger
                 key={cat.id}
                 value={cat.id}
-                disabled={cat.premium && !canAccessMyPhrases}
+                disabled={(cat as any).premium && !canAccessMyPhrases}
                 className={cn(
                   "rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground flex items-center gap-1",
-                  cat.premium && !canAccessMyPhrases && "opacity-50"
+                  (cat as any).premium && !canAccessMyPhrases && "opacity-50"
                 )}
               >
                 {cat.icon && <cat.icon className="w-4 h-4" />}
-                {cat.premium && !canAccessMyPhrases && <Lock className="w-3 h-3" />}
+                {(cat as any).premium && !canAccessMyPhrases && <Lock className="w-3 h-3" />}
                 {cat.name}
               </TabsTrigger>
             ))}

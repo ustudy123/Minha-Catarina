@@ -22,6 +22,7 @@ import Admin from "./pages/Admin";
 import AdminPhrases from "./pages/AdminPhrases";
 import AdminUsers from "./pages/AdminUsers";
 import AdminAudio from "./pages/AdminAudio";
+import Languages from "./pages/Languages";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -99,6 +100,14 @@ const App = () => (
                     element={
                       <ProtectedRoute>
                         <Profile />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/languages"
+                    element={
+                      <ProtectedRoute>
+                        <Languages />
                       </ProtectedRoute>
                     }
                   />
