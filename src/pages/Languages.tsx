@@ -4,14 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useAudioPlayer } from "@/hooks/useAudioPlayer";
-import { useTextToSpeech } from "@/hooks/useTextToSpeech";
+import { usePausableAudio, getTextWithoutPauses } from "@/hooks/usePausableAudio";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { getTranslations } from "@/translations";
 import { PlayButton } from "@/components/audio/PlayButton";
-import { AudioControls } from "@/components/audio/AudioControls";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Timer } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface LanguagePhrase {
@@ -25,8 +23,7 @@ const Languages = () => {
   const [selectedLanguage, setSelectedLanguage] = useState<"english" | "spanish">("english");
   const [playingId, setPlayingId] = useState<string | null>(null);
   
-  const audioPlayer = useAudioPlayer();
-  const { generate: generateTTS, isGenerating } = useTextToSpeech();
+  const pausableAudio = usePausableAudio();
   const { language } = useLanguage();
   const t = getTranslations(language);
 
@@ -44,23 +41,25 @@ const Languages = () => {
   }));
 
   const handlePlayPhrase = async (phrase: LanguagePhrase, targetLanguage: 'en' | 'es') => {
-    if (playingId === phrase.id && audioPlayer.isPlaying) {
-      audioPlayer.pause();
+    if (playingId === phrase.id && pausableAudio.isPlaying) {
+      pausableAudio.stop();
       setPlayingId(null);
       return;
     }
 
     try {
       setPlayingId(phrase.id);
-      const { url } = await generateTTS({ text: phrase.text, language: targetLanguage });
-      if (url) {
-        await audioPlayer.play(url);
-      }
+      // Use pausable audio which handles the [pausa:Xs] markers
+      await pausableAudio.play(phrase.text, targetLanguage);
     } catch (error) {
       console.error('Error playing phrase:', error);
-      setPlayingId(null);
     }
   };
+
+  // Reset playingId when audio stops
+  if (playingId && !pausableAudio.isPlaying) {
+    setPlayingId(null);
+  }
 
   const currentPhrases = selectedLanguage === "english" ? englishPhrases : spanishPhrases;
   const targetLanguage = selectedLanguage === "english" ? 'en' : 'es';
@@ -142,15 +141,18 @@ const Languages = () => {
                       {phrases.map((phrase, index) => (
                         <Card 
                           key={phrase.id}
-                          className="p-4 border-2 hover-lift animate-fade-in"
+                          className={cn(
+                            "p-4 border-2 hover-lift animate-fade-in",
+                            playingId === phrase.id && pausableAudio.isPlaying && "border-primary bg-primary/5"
+                          )}
                           style={{ animationDelay: `${index * 0.05}s` }}
                         >
                           <div className="flex items-start gap-3">
                             <PlayButton
-                              isPlaying={playingId === phrase.id && audioPlayer.isPlaying}
-                              isLoading={isGenerating && playingId === phrase.id}
+                              isPlaying={playingId === phrase.id && pausableAudio.isPlaying}
+                              isLoading={pausableAudio.isLoading && playingId === phrase.id}
                               onPlay={() => handlePlayPhrase(phrase, 'en')}
-                              onPause={audioPlayer.pause}
+                              onPause={() => { pausableAudio.stop(); setPlayingId(null); }}
                               variant="secondary"
                               size="icon"
                               className="flex-shrink-0"
@@ -158,24 +160,23 @@ const Languages = () => {
                             
                             <div className="flex-1 min-w-0">
                               <p className="text-sm font-medium break-words">
-                                {phrase.text}
+                                {getTextWithoutPauses(phrase.text)}
                               </p>
+                              
+                              {/* Pause indicator */}
+                              {playingId === phrase.id && pausableAudio.isPaused && (
+                                <div className="mt-2 flex items-center gap-2 text-xs text-primary animate-pulse">
+                                  <Timer className="w-4 h-4" />
+                                  <span>
+                                    {language === 'pt' ? 'Sua vez de falar!' :
+                                     language === 'en' ? 'Your turn to speak!' :
+                                     '¡Tu turno de hablar!'} 
+                                    ({pausableAudio.pauseTimeRemaining}s)
+                                  </span>
+                                </div>
+                              )}
                             </div>
                           </div>
-
-                          {playingId === phrase.id && audioPlayer.duration > 0 && (
-                            <AudioControls
-                              volume={audioPlayer.volume}
-                              playbackRate={audioPlayer.playbackRate}
-                              currentTime={audioPlayer.currentTime}
-                              duration={audioPlayer.duration}
-                              onVolumeChange={audioPlayer.setVolume}
-                              onPlaybackRateChange={audioPlayer.setPlaybackRate}
-                              onSeek={audioPlayer.seek}
-                              className="mt-3"
-                              compact
-                            />
-                          )}
                         </Card>
                       ))}
                     </div>
@@ -206,15 +207,18 @@ const Languages = () => {
                       {phrases.map((phrase, index) => (
                         <Card 
                           key={phrase.id}
-                          className="p-4 border-2 hover-lift animate-fade-in"
+                          className={cn(
+                            "p-4 border-2 hover-lift animate-fade-in",
+                            playingId === phrase.id && pausableAudio.isPlaying && "border-primary bg-primary/5"
+                          )}
                           style={{ animationDelay: `${index * 0.05}s` }}
                         >
                           <div className="flex items-start gap-3">
                             <PlayButton
-                              isPlaying={playingId === phrase.id && audioPlayer.isPlaying}
-                              isLoading={isGenerating && playingId === phrase.id}
+                              isPlaying={playingId === phrase.id && pausableAudio.isPlaying}
+                              isLoading={pausableAudio.isLoading && playingId === phrase.id}
                               onPlay={() => handlePlayPhrase(phrase, 'es')}
-                              onPause={audioPlayer.pause}
+                              onPause={() => { pausableAudio.stop(); setPlayingId(null); }}
                               variant="secondary"
                               size="icon"
                               className="flex-shrink-0"
@@ -222,24 +226,23 @@ const Languages = () => {
                             
                             <div className="flex-1 min-w-0">
                               <p className="text-sm font-medium break-words">
-                                {phrase.text}
+                                {getTextWithoutPauses(phrase.text)}
                               </p>
+                              
+                              {/* Pause indicator */}
+                              {playingId === phrase.id && pausableAudio.isPaused && (
+                                <div className="mt-2 flex items-center gap-2 text-xs text-primary animate-pulse">
+                                  <Timer className="w-4 h-4" />
+                                  <span>
+                                    {language === 'pt' ? 'Sua vez de falar!' :
+                                     language === 'en' ? 'Your turn to speak!' :
+                                     '¡Tu turno de hablar!'} 
+                                    ({pausableAudio.pauseTimeRemaining}s)
+                                  </span>
+                                </div>
+                              )}
                             </div>
                           </div>
-
-                          {playingId === phrase.id && audioPlayer.duration > 0 && (
-                            <AudioControls
-                              volume={audioPlayer.volume}
-                              playbackRate={audioPlayer.playbackRate}
-                              currentTime={audioPlayer.currentTime}
-                              duration={audioPlayer.duration}
-                              onVolumeChange={audioPlayer.setVolume}
-                              onPlaybackRateChange={audioPlayer.setPlaybackRate}
-                              onSeek={audioPlayer.seek}
-                              className="mt-3"
-                              compact
-                            />
-                          )}
                         </Card>
                       ))}
                     </div>

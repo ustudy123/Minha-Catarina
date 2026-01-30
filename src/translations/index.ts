@@ -689,34 +689,29 @@ export const translations = {
         { text: "Mamãe vamos na natação.", category: "daily", timeOfDay: "morning" },
         { text: "Mamãe vamos no ballet.", category: "daily", timeOfDay: "morning" },
         { text: "Vamos no mercado mamãe.", category: "daily", timeOfDay: "afternoon" },
-        // Brincadeiras - Frases interativas para brincar
+        // Brincadeiras - Frases interativas para brincar COM PAUSAS
         { text: "Vamos brincar?", category: "playtime", timeOfDay: "morning" },
-        { text: "Ache um objeto redondo por aqui!", category: "playtime", timeOfDay: "morning" },
-        { text: "É um círculo! Vamos brincar?", category: "playtime", timeOfDay: "morning" },
-        { text: "Ache algo da cor VERMELHA!", category: "playtime", timeOfDay: "morning" },
-        { text: "Achou? Deixa eu ver? Muito bem!", category: "playtime", timeOfDay: "afternoon" },
-        { text: "Ache algo da cor azul!", category: "playtime", timeOfDay: "afternoon" },
-        { text: "Parabéns! Ache algo da cor amarela!", category: "playtime", timeOfDay: "afternoon" },
-        { text: "Achou? Muito bem!", category: "playtime", timeOfDay: "afternoon" },
-        { text: "Agora é hora de imitar!", category: "playtime", timeOfDay: "afternoon" },
-        { text: "Como o cachorro faz?", category: "playtime", timeOfDay: "afternoon" },
-        { text: "E o gato?", category: "playtime", timeOfDay: "afternoon" },
-        { text: "E o pintinho?", category: "playtime", timeOfDay: "afternoon" },
-        { text: "Qual mais você sabe imitar?", category: "playtime", timeOfDay: "afternoon" },
-        { text: "Uau, adorei!", category: "playtime", timeOfDay: "afternoon" },
-        { text: "O que eu dizer você me mostra tá!?", category: "playtime", timeOfDay: "afternoon" },
-        { text: "Cadê o nariz?", category: "playtime", timeOfDay: "morning" },
-        { text: "A cabeça?", category: "playtime", timeOfDay: "morning" },
-        { text: "Cadê o pé?", category: "playtime", timeOfDay: "morning" },
-        { text: "E o joelho?", category: "playtime", timeOfDay: "morning" },
-        { text: "Cadê sua orelha?", category: "playtime", timeOfDay: "morning" },
-        { text: "Você é muito esperta!", category: "playtime", timeOfDay: "afternoon" },
-        { text: "Vamos brincar de esconde-esconde?", category: "playtime", timeOfDay: "afternoon" },
-        { text: "Você conta até dez, vou me esconder, pode ser?", category: "playtime", timeOfDay: "afternoon" },
-        { text: "Você me achou bem rápido, hein?", category: "playtime", timeOfDay: "afternoon" },
-        { text: "Agora vou contar até 10 em inglês e você se esconde, tá?", category: "playtime", timeOfDay: "afternoon" },
-        { text: "One, two, three, four, five, six, seven, eight, nine, ten!", category: "playtime", timeOfDay: "afternoon" },
-        { text: "Estou indo te procurar...", category: "playtime", timeOfDay: "afternoon" },
+        { text: "Ache um objeto redondo por aqui! [pausa:8s] Achou? Muito bem! É um círculo!", category: "playtime", timeOfDay: "morning" },
+        { text: "Ache algo da cor VERMELHA! [pausa:8s] Deixa eu ver? Muito bem, você acertou!", category: "playtime", timeOfDay: "morning" },
+        { text: "Ache algo da cor AZUL! [pausa:8s] Isso mesmo! Parabéns!", category: "playtime", timeOfDay: "afternoon" },
+        { text: "Ache algo da cor AMARELA! [pausa:8s] Achou? Muito bem!", category: "playtime", timeOfDay: "afternoon" },
+        { text: "Ache algo da cor VERDE! [pausa:8s] Perfeito! Você é muito esperta!", category: "playtime", timeOfDay: "afternoon" },
+        { text: "Agora é hora de imitar! Como o cachorro faz? [pausa:5s] Au au! Isso aí!", category: "playtime", timeOfDay: "afternoon" },
+        { text: "E o gato, como faz? [pausa:5s] Miau! Perfeito!", category: "playtime", timeOfDay: "afternoon" },
+        { text: "E o pintinho, como faz? [pausa:5s] Piu piu! Muito bem!", category: "playtime", timeOfDay: "afternoon" },
+        { text: "Como faz a vaca? [pausa:5s] Muuuu! Isso mesmo!", category: "playtime", timeOfDay: "afternoon" },
+        { text: "E o leão, como faz? [pausa:5s] Roaaar! Você é demais!", category: "playtime", timeOfDay: "afternoon" },
+        { text: "Cadê o nariz? [pausa:5s] Isso! Aqui está o nariz!", category: "playtime", timeOfDay: "morning" },
+        { text: "Cadê a cabeça? [pausa:5s] Muito bem!", category: "playtime", timeOfDay: "morning" },
+        { text: "Cadê o pé? [pausa:5s] Isso aí!", category: "playtime", timeOfDay: "morning" },
+        { text: "E o joelho, cadê? [pausa:5s] Perfeito!", category: "playtime", timeOfDay: "morning" },
+        { text: "Cadê sua orelha? [pausa:5s] Você é muito esperta!", category: "playtime", timeOfDay: "morning" },
+        { text: "Cadê a barriga? [pausa:5s] Isso! Aqui está!", category: "playtime", timeOfDay: "morning" },
+        { text: "Vamos brincar de esconde-esconde? Você conta até dez, vou me esconder!", category: "playtime", timeOfDay: "afternoon" },
+        { text: "Agora vou contar até 10 em inglês e você se esconde, tá? One, two, three, four, five, six, seven, eight, nine, ten! [pausa:15s] Estou indo te procurar... [pausa:10s] Te achei!", category: "playtime", timeOfDay: "afternoon" },
+        { text: "Bata palmas comigo! [pausa:3s] Outra vez! [pausa:3s] Mais uma! [pausa:3s] Uau, que legal!", category: "playtime", timeOfDay: "morning" },
+        { text: "Pula uma vez! [pausa:3s] Agora duas vezes! [pausa:4s] Você pula muito bem!", category: "playtime", timeOfDay: "afternoon" },
+        { text: "Gira como uma bailarina! [pausa:5s] Que lindo! Você dança muito bem!", category: "playtime", timeOfDay: "afternoon" },
       ],
     },
 
@@ -897,8 +892,53 @@ export const translations = {
         animals: "Animais",
         family: "Família",
       },
-      englishPhrases: [],
-      spanishPhrases: [],
+      englishPhrases: [
+        // Cores
+        { text: "Em inglês, vermelho é RED. [pausa:5s] Fala comigo: RED! [pausa:5s] Muito bem!", category: "colors" },
+        { text: "Em inglês, azul é BLUE. [pausa:5s] Fala comigo: BLUE! [pausa:5s] Isso mesmo!", category: "colors" },
+        { text: "Em inglês, amarelo é YELLOW. [pausa:5s] Fala comigo: YELLOW! [pausa:5s] Perfeito!", category: "colors" },
+        { text: "Em inglês, verde é GREEN. [pausa:5s] Fala comigo: GREEN! [pausa:5s] Arrasou!", category: "colors" },
+        { text: "Em inglês, laranja é ORANGE. [pausa:5s] Fala comigo: ORANGE! [pausa:5s] Excelente!", category: "colors" },
+        // Números
+        { text: "Em inglês, um é ONE. [pausa:5s] Fala comigo: ONE! [pausa:5s] Isso aí!", category: "numbers" },
+        { text: "Em inglês, dois é TWO. [pausa:5s] Fala comigo: TWO! [pausa:5s] Muito bom!", category: "numbers" },
+        { text: "Em inglês, três é THREE. [pausa:5s] Fala comigo: THREE! [pausa:5s] Perfeito!", category: "numbers" },
+        { text: "Vamos contar em inglês? ONE, TWO, THREE! [pausa:5s] Agora você: ONE, TWO, THREE! [pausa:5s] Mandou muito bem!", category: "numbers" },
+        // Saudações
+        { text: "Em inglês, olá é HELLO. [pausa:5s] Fala comigo: HELLO! [pausa:5s] Maravilha!", category: "greetings" },
+        { text: "Em inglês, bom dia é GOOD MORNING. [pausa:5s] Fala comigo: GOOD MORNING! [pausa:5s] Excelente!", category: "greetings" },
+        { text: "Em inglês, tchau é BYE BYE. [pausa:5s] Fala comigo: BYE BYE! [pausa:5s] Perfeito!", category: "greetings" },
+        // Animais
+        { text: "Em inglês, cachorro é DOG. [pausa:5s] Fala comigo: DOG! [pausa:5s] Isso aí!", category: "animals" },
+        { text: "Em inglês, gato é CAT. [pausa:5s] Fala comigo: CAT! [pausa:5s] Muito bom!", category: "animals" },
+        { text: "Em inglês, pássaro é BIRD. [pausa:5s] Fala comigo: BIRD! [pausa:5s] Arrasou!", category: "animals" },
+        // Família
+        { text: "Em inglês, mamãe é MOM. [pausa:5s] Fala comigo: MOM! [pausa:5s] Perfeito!", category: "family" },
+        { text: "Em inglês, papai é DAD. [pausa:5s] Fala comigo: DAD! [pausa:5s] Muito bem!", category: "family" },
+      ],
+      spanishPhrases: [
+        // Cores
+        { text: "En español, rojo se dice ROJO. [pausa:5s] Repite conmigo: ROJO! [pausa:5s] ¡Muy bien!", category: "colors" },
+        { text: "En español, azul se dice AZUL. [pausa:5s] Repite conmigo: AZUL! [pausa:5s] ¡Excelente!", category: "colors" },
+        { text: "En español, amarillo se dice AMARILLO. [pausa:5s] Repite conmigo: AMARILLO! [pausa:5s] ¡Perfecto!", category: "colors" },
+        { text: "En español, verde se dice VERDE. [pausa:5s] Repite conmigo: VERDE! [pausa:5s] ¡Genial!", category: "colors" },
+        // Números
+        { text: "En español, uno se dice UNO. [pausa:5s] Repite conmigo: UNO! [pausa:5s] ¡Muy bien!", category: "numbers" },
+        { text: "En español, dos se dice DOS. [pausa:5s] Repite conmigo: DOS! [pausa:5s] ¡Excelente!", category: "numbers" },
+        { text: "En español, tres se dice TRES. [pausa:5s] Repite conmigo: TRES! [pausa:5s] ¡Perfecto!", category: "numbers" },
+        { text: "¡Vamos a contar! UNO, DOS, TRES! [pausa:5s] Ahora tú: UNO, DOS, TRES! [pausa:5s] ¡Lo hiciste muy bien!", category: "numbers" },
+        // Saudações
+        { text: "En español, hola se dice HOLA. [pausa:5s] Repite conmigo: HOLA! [pausa:5s] ¡Maravilloso!", category: "greetings" },
+        { text: "En español, buenos días se dice BUENOS DÍAS. [pausa:5s] Repite conmigo: BUENOS DÍAS! [pausa:5s] ¡Excelente!", category: "greetings" },
+        { text: "En español, adiós se dice ADIÓS. [pausa:5s] Repite conmigo: ADIÓS! [pausa:5s] ¡Perfecto!", category: "greetings" },
+        // Animais
+        { text: "En español, perro se dice PERRO. [pausa:5s] Repite conmigo: PERRO! [pausa:5s] ¡Muy bien!", category: "animals" },
+        { text: "En español, gato se dice GATO. [pausa:5s] Repite conmigo: GATO! [pausa:5s] ¡Excelente!", category: "animals" },
+        { text: "En español, pájaro se dice PÁJARO. [pausa:5s] Repite conmigo: PÁJARO! [pausa:5s] ¡Genial!", category: "animals" },
+        // Família
+        { text: "En español, mamá se dice MAMÁ. [pausa:5s] Repite conmigo: MAMÁ! [pausa:5s] ¡Perfecto!", category: "family" },
+        { text: "En español, papá se dice PAPÁ. [pausa:5s] Repite conmigo: PAPÁ! [pausa:5s] ¡Muy bien!", category: "family" },
+      ],
     },
   },
   
@@ -1358,8 +1398,53 @@ export const translations = {
         animals: "Animals",
         family: "Family",
       },
-      englishPhrases: [],
-      spanishPhrases: [],
+      englishPhrases: [
+        // Colors
+        { text: "In English, red is RED. [pause:5s] Say it with me: RED! [pause:5s] Great job!", category: "colors" },
+        { text: "In English, blue is BLUE. [pause:5s] Say it with me: BLUE! [pause:5s] Excellent!", category: "colors" },
+        { text: "In English, yellow is YELLOW. [pause:5s] Say it with me: YELLOW! [pause:5s] Perfect!", category: "colors" },
+        { text: "In English, green is GREEN. [pause:5s] Say it with me: GREEN! [pause:5s] Amazing!", category: "colors" },
+        { text: "In English, orange is ORANGE. [pause:5s] Say it with me: ORANGE! [pause:5s] Wonderful!", category: "colors" },
+        // Numbers
+        { text: "In English, one is ONE. [pause:5s] Say it with me: ONE! [pause:5s] Great!", category: "numbers" },
+        { text: "In English, two is TWO. [pause:5s] Say it with me: TWO! [pause:5s] Excellent!", category: "numbers" },
+        { text: "In English, three is THREE. [pause:5s] Say it with me: THREE! [pause:5s] Perfect!", category: "numbers" },
+        { text: "Let's count in English! ONE, TWO, THREE! [pause:5s] Now you: ONE, TWO, THREE! [pause:5s] You did great!", category: "numbers" },
+        // Greetings
+        { text: "In English, hello is HELLO. [pause:5s] Say it with me: HELLO! [pause:5s] Wonderful!", category: "greetings" },
+        { text: "In English, good morning is GOOD MORNING. [pause:5s] Say it with me: GOOD MORNING! [pause:5s] Excellent!", category: "greetings" },
+        { text: "In English, bye is BYE BYE. [pause:5s] Say it with me: BYE BYE! [pause:5s] Perfect!", category: "greetings" },
+        // Animals
+        { text: "In English, dog is DOG. [pause:5s] Say it with me: DOG! [pause:5s] Great!", category: "animals" },
+        { text: "In English, cat is CAT. [pause:5s] Say it with me: CAT! [pause:5s] Excellent!", category: "animals" },
+        { text: "In English, bird is BIRD. [pause:5s] Say it with me: BIRD! [pause:5s] Amazing!", category: "animals" },
+        // Family
+        { text: "In English, mom is MOM. [pause:5s] Say it with me: MOM! [pause:5s] Perfect!", category: "family" },
+        { text: "In English, dad is DAD. [pause:5s] Say it with me: DAD! [pause:5s] Great job!", category: "family" },
+      ],
+      spanishPhrases: [
+        // Colors
+        { text: "In Spanish, red is ROJO. [pause:5s] Say it with me: ROJO! [pause:5s] Great job!", category: "colors" },
+        { text: "In Spanish, blue is AZUL. [pause:5s] Say it with me: AZUL! [pause:5s] Excellent!", category: "colors" },
+        { text: "In Spanish, yellow is AMARILLO. [pause:5s] Say it with me: AMARILLO! [pause:5s] Perfect!", category: "colors" },
+        { text: "In Spanish, green is VERDE. [pause:5s] Say it with me: VERDE! [pause:5s] Amazing!", category: "colors" },
+        // Numbers
+        { text: "In Spanish, one is UNO. [pause:5s] Say it with me: UNO! [pause:5s] Great!", category: "numbers" },
+        { text: "In Spanish, two is DOS. [pause:5s] Say it with me: DOS! [pause:5s] Excellent!", category: "numbers" },
+        { text: "In Spanish, three is TRES. [pause:5s] Say it with me: TRES! [pause:5s] Perfect!", category: "numbers" },
+        { text: "Let's count in Spanish! UNO, DOS, TRES! [pause:5s] Now you: UNO, DOS, TRES! [pause:5s] You did great!", category: "numbers" },
+        // Greetings
+        { text: "In Spanish, hello is HOLA. [pause:5s] Say it with me: HOLA! [pause:5s] Wonderful!", category: "greetings" },
+        { text: "In Spanish, good morning is BUENOS DÍAS. [pause:5s] Say it with me: BUENOS DÍAS! [pause:5s] Excellent!", category: "greetings" },
+        { text: "In Spanish, goodbye is ADIÓS. [pause:5s] Say it with me: ADIÓS! [pause:5s] Perfect!", category: "greetings" },
+        // Animals
+        { text: "In Spanish, dog is PERRO. [pause:5s] Say it with me: PERRO! [pause:5s] Great!", category: "animals" },
+        { text: "In Spanish, cat is GATO. [pause:5s] Say it with me: GATO! [pause:5s] Excellent!", category: "animals" },
+        { text: "In Spanish, bird is PÁJARO. [pause:5s] Say it with me: PÁJARO! [pause:5s] Amazing!", category: "animals" },
+        // Family
+        { text: "In Spanish, mom is MAMÁ. [pause:5s] Say it with me: MAMÁ! [pause:5s] Perfect!", category: "family" },
+        { text: "In Spanish, dad is PAPÁ. [pause:5s] Say it with me: PAPÁ! [pause:5s] Great job!", category: "family" },
+      ],
     },
   },
   
@@ -1819,8 +1904,53 @@ export const translations = {
         animals: "Animales",
         family: "Familia",
       },
-      englishPhrases: [],
-      spanishPhrases: [],
+      englishPhrases: [
+        // Colores
+        { text: "En inglés, rojo es RED. [pausa:5s] Dilo conmigo: RED! [pausa:5s] ¡Muy bien!", category: "colors" },
+        { text: "En inglés, azul es BLUE. [pausa:5s] Dilo conmigo: BLUE! [pausa:5s] ¡Excelente!", category: "colors" },
+        { text: "En inglés, amarillo es YELLOW. [pausa:5s] Dilo conmigo: YELLOW! [pausa:5s] ¡Perfecto!", category: "colors" },
+        { text: "En inglés, verde es GREEN. [pausa:5s] Dilo conmigo: GREEN! [pausa:5s] ¡Genial!", category: "colors" },
+        { text: "En inglés, naranja es ORANGE. [pausa:5s] Dilo conmigo: ORANGE! [pausa:5s] ¡Maravilloso!", category: "colors" },
+        // Números
+        { text: "En inglés, uno es ONE. [pausa:5s] Dilo conmigo: ONE! [pausa:5s] ¡Muy bien!", category: "numbers" },
+        { text: "En inglés, dos es TWO. [pausa:5s] Dilo conmigo: TWO! [pausa:5s] ¡Excelente!", category: "numbers" },
+        { text: "En inglés, tres es THREE. [pausa:5s] Dilo conmigo: THREE! [pausa:5s] ¡Perfecto!", category: "numbers" },
+        { text: "¡Vamos a contar en inglés! ONE, TWO, THREE! [pausa:5s] Ahora tú: ONE, TWO, THREE! [pausa:5s] ¡Lo hiciste genial!", category: "numbers" },
+        // Saludos
+        { text: "En inglés, hola es HELLO. [pausa:5s] Dilo conmigo: HELLO! [pausa:5s] ¡Maravilloso!", category: "greetings" },
+        { text: "En inglés, buenos días es GOOD MORNING. [pausa:5s] Dilo conmigo: GOOD MORNING! [pausa:5s] ¡Excelente!", category: "greetings" },
+        { text: "En inglés, adiós es BYE BYE. [pausa:5s] Dilo conmigo: BYE BYE! [pausa:5s] ¡Perfecto!", category: "greetings" },
+        // Animales
+        { text: "En inglés, perro es DOG. [pausa:5s] Dilo conmigo: DOG! [pausa:5s] ¡Muy bien!", category: "animals" },
+        { text: "En inglés, gato es CAT. [pausa:5s] Dilo conmigo: CAT! [pausa:5s] ¡Excelente!", category: "animals" },
+        { text: "En inglés, pájaro es BIRD. [pausa:5s] Dilo conmigo: BIRD! [pausa:5s] ¡Genial!", category: "animals" },
+        // Familia
+        { text: "En inglés, mamá es MOM. [pausa:5s] Dilo conmigo: MOM! [pausa:5s] ¡Perfecto!", category: "family" },
+        { text: "En inglés, papá es DAD. [pausa:5s] Dilo conmigo: DAD! [pausa:5s] ¡Muy bien!", category: "family" },
+      ],
+      spanishPhrases: [
+        // Colores
+        { text: "En español, rojo se dice ROJO. [pausa:5s] Repite conmigo: ROJO! [pausa:5s] ¡Muy bien!", category: "colors" },
+        { text: "En español, azul se dice AZUL. [pausa:5s] Repite conmigo: AZUL! [pausa:5s] ¡Excelente!", category: "colors" },
+        { text: "En español, amarillo se dice AMARILLO. [pausa:5s] Repite conmigo: AMARILLO! [pausa:5s] ¡Perfecto!", category: "colors" },
+        { text: "En español, verde se dice VERDE. [pausa:5s] Repite conmigo: VERDE! [pausa:5s] ¡Genial!", category: "colors" },
+        // Números
+        { text: "En español, uno se dice UNO. [pausa:5s] Repite conmigo: UNO! [pausa:5s] ¡Muy bien!", category: "numbers" },
+        { text: "En español, dos se dice DOS. [pausa:5s] Repite conmigo: DOS! [pausa:5s] ¡Excelente!", category: "numbers" },
+        { text: "En español, tres se dice TRES. [pausa:5s] Repite conmigo: TRES! [pausa:5s] ¡Perfecto!", category: "numbers" },
+        { text: "¡Vamos a contar! UNO, DOS, TRES! [pausa:5s] Ahora tú: UNO, DOS, TRES! [pausa:5s] ¡Lo hiciste muy bien!", category: "numbers" },
+        // Saludos
+        { text: "En español, hola se dice HOLA. [pausa:5s] Repite conmigo: HOLA! [pausa:5s] ¡Maravilloso!", category: "greetings" },
+        { text: "En español, buenos días se dice BUENOS DÍAS. [pausa:5s] Repite conmigo: BUENOS DÍAS! [pausa:5s] ¡Excelente!", category: "greetings" },
+        { text: "En español, adiós se dice ADIÓS. [pausa:5s] Repite conmigo: ADIÓS! [pausa:5s] ¡Perfecto!", category: "greetings" },
+        // Animales
+        { text: "En español, perro se dice PERRO. [pausa:5s] Repite conmigo: PERRO! [pausa:5s] ¡Muy bien!", category: "animals" },
+        { text: "En español, gato se dice GATO. [pausa:5s] Repite conmigo: GATO! [pausa:5s] ¡Excelente!", category: "animals" },
+        { text: "En español, pájaro se dice PÁJARO. [pausa:5s] Repite conmigo: PÁJARO! [pausa:5s] ¡Genial!", category: "animals" },
+        // Familia
+        { text: "En español, mamá se dice MAMÁ. [pausa:5s] Repite conmigo: MAMÁ! [pausa:5s] ¡Perfecto!", category: "family" },
+        { text: "En español, papá se dice PAPÁ. [pausa:5s] Repite conmigo: PAPÁ! [pausa:5s] ¡Muy bien!", category: "family" },
+      ],
     },
   },
 };
