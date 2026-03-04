@@ -264,9 +264,7 @@ const Index = () => {
                       <div className={cn("w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br flex items-center justify-center shadow-md", action.gradient)}>
                         <action.icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                       </div>
-                      {action.isPremium && !isPremium && <Badge variant="secondary" className="gap-1 text-xs">
-                          <Crown className="w-3 h-3" />
-                        </Badge>}
+                      
                     </div>
                     
                     <div className="flex-1">
