@@ -1,4 +1,6 @@
 import { Language } from '@/contexts/LanguageContext';
+import { libraryPhrasesData } from '@/data/libraryPhrases';
+import { englishPhrasesData, spanishPhrasesData } from '@/data/languagePhrases';
 
 export const translations = {
   pt: {
@@ -193,7 +195,7 @@ export const translations = {
         night: "Noite",
       },
       phrases: "frases",
-      prerecordedPhrases: [],
+      prerecordedPhrases: libraryPhrasesData,
     },
 
     // Routines
@@ -372,9 +374,12 @@ export const translations = {
         greetings: "Saudações",
         animals: "Animais",
         family: "Família",
+        vocabulary: "Vocabulário",
+        places: "Lugares",
+        food: "Comida",
       },
-      englishPhrases: [],
-      spanishPhrases: [],
+      englishPhrases: englishPhrasesData,
+      spanishPhrases: spanishPhrasesData,
     },
   },
   
@@ -570,7 +575,7 @@ export const translations = {
         night: "Night",
       },
       phrases: "phrases",
-      prerecordedPhrases: [],
+      prerecordedPhrases: libraryPhrasesData,
     },
 
     // Routines
@@ -749,9 +754,12 @@ export const translations = {
         greetings: "Greetings",
         animals: "Animals",
         family: "Family",
+        vocabulary: "Vocabulary",
+        places: "Places",
+        food: "Food",
       },
-      englishPhrases: [],
-      spanishPhrases: [],
+      englishPhrases: englishPhrasesData,
+      spanishPhrases: spanishPhrasesData,
     },
   },
   
@@ -947,7 +955,7 @@ export const translations = {
         night: "Noche",
       },
       phrases: "frases",
-      prerecordedPhrases: [],
+      prerecordedPhrases: libraryPhrasesData,
     },
 
     // Routines
@@ -1126,9 +1134,12 @@ export const translations = {
         greetings: "Saludos",
         animals: "Animales",
         family: "Familia",
+        vocabulary: "Vocabulario",
+        places: "Lugares",
+        food: "Comida",
       },
-      englishPhrases: [],
-      spanishPhrases: [],
+      englishPhrases: englishPhrasesData,
+      spanishPhrases: spanishPhrasesData,
     },
   },
 };

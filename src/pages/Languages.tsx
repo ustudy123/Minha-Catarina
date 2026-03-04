@@ -101,6 +101,9 @@ const Languages = () => {
     greetings: t.languageLearning.categories.greetings,
     animals: t.languageLearning.categories.animals,
     family: t.languageLearning.categories.family,
+    vocabulary: (t.languageLearning.categories as any).vocabulary || "Vocabulário",
+    places: (t.languageLearning.categories as any).places || "Lugares",
+    food: (t.languageLearning.categories as any).food || "Comida",
   };
 
   return (
