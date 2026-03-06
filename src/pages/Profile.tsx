@@ -287,7 +287,8 @@ export default function Profile() {
                 )}
               </div>
 
-              {/* Antonio Option */}
+              {/* Antonio Option - Hidden but preserved */}
+              <div className="hidden">
               <div
                 className={cn(
                   'relative cursor-pointer transition-all p-4 rounded-xl border-2 flex flex-col items-center gap-3',
