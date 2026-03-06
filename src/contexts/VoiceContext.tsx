@@ -147,8 +147,6 @@ export const VoiceProvider = ({ children }: { children: ReactNode }) => {
 
   const completeOnboarding = (doll: DollType) => {
     setSelectedDoll(doll);
-    setHasCompletedOnboarding(true);
-    localStorage.setItem('onboarding-completed', 'true');
   };
 
   return (
