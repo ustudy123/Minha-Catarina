@@ -38,6 +38,17 @@ export const FEMALE_VOICES: ChildVoice[] = [
     voiceId: 'TTGjcNbsD6mgd4Yt8Tbl',
     gender: 'female',
   },
+  {
+    id: 'voz3',
+    name: 'Voz 3',
+    description: {
+      pt: 'Voz infantil expressiva',
+      en: 'Expressive child voice',
+      es: 'Voz infantil expresiva',
+    },
+    voiceId: 'uEB23VYot0LSckRGjGKB',
+    gender: 'female',
+  },
 ];
 
 // Vozes para Antônio (usando vozes neutras que soam infantis)
