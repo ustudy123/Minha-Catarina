@@ -54,8 +54,8 @@ export default function Onboarding() {
             </div>
           </Card>
 
-          {/* Antonio Option */}
-          <Card className={cn('relative cursor-pointer transition-all hover:scale-105 border-2', selectedDoll === 'antonio' ? 'border-accent bg-accent/10 ring-2 ring-accent/30' : 'border-border/50 hover:border-accent/50')} onClick={() => setSelectedDoll('antonio')}>
+          {/* Antonio Option - Hidden but preserved */}
+          <Card className={cn('hidden relative cursor-pointer transition-all hover:scale-105 border-2', selectedDoll === 'antonio' ? 'border-accent bg-accent/10 ring-2 ring-accent/30' : 'border-border/50 hover:border-accent/50')} onClick={() => setSelectedDoll('antonio')}>
             <div className="p-6 flex flex-col items-center space-y-4">
               {/* Blue cap icon */}
               <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center shadow-lg">

@@ -311,6 +311,7 @@ export default function Profile() {
                   </div>
                 )}
               </div>
+              </div>
             </div>
           </CardContent>
         </Card>
