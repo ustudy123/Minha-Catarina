@@ -17,6 +17,17 @@ export interface ChildVoice {
 // Vozes femininas para Catarina
 export const FEMALE_VOICES: ChildVoice[] = [
   {
+    id: 'voz1',
+    name: 'Voz 1',
+    description: {
+      pt: 'Voz infantil natural',
+      en: 'Natural child voice',
+      es: 'Voz infantil natural',
+    },
+    voiceId: 'jj2TcaVLZHLBxUPLvvwu',
+    gender: 'female',
+  },
+  {
     id: 'voz2',
     name: 'Voz 2',
     description: {
