@@ -99,9 +99,7 @@ export const VoiceProvider = ({ children }: { children: ReactNode }) => {
     return (savedDoll as DollType) || 'catarina';
   });
 
-  const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState<boolean>(() => {
-    return localStorage.getItem('onboarding-completed') === 'true';
-  });
+  const [hasCompletedOnboarding] = useState<boolean>(true);
 
   const availableVoices = selectedDoll === 'catarina' ? FEMALE_VOICES : MALE_VOICES;
 
@@ -149,8 +147,6 @@ export const VoiceProvider = ({ children }: { children: ReactNode }) => {
 
   const completeOnboarding = (doll: DollType) => {
     setSelectedDoll(doll);
-    setHasCompletedOnboarding(true);
-    localStorage.setItem('onboarding-completed', 'true');
   };
 
   return (
