@@ -61,6 +61,7 @@ const Routines = () => {
     coordinateGetter: sortableKeyboardCoordinates
   }));
   const [isAddingPreset, setIsAddingPreset] = useState(false);
+  const [previewPreset, setPreviewPreset] = useState<PresetRoutine | null>(null);
 
   const texts = {
     pt: {
