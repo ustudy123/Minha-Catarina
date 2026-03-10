@@ -48,7 +48,7 @@ export const useTextToSpeech = () => {
           body: JSON.stringify({
             text,
             voiceId: voiceId || selectedVoice.voiceId,
-            targetLanguage: language,
+            ...(language ? { targetLanguage: language } : {}),
           }),
         }
       );

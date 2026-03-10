@@ -164,7 +164,7 @@ export function usePausableAudio() {
           // Generate new audio
           const { url } = await generate({ 
             text: segment.content, 
-            language: targetLanguage 
+            ...(targetLanguage ? { language: targetLanguage } : {}),
           });
           audioUrl = url;
         }
