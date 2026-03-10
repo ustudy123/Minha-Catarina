@@ -1,15 +1,14 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 
 export interface FavoritePhrase {
   id: string;
   text: string;
   category: string;
   source: 'library' | 'saved';
-  durationMinutes: number; // duração individual em minutos (padrão: 1)
+  durationMinutes: number;
 }
-
-const FAVORITES_KEY = 'catarina_favorites';
 
 export function useFavorites() {
   const { user } = useAuth();
@@ -18,96 +17,138 @@ export function useFavorites() {
   const [playRandom, setPlayRandom] = useState(false);
   const [intervalMinutes, setIntervalMinutes] = useState(1);
 
-  // Load favorites from localStorage (user-specific)
+  // Load favorites from Supabase (saved_phrases where is_favorite = true)
   useEffect(() => {
-    if (user) {
-      const storageKey = `${FAVORITES_KEY}_${user.id}`;
-      const stored = localStorage.getItem(storageKey);
-      if (stored) {
-        try {
-          const parsed = JSON.parse(stored);
-          setFavorites(parsed.favorites || []);
-          setPlayRandom(parsed.playRandom || false);
-          setIntervalMinutes(parsed.intervalMinutes || 1);
-        } catch (e) {
-          console.error('Error parsing favorites:', e);
-        }
-      }
+    if (!user) {
+      setIsLoading(false);
+      return;
     }
-    setIsLoading(false);
+
+    const loadFavorites = async () => {
+      setIsLoading(true);
+      try {
+        const { data, error } = await supabase
+          .from('saved_phrases')
+          .select('*')
+          .eq('user_id', user.id)
+          .eq('is_favorite', true)
+          .order('created_at', { ascending: true });
+
+        if (error) {
+          console.error('Error loading favorites:', error);
+        } else if (data) {
+          setFavorites(data.map(p => ({
+            id: p.id,
+            text: p.text,
+            category: p.category || 'general',
+            source: 'saved' as const,
+            durationMinutes: 1,
+          })));
+        }
+      } catch (e) {
+        console.error('Error loading favorites:', e);
+      }
+      setIsLoading(false);
+    };
+
+    loadFavorites();
   }, [user]);
 
-  // Save to localStorage whenever favorites change
-  const saveFavorites = useCallback((newFavorites: FavoritePhrase[], random?: boolean, interval?: number) => {
+  const addFavorite = useCallback(async (phrase: Omit<FavoritePhrase, 'durationMinutes'> & { durationMinutes?: number }) => {
     if (!user) return;
-    
-    const storageKey = `${FAVORITES_KEY}_${user.id}`;
-    const data = {
-      favorites: newFavorites,
-      playRandom: random ?? playRandom,
-      intervalMinutes: interval ?? intervalMinutes,
-    };
-    localStorage.setItem(storageKey, JSON.stringify(data));
-  }, [user, playRandom, intervalMinutes]);
+    if (favorites.some(f => f.id === phrase.id)) return;
 
-  const addFavorite = useCallback((phrase: Omit<FavoritePhrase, 'durationMinutes'> & { durationMinutes?: number }) => {
-    setFavorites(prev => {
-      // Check if already exists
-      if (prev.some(f => f.id === phrase.id)) {
-        return prev;
-      }
+    // Check if this phrase already exists in saved_phrases
+    const { data: existing } = await supabase
+      .from('saved_phrases')
+      .select('id')
+      .eq('user_id', user.id)
+      .eq('text', phrase.text)
+      .maybeSingle();
+
+    if (existing) {
+      // Update existing to mark as favorite
+      await supabase
+        .from('saved_phrases')
+        .update({ is_favorite: true })
+        .eq('id', existing.id);
+
       const newPhrase: FavoritePhrase = {
-        ...phrase,
-        durationMinutes: phrase.durationMinutes ?? 1, // default 1 minuto
+        id: existing.id,
+        text: phrase.text,
+        category: phrase.category,
+        source: phrase.source,
+        durationMinutes: phrase.durationMinutes ?? 1,
       };
-      const updated = [...prev, newPhrase];
-      saveFavorites(updated);
-      return updated;
-    });
-  }, [saveFavorites]);
+      setFavorites(prev => [...prev, newPhrase]);
+    } else {
+      // Insert new phrase as favorite
+      const { data: inserted, error } = await supabase
+        .from('saved_phrases')
+        .insert({
+          user_id: user.id,
+          text: phrase.text,
+          category: phrase.category,
+          is_favorite: true,
+          language: 'pt',
+        })
+        .select()
+        .single();
 
-  const removeFavorite = useCallback((phraseId: string) => {
-    setFavorites(prev => {
-      const updated = prev.filter(f => f.id !== phraseId);
-      saveFavorites(updated);
-      return updated;
-    });
-  }, [saveFavorites]);
+      if (!error && inserted) {
+        const newPhrase: FavoritePhrase = {
+          id: inserted.id,
+          text: inserted.text,
+          category: inserted.category || 'general',
+          source: phrase.source,
+          durationMinutes: phrase.durationMinutes ?? 1,
+        };
+        setFavorites(prev => [...prev, newPhrase]);
+      }
+    }
+  }, [user, favorites]);
+
+  const removeFavorite = useCallback(async (phraseId: string) => {
+    if (!user) return;
+
+    await supabase
+      .from('saved_phrases')
+      .update({ is_favorite: false })
+      .eq('id', phraseId)
+      .eq('user_id', user.id);
+
+    setFavorites(prev => prev.filter(f => f.id !== phraseId));
+  }, [user]);
 
   const isFavorite = useCallback((phraseId: string) => {
-    return favorites.some(f => f.id === phraseId);
+    return favorites.some(f => f.id === phraseId || f.text === phraseId);
   }, [favorites]);
 
   const toggleFavorite = useCallback((phrase: FavoritePhrase) => {
-    if (isFavorite(phrase.id)) {
-      removeFavorite(phrase.id);
+    const existing = favorites.find(f => f.id === phrase.id || f.text === phrase.text);
+    if (existing) {
+      removeFavorite(existing.id);
       return false;
     } else {
       addFavorite(phrase);
       return true;
     }
-  }, [isFavorite, addFavorite, removeFavorite]);
+  }, [favorites, addFavorite, removeFavorite]);
 
   const reorderFavorites = useCallback((newOrder: FavoritePhrase[]) => {
     setFavorites(newOrder);
-    saveFavorites(newOrder);
-  }, [saveFavorites]);
+  }, []);
 
   const updateSettings = useCallback((random: boolean, interval: number) => {
     setPlayRandom(random);
     setIntervalMinutes(interval);
-    saveFavorites(favorites, random, interval);
-  }, [favorites, saveFavorites]);
+  }, []);
 
   const updatePhraseDuration = useCallback((phraseId: string, minutes: number) => {
-    setFavorites(prev => {
-      const updated = prev.map(f => 
-        f.id === phraseId ? { ...f, durationMinutes: minutes } : f
-      );
-      saveFavorites(updated);
-      return updated;
-    });
-  }, [saveFavorites]);
+    setFavorites(prev => prev.map(f =>
+      f.id === phraseId ? { ...f, durationMinutes: minutes } : f
+    ));
+  }, []);
 
   return {
     favorites,

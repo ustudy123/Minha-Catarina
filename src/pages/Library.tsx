@@ -279,7 +279,7 @@ const Library = () => {
                      language === 'en' ? 'You haven\'t created any phrases yet' :
                      'Aún no has creado ninguna frase'}
                   </p>
-                  <Link to="/create-phrase">
+                  <Link to="/create">
                     <Button className="gap-2">
                       <Plus className="w-4 h-4" />
                       {language === 'pt' ? 'Criar Frase' :
