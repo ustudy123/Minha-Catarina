@@ -1,4 +1,4 @@
-import { Language } from '@/contexts/LanguageContext';
+type Language = 'pt' | 'en' | 'es';
 import { libraryPhrasesData } from '@/data/libraryPhrases';
 import { englishPhrasesData, spanishPhrasesData } from '@/data/languagePhrases';
 
