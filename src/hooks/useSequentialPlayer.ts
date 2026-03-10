@@ -32,7 +32,7 @@ export function useSequentialPlayer() {
   });
 
   const phrasesRef = useRef<PlayablePhrase[]>([]);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const phraseEndTimeRef = useRef<number>(0);
   const isPlayingRef = useRef(false);
 

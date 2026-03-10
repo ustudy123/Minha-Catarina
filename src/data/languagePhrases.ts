@@ -1,6 +1,6 @@
 // Language learning phrases data
 // All phrases are educational content in Portuguese with foreign language words embedded
-// Filter: no phrases containing "chupeta"
+// Each numbered item from the original script is a separate phrase entry
 
 export interface LanguagePhraseData {
   text: string;
@@ -10,62 +10,286 @@ export interface LanguagePhraseData {
 // ==================== ENGLISH LEARNING ====================
 export const englishPhrasesData: LanguagePhraseData[] = [
   // Lesson 1 - Greetings & Introduction
-  { text: "Hello! Vou te ensinar um pouquinho de inglês. Eu gosto de falar inglês. Hello, quer dizer Olá! Agora vamos aprender a se apresentar. My name is Catarina. What is your name? Como é o seu nome? [pausa:5s] Agora frases mágicas: Repete comigo: How are you? [pausa:3s] How are you? How are you? significa Como você está? Resposta mágica: I'm fine! Que significa Estou bem! Vamos encenar: Hello! How are you? [pausa:3s] I'm fine! Yaaay! Eu amo você. I love you. [pausa:3s] Parabéns! Você ganhou a medalha de Mini Falante de Inglês! Missão secreta: Hoje fale pelo menos 3 palavras em inglês para alguém da sua família! Bye bye, tchau, tchau!", category: "greetings" },
-  
-  // Lesson 2 - Castle (Princess theme)
-  { text: "Bem-vindo ao meu castelo encantado! Para entrar, você precisa dizer a palavra mágica em inglês: Hello! [pausa:3s] Hello! Muito bem! Isso quer dizer Olá! Pode entrar! Qual é o seu nome? Em inglês falamos: My name is Catarina. Tente falar com seu nome agora. [pausa:5s] Agora vamos passear pelo jardim mágico. No jardim encantado temos Flowers and butterflies. Sabe o que isso significa? [pausa:5s] Flores e borboletas! Você é muito inteligente! Repete comigo: Flowers and butterflies. [pausa:3s] Flowers and butterflies. Hora do jogo! Eu falo e você repete. Coroa é Crown! [pausa:3s] Vestido é Dress! [pausa:3s] Estrela é Star! [pausa:3s] Uau! Você está virando uma princesa do inglês! Vamos aprender uma frase de princesa educada: Please é Por favor. Thank you é Obrigado ou Obrigada. Que educação real! Parabéns! Você ganhou o título de Princesa do Inglês!", category: "vocabulary" },
-  
-  // Lesson 3 - Numbers
-  { text: "Vamos aprender os números em inglês! Repete comigo: One. [pausa:2s] Two. [pausa:2s] Three. [pausa:2s] Four. [pausa:2s] Five. [pausa:2s] Six. [pausa:2s] Seven. [pausa:2s] Eight. [pausa:2s] Nine. [pausa:2s] Ten. [pausa:2s] Muito bem! Agora você sabe contar até dez em inglês!", category: "numbers" },
-  
-  // Lesson 4 - Colors (expanded)
-  { text: "Hello! Hora de aprender inglês! Vou te ensinar as cores hoje. Em inglês, vermelho é RED. Fala comigo: RED! [pausa:3s] Muito bem! E Azul em inglês é BLUE. Repete: BLUE! [pausa:3s] Eu gosto quando o céu fica blue. E rosa, como será que se diz rosa em inglês? [pausa:5s] Você sabe falar rosa em inglês? Deixa eu pensar um pouquinho. Rosa em inglês é pink. Eu amo a cor pink. Vou te ensinar a cor verde em inglês. Verde em inglês é green. A grama do quintal é green. O sol é yellow. Amarelo em inglês se diz yellow. Qual é sua cor favorita? [pausa:5s] Bye bye, tchau tchau! Até a próxima! Outro dia te ensino mais.", category: "colors" },
-  
-  // Lesson 5 - Animals (expanded)
-  { text: "Você sabe como fala cachorro em inglês? [pausa:3s] Cachorro em inglês é DOG. Fala comigo: Dog! [pausa:3s] Agora você fala sozinha. Como é cachorro em inglês? [pausa:5s] Isso! Muito bem! Gato em inglês é CAT. Quer aprender mais em inglês? [pausa:3s]", category: "animals" },
-  
-  // Lesson 6 - Family
-  { text: "Vamos aprender a família em inglês! Mamãe em inglês é Mom. Repete: Mom! [pausa:3s] Papai é Dad! [pausa:3s] Irmão é Brother! [pausa:3s] Irmã é Sister! [pausa:3s] Vovó é Grandma! [pausa:3s] Vovô é Grandpa! [pausa:3s] Família é Family! [pausa:3s] I love my family! Eu amo minha família!", category: "family" },
-  
-  // Lesson 7 - Counting in English
-  { text: "Hello. Vamos contar em inglês? Um é ONE. [pausa:2s] Dois é TWO. [pausa:2s] Três é THREE. [pausa:2s] One, two, three. Vou contar até dez para você ver, tudo em inglês. One, two, three, four, five, six, seven, eight, nine, e ten.", category: "numbers" },
-  
-  // Lesson 8 - Body parts
-  { text: "Cabeça em inglês é HEAD. Repete: HEAD! [pausa:3s] E Nariz em inglês é NOSE. [pausa:3s] Coração é heart. Você sabia que o heart faz tum-tum o dia todo! Ele trabalha sem parar para cuidar da gente, até quando a gente tá dormindo.", category: "vocabulary" },
-  
-  // Lesson 9 - School
-  { text: "Na escola aprendemos muitas coisas. Escola em inglês é school. Professora em inglês é teacher. E amigo em inglês é friend. Nós vamos aprender na school. Na school, quem ensina é a teacher. Na school, encontramos os friends.", category: "vocabulary" },
-  
-  // Lesson 10 - Magic words
-  { text: "Vou te ensinar as palavras mágicas em inglês. Você sabe quais são as palavras mágicas? [pausa:3s] Isso mesmo! Desculpa, por favor, obrigada. Desculpa em inglês é sorry. Repete comigo: sorry. [pausa:3s] Por favor em inglês é please. Repete comigo: please. [pausa:3s] E obrigada em inglês é Thanks. Repete de novo: thanks. [pausa:3s] Thanks é obrigada, sorry é desculpa e please é por favor. Devemos sempre usar as palavras mágicas, porque somos crianças educadas. Agora você pode pedir assim para mamãe: Please mamãe me dá uma comidinha?", category: "vocabulary" },
-  
-  // Lesson 11 - Food & Water
-  { text: "Hello. Vou te ensinar uma palavra muito legal em inglês. Você pode ensinar para alguém depois. Sabe como fala água em inglês? [pausa:3s] Água em inglês é water. Mamãe quero water! E quando você estiver com fome, comida em inglês é food. Eu quero food, eu quero water. Inglês é bem legal. Vamos ver se aprendeu? Água em inglês é? [pausa:3s] Water! Comida em inglês é? [pausa:3s] Food! Nós somos muito inteligentes.", category: "vocabulary" },
+  { text: "Hello!", category: "greetings" },
+  { text: "Vou te ensinar um pouquinho de inglês", category: "greetings" },
+  { text: "Eu gosto de falar inglês", category: "greetings" },
+  { text: "Hello, quer dizer Olá!", category: "greetings" },
+  { text: "Agora vamos aprender a se apresentar.", category: "greetings" },
+  { text: "My name is Catarina.", category: "greetings" },
+  { text: "What is your name? Como é o seu nome?", category: "greetings" },
+  { text: "Agora frases mágicas:", category: "greetings" },
+  { text: "Repete comigo: How are you?", category: "greetings" },
+  { text: "How are you?", category: "greetings" },
+  { text: "How are you? significa Como você está?", category: "greetings" },
+  { text: "Resposta mágica: I'm fine! Que significa Estou bem!", category: "greetings" },
+  { text: "Vamos encenar:", category: "greetings" },
+  { text: "Hello! How are you?", category: "greetings" },
+  { text: "I'm fine! Yaaay!", category: "greetings" },
+  { text: "Eu amo você", category: "greetings" },
+  { text: "I love you", category: "greetings" },
+  { text: "Parabéns! Você ganhou a medalha de Mini Falante de Inglês!", category: "greetings" },
+  { text: "Missão secreta: Hoje fale pelo menos 3 palavras em inglês para alguém da sua família!", category: "greetings" },
+  { text: "Bye bye, tchau tchau!", category: "greetings" },
+
+  // Lesson 2 - Colors
+  { text: "Hello! Hora de aprender inglês!", category: "colors" },
+  { text: "Vou te ensinar as cores hoje.", category: "colors" },
+  { text: "Em inglês, vermelho é RED", category: "colors" },
+  { text: "Fala comigo: RED!", category: "colors" },
+  { text: "Muito bem!", category: "colors" },
+  { text: "E Azul em inglês é BLUE", category: "colors" },
+  { text: "Repete: BLUE!", category: "colors" },
+  { text: "Eu gosto quando o céu fica blue", category: "colors" },
+  { text: "E rosa, como será que se diz rosa em inglês?", category: "colors" },
+  { text: "Você sabe falar rosa em inglês?", category: "colors" },
+  { text: "Deixa eu pensar um pouquinho", category: "colors" },
+  { text: "Rosa em inglês é pink", category: "colors" },
+  { text: "Eu amo a cor pink", category: "colors" },
+  { text: "Vou te ensinar a cor verde em inglês", category: "colors" },
+  { text: "Verde em inglês é green", category: "colors" },
+  { text: "A grama do quintal é green", category: "colors" },
+  { text: "O sol é yellow", category: "colors" },
+  { text: "Amarelo em inglês se diz yellow", category: "colors" },
+  { text: "Qual é sua cor favorita?", category: "colors" },
+  { text: "Bye bye, tchau tchau! Até a próxima!", category: "colors" },
+  { text: "Outro dia te ensino mais", category: "colors" },
+
+  // Lesson 3 - Animals
+  { text: "Você sabe como fala cachorro em inglês?", category: "animals" },
+  { text: "Cachorro em inglês é DOG", category: "animals" },
+  { text: "Fala comigo: Dog!", category: "animals" },
+  { text: "Agora você fala sozinha", category: "animals" },
+  { text: "Como é cachorro em inglês?", category: "animals" },
+  { text: "Isso! Muito bem!", category: "animals" },
+  { text: "Gato em inglês é CAT.", category: "animals" },
+  { text: "Quer aprender mais em inglês?", category: "animals" },
+
+  // Lesson 4 - Numbers
+  { text: "Vamos contar em inglês?", category: "numbers" },
+  { text: "Um é ONE", category: "numbers" },
+  { text: "Dois é TWO", category: "numbers" },
+  { text: "Três é THREE", category: "numbers" },
+  { text: "One, two, three.", category: "numbers" },
+  { text: "Vou contar até dez para você ver, tudo em inglês", category: "numbers" },
+  { text: "One, two, three, four, five, six, seven, eight, nine, e ten.", category: "numbers" },
+
+  // Lesson 5 - Body parts
+  { text: "Cabeça em inglês é HEAD", category: "vocabulary" },
+  { text: "Repete: HEAD!", category: "vocabulary" },
+  { text: "E Nariz em inglês é NOSE", category: "vocabulary" },
+  { text: "Coração é heart", category: "vocabulary" },
+  { text: "Você sabia que o heart faz tum-tum o dia todo!", category: "vocabulary" },
+  { text: "Ele trabalha sem parar para cuidar da gente, até quando a gente tá dormindo", category: "vocabulary" },
+
+  // Lesson 6 - School
+  { text: "Na escola aprendemos muitas coisas", category: "vocabulary" },
+  { text: "Escola em inglês é school", category: "vocabulary" },
+  { text: "Professora em inglês é teacher", category: "vocabulary" },
+  { text: "E amigo em inglês é friend", category: "vocabulary" },
+  { text: "Nós vamos aprender na school", category: "vocabulary" },
+  { text: "Na school, quem ensina é a teacher", category: "vocabulary" },
+  { text: "Na school, encontramos os friends", category: "vocabulary" },
+
+  // Lesson 7 - Magic words
+  { text: "Vou te ensinar as palavras mágicas em inglês", category: "vocabulary" },
+  { text: "Você sabe quais são as palavras mágicas?", category: "vocabulary" },
+  { text: "Desculpa, por favor, obrigada", category: "vocabulary" },
+  { text: "Desculpa em inglês é sorry", category: "vocabulary" },
+  { text: "Repete comigo: sorry", category: "vocabulary" },
+  { text: "Por favor em inglês é please", category: "vocabulary" },
+  { text: "Repete comigo: please", category: "vocabulary" },
+  { text: "E obrigada em inglês é Thanks", category: "vocabulary" },
+  { text: "Repete de novo: thanks", category: "vocabulary" },
+  { text: "Thanks é obrigada, sorry é desculpa e please é por favor", category: "vocabulary" },
+  { text: "Devemos sempre usar as palavras mágicas, porque somos crianças educadas", category: "vocabulary" },
+  { text: "Agora você pode pedir assim para mamãe: Please mamãe me dá uma comidinha?", category: "vocabulary" },
+
+  // Lesson 8 - Food & Water
+  { text: "Hello", category: "vocabulary" },
+  { text: "Vou te ensinar uma palavra muito legal em inglês", category: "vocabulary" },
+  { text: "Você pode ensinar para alguém depois", category: "vocabulary" },
+  { text: "Sabe como fala água em inglês?", category: "vocabulary" },
+  { text: "Água em inglês é water.", category: "vocabulary" },
+  { text: "Mamãe quero water!", category: "vocabulary" },
+  { text: "E quando você estiver com fome, comida em inglês é food", category: "vocabulary" },
+  { text: "Eu quero food, eu quero water", category: "vocabulary" },
+  { text: "Inglês é bem legal", category: "vocabulary" },
+  { text: "Vamos ver se aprendeu?", category: "vocabulary" },
+  { text: "Água em inglês é?", category: "vocabulary" },
+  { text: "Water!", category: "vocabulary" },
+  { text: "Comida em inglês é?", category: "vocabulary" },
+  { text: "Food!", category: "vocabulary" },
+  { text: "Nós somos muito inteligentes.", category: "vocabulary" },
+
+  // Lesson 9 - Castle (Princess theme)
+  { text: "Bem-vindo ao meu castelo encantado!", category: "vocabulary" },
+  { text: "Para entrar, você precisa dizer a palavra mágica em inglês: Hello!", category: "vocabulary" },
+  { text: "Hello!", category: "vocabulary" },
+  { text: "Muito bem! Isso quer dizer Olá! Pode entrar!", category: "vocabulary" },
+  { text: "Qual é o seu nome? Em inglês falamos:", category: "vocabulary" },
+  { text: "My name is Catarina", category: "vocabulary" },
+  { text: "Tente falar com seu nome agora", category: "vocabulary" },
+  { text: "Agora vamos passear pelo jardim mágico. No jardim encantado temos Flowers and butterflies. Sabe o que isso significa?", category: "vocabulary" },
+  { text: "Flores e borboletas!", category: "vocabulary" },
+  { text: "Você é muito inteligente!", category: "vocabulary" },
+  { text: "Repete comigo: Flowers and butterflies", category: "vocabulary" },
+  { text: "Flowers and butterflies", category: "vocabulary" },
+  { text: "Hora do jogo! Eu falo e você repete", category: "vocabulary" },
+  { text: "Coroa é Crown!", category: "vocabulary" },
+  { text: "Vestido é Dress!", category: "vocabulary" },
+  { text: "Estrela é Star!", category: "vocabulary" },
+  { text: "Uau! Você está virando uma princesa do inglês!", category: "vocabulary" },
+  { text: "Vamos aprender uma frase de princesa educada:", category: "vocabulary" },
+  { text: "Please é Por favor", category: "vocabulary" },
+  { text: "Thank you é Obrigado ou Obrigada", category: "vocabulary" },
+  { text: "Que educação real!", category: "vocabulary" },
+  { text: "Parabéns! Você ganhou o título de Princesa do Inglês!", category: "vocabulary" },
+
+  // Lesson 10 - Family
+  { text: "Vamos aprender a família em inglês! Mamãe em inglês é Mom. Repete: Mom!", category: "family" },
+  { text: "Papai é Dad!", category: "family" },
+  { text: "Irmão é Brother!", category: "family" },
+  { text: "Irmã é Sister!", category: "family" },
+  { text: "Vovó é Grandma!", category: "family" },
+  { text: "Vovô é Grandpa!", category: "family" },
+  { text: "Família é Family!", category: "family" },
+  { text: "I love my family! Eu amo minha família!", category: "family" },
+
+  // Lesson 11 - Counting
+  { text: "Vamos aprender os números em inglês! Repete comigo:", category: "numbers" },
+  { text: "One.", category: "numbers" },
+  { text: "Two.", category: "numbers" },
+  { text: "Three.", category: "numbers" },
+  { text: "Four.", category: "numbers" },
+  { text: "Five.", category: "numbers" },
+  { text: "Six.", category: "numbers" },
+  { text: "Seven.", category: "numbers" },
+  { text: "Eight.", category: "numbers" },
+  { text: "Nine.", category: "numbers" },
+  { text: "Ten.", category: "numbers" },
+  { text: "Muito bem! Agora você sabe contar até dez em inglês!", category: "numbers" },
 ];
 
 // ==================== SPANISH LEARNING ====================
 export const spanishPhrasesData: LanguagePhraseData[] = [
-  // Lesson 1 - Greetings & Introduction
-  { text: "¡Hola! Vamos brincar de falar espanhol? Vamos! Primeira palavra mágica: Hola! Hola significa Oi. Repete! [pausa:3s] ¡Hola! ¡Muy bien! Me llamo Catarina. Agora uma frase: ¿Cómo estás? [pausa:3s] Estoy bien significa Estou bem. Agora você já sabe se apresentar em espanhol! Você ganhou o troféu de Mini Falante de Espanhol!", category: "greetings" },
-  
-  // Lesson 2 - Numbers
-  { text: "Vou te ensinar a contar até dez, em espanhol. Cero, uno, dos, tres, cuatro, cinco, seis, siete, ocho, nueve, diez. É bem legal, não é? Vamos tentar juntas, você pode repetir depois de mim. Cero. [pausa:2s] Uno. [pausa:2s] Dos. [pausa:2s] Tres. [pausa:2s] Cuatro. [pausa:2s] Cinco. [pausa:2s] Seis. [pausa:2s] Siete. [pausa:2s] Ocho. [pausa:2s] Nueve. [pausa:2s] Diez. [pausa:2s] Ufa, acabou!", category: "numbers" },
-  
-  // Lesson 3 - Places
-  { text: "Eu adoro passear! Eu sei falar em espanhol. Vou te ensinar o nome de alguns lugares em español. Você vai saber falar español assim como eu! Igreja em espanhol é iglesia. [pausa:3s] Escola é escuela. [pausa:3s] Sabia que mercado e casa é igual em espanhol e português? Me gusta mucho mi casa. Voy a la iglesia con mi papá y mi mamá. Outro dia eu vou te ensinar mais palabras em espanhol!", category: "places" },
-  
-  // Lesson 4 - Colors
-  { text: "Vamos aprender como fala as cores em espanhol! A cor amarelo em espanhol se fala amarillo. Repete: amarillo! [pausa:3s] Roxo em espanhol é púrpura. [pausa:3s] Branco em espanhol é blanco. [pausa:3s] Las nubes en el cielo son blancas. Tengo una pelota amarilla y púrpura. Aprender é muito bom! Agora você me ensina. Como é roxo em espanhol? [pausa:5s] Acertou! Branco em espanhol é blanco.", category: "colors" },
-  
-  // Lesson 5 - Animals
-  { text: "Eu gosto de animais. Devemos proteger os animais. Mas alguns animais são perigosos e temos que ter cuidado. Vou te ensinar o nome de alguns animais em espanhol. Cavalo em español é caballo. Repete comigo essa palavra nova: caballo! [pausa:3s] Você já andou de caballo? [pausa:3s] Me gusta montar a caballo. Podemos andar de caballo juntas um dia! O que achou dessa ideia? [pausa:3s] Vamos andar de caballo? Você é corajosa! Formiga em espanhol é hormiga. La hormiga es pequeña pero muy fuerte. Muito legal essas novas palavras! Parabéns para nós duas!", category: "animals" },
-  
-  // Lesson 6 - Kitchen
-  { text: "Hoje vou te ensinar algumas coisas que tem na cozinha em español. É muito legal! Vamos começar aprendendo como falar cozinha em español. Cozinha em español é cocina. [pausa:3s] Na cocina temos geladeira que em espanhol se fala refrigerador. [pausa:3s] Na cocina temos também fogão. Fogão em español é estufa. [pausa:3s] En la cocina hay una estufa y un refrigerador. En la cocina também temos cacerolas. Sabe o que é cacerola? [pausa:5s] Cacerola em espanhol é panela!", category: "food" },
-  
-  // Lesson 7 - Family
-  { text: "Vou te ensinar umas palavrinhas em outra língua. É muito legal. Aprender também é divertido. Mamãe em espanhol é mami. Papai em espanhol é papá. Eu amo minha mami e meu papá também. Gostou? [pausa:3s] Eu adorei. E vovó em espanhol é abuela. Diferente né? Vovô em espanhol é abuelo. Eu amo minha abuela e meu abuelo. Gosto muito de ir na casa dos meus abuelos. E você gosta de ir na casa da sua abuela e do seu abuelo? [pausa:5s] O que mais gosta de fazer lá? [pausa:5s] Como é o nome da sua abuela? [pausa:5s] Como é o nome do seu abuelo? [pausa:5s]", category: "family" },
-  
-  // Lesson 8 - Toys
-  { text: "Eu adoro falar em espanhol. Vou te ensinar algumas palavras bem legais em espanhol. Boneca em espanhol é muñeca. Repete comigo: muñeca! [pausa:3s] Bola em espanhol é pelota. Vamos falar juntas essas palavras? Um, dois, três e já... Muñeca! [pausa:3s] Pelota! [pausa:3s] Eu sou a muñeca Catarina, mas não sei brincar de pelota. Você gosta mais de muñeca ou de pelota? [pausa:5s] Ensina seus amigos essas palavras, eles vão gostar de aprender espanhol. Ensina sua mami e seu papi também.", category: "vocabulary" },
+  // Lesson 1 - Greetings
+  { text: "¡Hola! Vamos brincar de falar espanhol?", category: "greetings" },
+  { text: "Vamos!", category: "greetings" },
+  { text: "Primeira palavra mágica: Hola!", category: "greetings" },
+  { text: "Hola significa Oi. Repete!", category: "greetings" },
+  { text: "¡Hola!", category: "greetings" },
+  { text: "¡Muy bien!", category: "greetings" },
+  { text: "Me llamo Catarina.", category: "greetings" },
+  { text: "Agora uma frase: ¿Cómo estás?", category: "greetings" },
+  { text: "Estoy bien significa Estou bem", category: "greetings" },
+  { text: "Agora você já sabe se apresentar em espanhol!", category: "greetings" },
+  { text: "Você ganhou o troféu de Mini Falante de Espanhol!", category: "greetings" },
+
+  // Lesson 2 - Family
+  { text: "Vou te ensinar umas palavrinhas em outra língua", category: "family" },
+  { text: "É muito legal", category: "family" },
+  { text: "Aprender também é divertido", category: "family" },
+  { text: "Mamãe em espanhol é mami", category: "family" },
+  { text: "Papai em espanhol é papá", category: "family" },
+  { text: "Eu amo minha mami e meu papá também", category: "family" },
+  { text: "Gostou?", category: "family" },
+  { text: "Eu adorei", category: "family" },
+  { text: "E vovó em espanhol é abuela", category: "family" },
+  { text: "Diferente né?", category: "family" },
+  { text: "Vovô em espanhol é abuelo", category: "family" },
+  { text: "Eu amo minha abuela e meu abuelo", category: "family" },
+  { text: "Gosto muito de ir na casa dos meus abuelos", category: "family" },
+  { text: "E você gosta de ir na casa da sua abuela e do seu abuelo?", category: "family" },
+  { text: "O que mais gosta de fazer lá?", category: "family" },
+  { text: "Como é o nome da sua abuela?", category: "family" },
+  { text: "Como é o nome do seu abuelo?", category: "family" },
+
+  // Lesson 3 - Toys
+  { text: "Eu adoro falar em espanhol", category: "vocabulary" },
+  { text: "Vou te ensinar algumas palavras bem legais em espanhol", category: "vocabulary" },
+  { text: "Boneca em espanhol é muñeca", category: "vocabulary" },
+  { text: "Repete comigo: muñeca!", category: "vocabulary" },
+  { text: "Bola em espanhol é pelota", category: "vocabulary" },
+  { text: "Vamos falar juntas essas palavras?", category: "vocabulary" },
+  { text: "Um, dois, três e já...", category: "vocabulary" },
+  { text: "Muñeca!", category: "vocabulary" },
+  { text: "Pelota!", category: "vocabulary" },
+  { text: "Eu sou a muñeca Catarina, mas não sei brincar de pelota", category: "vocabulary" },
+  { text: "Você gosta mais de muñeca ou de pelota?", category: "vocabulary" },
+  { text: "Ensina seus amigos essas palavras, eles vão gostar de aprender espanhol", category: "vocabulary" },
+  { text: "Ensina sua mami e seu papi também.", category: "vocabulary" },
+
+  // Lesson 4 - Numbers
+  { text: "Vou te ensinar a contar até dez, em espanhol.", category: "numbers" },
+  { text: "Cero, uno, dos, tres, cuatro, cinco, seis, siete, ocho, nueve, diez", category: "numbers" },
+  { text: "É bem legal, não é?", category: "numbers" },
+  { text: "Vamos tentar juntas, você pode repetir depois de mim", category: "numbers" },
+  { text: "Cero", category: "numbers" },
+  { text: "Uno", category: "numbers" },
+  { text: "Dos", category: "numbers" },
+  { text: "Tres", category: "numbers" },
+  { text: "Cuatro", category: "numbers" },
+  { text: "Cinco", category: "numbers" },
+  { text: "Seis", category: "numbers" },
+  { text: "Siete", category: "numbers" },
+  { text: "Ocho", category: "numbers" },
+  { text: "Nueve", category: "numbers" },
+  { text: "Diez", category: "numbers" },
+  { text: "Ufa, acabou!", category: "numbers" },
+
+  // Lesson 5 - Places
+  { text: "Eu adoro passear!", category: "places" },
+  { text: "Eu sei falar em espanhol", category: "places" },
+  { text: "Vou te ensinar o nome de alguns lugares em español", category: "places" },
+  { text: "Você vai saber falar español assim como eu!", category: "places" },
+  { text: "Igreja em espanhol é iglesia", category: "places" },
+  { text: "Escola é escuela", category: "places" },
+  { text: "Sabia que mercado e casa é igual em espanhol e português.", category: "places" },
+  { text: "Me gusta mucho mi casa.", category: "places" },
+  { text: "Voy a la iglesia con mi papá y mi mamá.", category: "places" },
+  { text: "Outro dia eu vou te ensinar mais palavras em espanhol!", category: "places" },
+
+  // Lesson 6 - Colors
+  { text: "Vamos aprender como fala as cores em espanhol!", category: "colors" },
+  { text: "A cor amarelo em espanhol se fala amarillo", category: "colors" },
+  { text: "Roxo em espanhol é púrpura", category: "colors" },
+  { text: "Branco em espanhol é blanco", category: "colors" },
+  { text: "Las nubes en el cielo son blancas", category: "colors" },
+  { text: "Tengo una pelota amarilla y púrpura", category: "colors" },
+  { text: "Aprender é muito bom!", category: "colors" },
+  { text: "Agora você me ensina", category: "colors" },
+  { text: "Como é roxo em espanhol?", category: "colors" },
+  { text: "Acertou!", category: "colors" },
+  { text: "Branco em espanhol é blanco.", category: "colors" },
+
+  // Lesson 7 - Animals
+  { text: "Eu gosto de animais", category: "animals" },
+  { text: "Devemos proteger os animais", category: "animals" },
+  { text: "Mas alguns animais são perigosos e temos que ter cuidado", category: "animals" },
+  { text: "Vou te ensinar o nome de alguns animais em espanhol", category: "animals" },
+  { text: "Cavalo em español é caballo", category: "animals" },
+  { text: "Repete comigo essa palavra nova: caballo!", category: "animals" },
+  { text: "Você já andou de caballo?", category: "animals" },
+  { text: "Me gusta montar a caballo.", category: "animals" },
+  { text: "Podemos andar de caballo juntas um dia!", category: "animals" },
+  { text: "O que achou dessa ideia?", category: "animals" },
+  { text: "Vamos andar de caballo?", category: "animals" },
+  { text: "Você é corajosa!", category: "animals" },
+  { text: "Formiga em espanhol é hormiga", category: "animals" },
+  { text: "La hormiga es pequeña pero muy fuerte.", category: "animals" },
+  { text: "Muito legal essas novas palavras!", category: "animals" },
+  { text: "Parabéns para nós duas!", category: "animals" },
+
+  // Lesson 8 - Kitchen
+  { text: "Hoje vou te ensinar algumas coisas que tem na cozinha em español", category: "food" },
+  { text: "É muito legal!", category: "food" },
+  { text: "Vamos começar aprendendo como falar cozinha em español", category: "food" },
+  { text: "Cozinha em español é cocina", category: "food" },
+  { text: "Na cocina temos geladeira que em espanhol se fala refrigerador", category: "food" },
+  { text: "Na cocina temos também fogão.", category: "food" },
+  { text: "Fogão em español é estufa", category: "food" },
+  { text: "En la cocina hay una estufa y un refrigerador", category: "food" },
+  { text: "En la cocina também temos cacerolas", category: "food" },
+  { text: "Sabe o que é cacerola?", category: "food" },
+  { text: "Cacerola em espanhol é panela!", category: "food" },
 ];
