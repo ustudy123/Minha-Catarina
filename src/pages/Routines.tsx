@@ -25,6 +25,7 @@ import { ArrowLeft, Plus, MoreVertical, Shuffle, Clock, Play, Trash2, Edit, List
 import { cn } from '@/lib/utils';
 import { presetRoutines, PresetRoutine } from '@/data/presetRoutines';
 const Routines = () => {
+  const navigate = useNavigate();
   const {
     language
   } = useLanguage();
