@@ -54,7 +54,7 @@ const Languages = () => {
         .map(s => s.trim())
         .filter(s => s.length > 0);
       
-      return segments.map(segment => ({ text: segment, language: 'pt' as const }));
+      return segments.map(segment => ({ text: segment }));
     });
 
     if (phrasesToPreload.length > 0) {
