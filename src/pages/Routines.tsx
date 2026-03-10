@@ -61,6 +61,7 @@ const Routines = () => {
     coordinateGetter: sortableKeyboardCoordinates
   }));
   const [isAddingPreset, setIsAddingPreset] = useState(false);
+  const [previewPreset, setPreviewPreset] = useState<PresetRoutine | null>(null);
 
   const texts = {
     pt: {
@@ -698,7 +699,7 @@ const Routines = () => {
                   key={preset.id} 
                   className="p-4 border-2 cursor-pointer hover-lift animate-fade-in transition-all"
                   style={{ animationDelay: `${index * 0.05}s` }}
-                  onClick={() => handleAddPresetRoutine(preset)}
+                  onClick={() => setPreviewPreset(preset)}
                 >
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center text-xl">
@@ -715,6 +716,10 @@ const Routines = () => {
                       size="icon" 
                       className="flex-shrink-0"
                       disabled={isAddingPreset || !canCreateMore}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleAddPresetRoutine(preset);
+                      }}
                     >
                       {isAddingPreset ? (
                         <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
@@ -776,6 +781,43 @@ const Routines = () => {
             </Button>
             <Button onClick={handleEditName} disabled={!newRoutineName.trim()}>
               {t.save}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      {/* Preset Preview Dialog */}
+      <Dialog open={!!previewPreset} onOpenChange={(open) => !open && setPreviewPreset(null)}>
+        <DialogContent className="max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <span className="text-xl">{previewPreset?.icon}</span>
+              {previewPreset?.name[language]}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-2 mt-2">
+            {previewPreset?.phrases.map((phrase, i) => (
+              <div key={i} className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
+                <span className="text-xs text-muted-foreground w-5 text-right flex-shrink-0">{i + 1}</span>
+                <p className="text-sm">{phrase}</p>
+              </div>
+            ))}
+          </div>
+          <DialogFooter className="mt-4">
+            <Button variant="outline" onClick={() => setPreviewPreset(null)}>
+              {t.cancel}
+            </Button>
+            <Button 
+              variant="gradient"
+              disabled={isAddingPreset || !canCreateMore}
+              onClick={() => {
+                if (previewPreset) {
+                  handleAddPresetRoutine(previewPreset);
+                  setPreviewPreset(null);
+                }
+              }}
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              {isAddingPreset ? t.adding : t.create}
             </Button>
           </DialogFooter>
         </DialogContent>
