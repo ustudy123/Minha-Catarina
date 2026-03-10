@@ -40,7 +40,7 @@ export function usePausableAudio() {
 
   const segmentsRef = useRef<PauseSegment[]>([]);
   const isPlayingRef = useRef(false);
-  const pauseTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const pauseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pauseEndTimeRef = useRef<number>(0);
 
   // Parse text into segments (text and pauses)
