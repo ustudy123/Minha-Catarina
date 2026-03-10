@@ -55,6 +55,7 @@ import {
 import { cn } from '@/lib/utils';
 
 const Favorites = () => {
+  const navigate = useNavigate();
   const { language } = useLanguage();
   const {
     favorites,
