@@ -10,6 +10,7 @@ import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useTextToSpeech } from "@/hooks/useTextToSpeech";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { getTranslations } from "@/translations";
+import { useFavorites } from "@/hooks/useFavorites";
 import { AudioControls } from "@/components/audio/AudioControls";
 import { PlayButton } from "@/components/audio/PlayButton";
 import { toast } from "sonner";
@@ -30,45 +31,46 @@ const timePeriods = [
 ];
 
 const categories = [
-  { id: "all", name: "categories.all", icon: Sparkles, color: "from-purple-100 to-pink-100" },
-  { id: "routine", name: "categories.routine", icon: Clock, color: "from-blue-100 to-cyan-100" },
-  { id: "motivation", name: "categories.motivation", icon: Heart, color: "from-rose-100 to-pink-100" },
-  { id: "educational", name: "categories.educational", icon: GraduationCap, color: "from-amber-100 to-yellow-100" },
+  { id: "all", name: "categories.all", icon: Sparkles },
+  { id: "routine", name: "categories.routine", icon: Clock },
+  { id: "motivation", name: "categories.motivation", icon: Heart },
+  { id: "educational", name: "categories.educational", icon: GraduationCap },
 ];
 
 export default function DailyPhrases() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedTime, setSelectedTime] = useState("all");
-  const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const [currentPhrase, setCurrentPhrase] = useState<Phrase | null>(null);
 
   const audioPlayer = useAudioPlayer();
   const { audioUrl, isGenerating, generate } = useTextToSpeech();
   const { language } = useLanguage();
   const t = getTranslations(language);
+  const { isFavorite, toggleFavorite: toggleFav } = useFavorites();
 
   // Get phrases from translations and add isFavorite state
   const phrases = useMemo(() => {
     const translatedPhrases = (t.dailyPhrases as any).phrases || [];
     return translatedPhrases.map((p: any) => ({
       ...p,
-      isFavorite: favorites.has(p.id),
+      isFavorite: isFavorite(p.id),
     })) as Phrase[];
-  }, [t.dailyPhrases, favorites]);
+  }, [t.dailyPhrases, isFavorite]);
 
-  const toggleFavorite = (id: string) => {
-    setFavorites(prev => {
-      const newFavorites = new Set(prev);
-      if (newFavorites.has(id)) {
-        newFavorites.delete(id);
-        toast.success(t.dailyPhrases.removedFromFavorites);
-      } else {
-        newFavorites.add(id);
-        toast.success(t.dailyPhrases.addedToFavorites);
-      }
-      return newFavorites;
+  const handleToggleFavorite = (phrase: Phrase) => {
+    const added = toggleFav({
+      id: phrase.id,
+      text: phrase.text,
+      category: phrase.category,
+      source: 'library',
+      durationMinutes: 1,
     });
+    if (added) {
+      toast.success(t.dailyPhrases.addedToFavorites);
+    } else {
+      toast.success(t.dailyPhrases.removedFromFavorites);
+    }
   };
 
   const handlePlayPhrase = async (phrase: Phrase) => {
@@ -107,16 +109,16 @@ export default function DailyPhrases() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-muted via-background to-accent/10">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-purple-100 shadow-sm">
+      <header className="sticky top-0 z-50 glass border-b border-border/50 backdrop-blur-lg">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Link to="/">
-            <Button variant="ghost" size="icon" className="hover:bg-purple-100">
+            <Button variant="ghost" size="icon" className="hover:bg-muted">
               <ArrowLeft className="h-5 w-5" />
             </Button>
           </Link>
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
+          <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
             {t.dailyPhrases.title}
           </h1>
           <div className="w-10" />
@@ -159,7 +161,7 @@ export default function DailyPhrases() {
               }`}
               onClick={() => setSelectedCategory(category.id)}
             >
-              <CardContent className={`p-4 bg-gradient-to-br ${category.color}`}>
+              <CardContent className="p-4 bg-muted/50">
                 <div className="flex flex-col items-center text-center gap-2">
                   <category.icon className="h-8 w-8 text-primary" />
                   <span className="font-semibold text-sm">{getCategoryLabel(category.id)}</span>
@@ -173,7 +175,7 @@ export default function DailyPhrases() {
         <div className="space-y-4">
           {filteredPhrases.length === 0 ? (
             <Card className="p-8 text-center">
-              <p className="text-gray-500">{t.dailyPhrases.noPhrasesFound}</p>
+              <p className="text-muted-foreground">{t.dailyPhrases.noPhrasesFound}</p>
             </Card>
           ) : (
             filteredPhrases.map((phrase) => (
@@ -191,7 +193,7 @@ export default function DailyPhrases() {
                     />
                     
                     <div className="flex-1">
-                      <p className="text-lg text-gray-800 mb-3">{phrase.text}</p>
+                      <p className="text-lg text-foreground mb-3">{phrase.text}</p>
                       <div className="flex items-center gap-2 flex-wrap">
                         <Badge variant="secondary" className="capitalize">
                           {getCategoryLabel(phrase.category)}
@@ -205,12 +207,12 @@ export default function DailyPhrases() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={() => toggleFavorite(phrase.id)}
-                      className="hover:bg-pink-100"
+                      onClick={() => handleToggleFavorite(phrase)}
+                      className="hover:bg-primary/10"
                     >
                       <Heart
                         className={`h-5 w-5 ${
-                          favorites.has(phrase.id) ? "fill-pink-500 text-pink-500" : "text-gray-400"
+                          isFavorite(phrase.id) ? "fill-primary text-primary" : "text-muted-foreground"
                         }`}
                       />
                     </Button>
@@ -223,7 +225,7 @@ export default function DailyPhrases() {
 
         {/* Audio Controls */}
         {audioPlayer.isPlaying && audioUrl && (
-          <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-purple-100 shadow-lg p-4">
+          <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-md border-t border-border shadow-lg p-4">
             <AudioControls
               volume={audioPlayer.volume}
               playbackRate={audioPlayer.playbackRate}

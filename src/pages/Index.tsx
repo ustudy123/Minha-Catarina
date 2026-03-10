@@ -187,7 +187,7 @@ const Index = () => {
                 {isConnected && <div className="flex items-center justify-center sm:justify-start gap-3 text-sm">
                     <div className="flex items-center gap-1 text-muted-foreground">
                       <Battery className="w-4 h-4" />
-                      <span>85%</span>
+                      <span>{t.home.battery}</span>
                     </div>
                     <div className="flex items-center gap-1 text-muted-foreground">
                       <Volume2 className="w-4 h-4" />

@@ -23,6 +23,7 @@ import AdminPhrases from "./pages/AdminPhrases";
 import AdminUsers from "./pages/AdminUsers";
 import AdminAudio from "./pages/AdminAudio";
 import Languages from "./pages/Languages";
+import Pricing from "./pages/Pricing";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -108,6 +109,14 @@ const App = () => (
                     element={
                       <ProtectedRoute>
                         <Languages />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/pricing"
+                    element={
+                      <ProtectedRoute>
+                        <Pricing />
                       </ProtectedRoute>
                     }
                   />
