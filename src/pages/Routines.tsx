@@ -699,7 +699,7 @@ const Routines = () => {
                   key={preset.id} 
                   className="p-4 border-2 cursor-pointer hover-lift animate-fade-in transition-all"
                   style={{ animationDelay: `${index * 0.05}s` }}
-                  onClick={() => handleAddPresetRoutine(preset)}
+                  onClick={() => setPreviewPreset(preset)}
                 >
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center text-xl">
@@ -716,6 +716,10 @@ const Routines = () => {
                       size="icon" 
                       className="flex-shrink-0"
                       disabled={isAddingPreset || !canCreateMore}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleAddPresetRoutine(preset);
+                      }}
                     >
                       {isAddingPreset ? (
                         <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
