@@ -24,6 +24,7 @@ import {
 import { cn } from "@/lib/utils";
 
 const CreatePhrase = () => {
+  const navigate = useNavigate();
   const [phraseText, setPhraseText] = useState("");
   const [generatingLang, setGeneratingLang] = useState<Language | null>(null);
   const maxChars = 200;
