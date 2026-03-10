@@ -33,6 +33,7 @@ const features = {
 };
 
 const Pricing = () => {
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-gradient-to-br from-muted via-background to-accent/10">
       {/* Header */}
