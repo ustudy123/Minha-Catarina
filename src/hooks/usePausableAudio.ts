@@ -116,7 +116,7 @@ export function usePausableAudio() {
   const playSegment = useCallback(async (
     index: number, 
     segments: PauseSegment[], 
-    targetLanguage: 'pt' | 'en' | 'es'
+    targetLanguage?: 'pt' | 'en' | 'es'
   ) => {
     if (!isPlayingRef.current || index >= segments.length) {
       // End of playback
