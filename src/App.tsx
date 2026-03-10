@@ -112,6 +112,14 @@ const App = () => (
                       </ProtectedRoute>
                     }
                   />
+                  <Route
+                    path="/pricing"
+                    element={
+                      <ProtectedRoute>
+                        <Pricing />
+                      </ProtectedRoute>
+                    }
+                  />
                   {/* Admin Routes */}
                   <Route
                     path="/admin"
