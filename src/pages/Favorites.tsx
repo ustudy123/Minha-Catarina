@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { PageTransition } from "@/components/PageTransition";
 import {
   DndContext,
@@ -55,6 +55,7 @@ import {
 import { cn } from '@/lib/utils';
 
 const Favorites = () => {
+  const navigate = useNavigate();
   const { language } = useLanguage();
   const {
     favorites,
@@ -195,7 +196,7 @@ const Favorites = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Button variant="ghost" size="icon" onClick={() => window.history.back()}>
+              <Button variant="ghost" size="icon" onClick={() => navigate('/')}>
                 <ArrowLeft className="w-5 h-5" />
               </Button>
               <div>

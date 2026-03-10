@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { PageTransition } from "@/components/PageTransition";
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragEndEvent } from '@dnd-kit/core';
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
@@ -25,6 +25,7 @@ import { ArrowLeft, Plus, MoreVertical, Shuffle, Clock, Play, Trash2, Edit, List
 import { cn } from '@/lib/utils';
 import { presetRoutines, PresetRoutine } from '@/data/presetRoutines';
 const Routines = () => {
+  const navigate = useNavigate();
   const {
     language
   } = useLanguage();
@@ -542,7 +543,7 @@ const Routines = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Button variant="ghost" size="icon" onClick={() => window.history.back()}>
+              <Button variant="ghost" size="icon" onClick={() => navigate('/')}>
                 <ArrowLeft className="w-5 h-5" />
               </Button>
               <div>
