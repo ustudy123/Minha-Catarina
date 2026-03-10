@@ -199,7 +199,7 @@ export function usePausableAudio() {
 
   const play = useCallback(async (
     text: string, 
-    targetLanguage: 'pt' | 'en' | 'es' = language as 'pt' | 'en' | 'es'
+    targetLanguage?: 'pt' | 'en' | 'es'
   ) => {
     // Parse text into segments
     const segments = parseText(text);
