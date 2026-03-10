@@ -54,7 +54,7 @@ const Languages = () => {
         .map(s => s.trim())
         .filter(s => s.length > 0);
       
-      return segments.map(segment => ({ text: segment, language: 'pt' as const }));
+      return segments.map(segment => ({ text: segment }));
     });
 
     if (phrasesToPreload.length > 0) {
@@ -71,9 +71,9 @@ const Languages = () => {
 
     try {
       setPlayingId(phrase.id);
-      // Play in Portuguese - the phrases already contain the foreign words embedded
-      // e.g., "Em inglês, vermelho é RED. Fala comigo: RED [pausa:5s] Muito bem!"
-      await pausableAudio.play(phrase.text, 'pt');
+      // Play without translation - the phrases already contain mixed languages as-is
+      // e.g., "How are you?" should be spoken in English, not translated
+      await pausableAudio.play(phrase.text);
     } catch (error) {
       console.error('Error playing phrase:', error);
     }

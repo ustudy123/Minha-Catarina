@@ -116,7 +116,7 @@ export function usePausableAudio() {
   const playSegment = useCallback(async (
     index: number, 
     segments: PauseSegment[], 
-    targetLanguage: 'pt' | 'en' | 'es'
+    targetLanguage?: 'pt' | 'en' | 'es'
   ) => {
     if (!isPlayingRef.current || index >= segments.length) {
       // End of playback
@@ -164,7 +164,7 @@ export function usePausableAudio() {
           // Generate new audio
           const { url } = await generate({ 
             text: segment.content, 
-            language: targetLanguage 
+            ...(targetLanguage ? { language: targetLanguage } : {}),
           });
           audioUrl = url;
         }
@@ -199,7 +199,7 @@ export function usePausableAudio() {
 
   const play = useCallback(async (
     text: string, 
-    targetLanguage: 'pt' | 'en' | 'es' = language as 'pt' | 'en' | 'es'
+    targetLanguage?: 'pt' | 'en' | 'es'
   ) => {
     // Parse text into segments
     const segments = parseText(text);
