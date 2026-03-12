@@ -72,7 +72,7 @@ export const translations = {
       medium: "Médio",
       phraseOfTheDay: "Frase do Dia",
       phraseOfTheDayText: "Bom dia, meu amor! Que tal começarmos o dia com um sorriso?",
-      quickActions: "Ações Rápidas",
+      quickActions: "Início",
       library: "Biblioteca",
       libraryDesc: "500+ frases",
       favorites: "Favoritas",
