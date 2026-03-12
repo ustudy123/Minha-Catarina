@@ -65,6 +65,7 @@ const Library = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+  const [selectedTimeOfDay, setSelectedTimeOfDay] = useState<string | null>(null);
   const [playingId, setPlayingId] = useState<string | null>(null);
 
   const audioPlayer = useAudioPlayer();
