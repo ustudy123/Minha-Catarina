@@ -27,6 +27,8 @@ import {
   BookOpen,
   Heart,
   Sun,
+  Sunset,
+  Moon,
   GraduationCap,
   Bell,
   Sparkles,
@@ -65,6 +67,7 @@ const Library = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+  const [selectedTimeOfDay, setSelectedTimeOfDay] = useState<string | null>(null);
   const [playingId, setPlayingId] = useState<string | null>(null);
 
   const audioPlayer = useAudioPlayer();
@@ -183,12 +186,24 @@ const Library = () => {
   const filteredPhrases = selectedCategory
     ? samplePhrases.filter(phrase => {
         const matchesCategory = phrase.category === selectedCategory.id;
+        const matchesTime = selectedTimeOfDay ? phrase.timeOfDay === selectedTimeOfDay : true;
         const matchesSearch = searchQuery
           ? phrase.text.toLowerCase().includes(searchQuery.toLowerCase())
           : true;
-        return matchesCategory && matchesSearch;
+        return matchesCategory && matchesTime && matchesSearch;
       })
     : [];
+
+  // Time of day sub-categories for "daily"
+  const timeOfDaySubCategories = [
+    { id: "morning", name: language === 'pt' ? 'Manhã' : language === 'en' ? 'Morning' : 'Mañana', icon: Sun },
+    { id: "afternoon", name: language === 'pt' ? 'Tarde' : language === 'en' ? 'Afternoon' : 'Tarde', icon: Sunset },
+    { id: "night", name: language === 'pt' ? 'Noite' : language === 'en' ? 'Night' : 'Noche', icon: Moon },
+  ];
+
+  const getTimeOfDayPhraseCount = (timeId: string) => {
+    return samplePhrases.filter(p => p.category === 'daily' && p.timeOfDay === timeId).length;
+  };
 
   // Category detail view (like routine detail)
   if (selectedCategory && selectedCategory.id === "myPhrases") {
@@ -336,21 +351,91 @@ const Library = () => {
     );
   }
 
-  // Category detail view (regular categories)
-  if (selectedCategory) {
+  // Daily category - show time of day sub-categories
+  if (selectedCategory && selectedCategory.id === "daily" && !selectedTimeOfDay) {
     return (
       <PageTransition>
         <div className="min-h-screen bg-gradient-to-br from-muted via-background to-accent/10">
           <header className="sticky top-0 z-50 glass border-b border-border/50 backdrop-blur-lg">
             <div className="container mx-auto px-4 py-4">
               <div className="flex items-center gap-3">
-                <Button variant="ghost" size="icon" onClick={() => { setSelectedCategory(null); setSearchQuery(""); }}>
+                <Button variant="ghost" size="icon" onClick={() => { setSelectedCategory(null); }}>
+                  <ArrowLeft className="w-5 h-5" />
+                </Button>
+                <div>
+                  <h1 className="text-xl font-bold flex items-center gap-2">
+                    <Sun className="w-5 h-5" />
+                    {selectedCategory.name}
+                  </h1>
+                  <p className="text-xs text-muted-foreground">
+                    {language === 'pt' ? 'Escolha o período do dia' : language === 'en' ? 'Choose time of day' : 'Elige el período del día'}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </header>
+
+          <main className="container mx-auto px-4 py-6 max-w-2xl space-y-6">
+            <div className="space-y-3">
+              {timeOfDaySubCategories.map((sub, index) => {
+                const count = getTimeOfDayPhraseCount(sub.id);
+                const SubIcon = sub.icon;
+                return (
+                  <Card
+                    key={sub.id}
+                    className="p-4 border-2 cursor-pointer hover-lift animate-fade-in transition-all"
+                    style={{ animationDelay: `${index * 0.05}s` }}
+                    onClick={() => setSelectedTimeOfDay(sub.id)}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-secondary to-accent flex items-center justify-center">
+                          <SubIcon className="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold">{sub.name}</h3>
+                          <p className="text-xs text-muted-foreground">
+                            {count} {count === 1
+                              ? (language === 'pt' ? 'frase' : language === 'en' ? 'phrase' : 'frase')
+                              : (language === 'pt' ? 'frases' : language === 'en' ? 'phrases' : 'frases')}
+                          </p>
+                        </div>
+                      </div>
+                      <ChevronRight className="w-5 h-5 text-muted-foreground" />
+                    </div>
+                  </Card>
+                );
+              })}
+            </div>
+            <div className="h-20" />
+          </main>
+        </div>
+      </PageTransition>
+    );
+  }
+
+  // Category detail view (regular categories)
+  if (selectedCategory) {
+    const backAction = selectedCategory.id === "daily" && selectedTimeOfDay
+      ? () => { setSelectedTimeOfDay(null); setSearchQuery(""); }
+      : () => { setSelectedCategory(null); setSearchQuery(""); };
+    const headerTitle = selectedCategory.id === "daily" && selectedTimeOfDay
+      ? timeOfDaySubCategories.find(s => s.id === selectedTimeOfDay)?.name || selectedCategory.name
+      : selectedCategory.name;
+
+    return (
+      <PageTransition>
+        <div className="min-h-screen bg-gradient-to-br from-muted via-background to-accent/10">
+          <header className="sticky top-0 z-50 glass border-b border-border/50 backdrop-blur-lg">
+            <div className="container mx-auto px-4 py-4">
+              <div className="flex items-center gap-3">
+                <Button variant="ghost" size="icon" onClick={backAction}>
                   <ArrowLeft className="w-5 h-5" />
                 </Button>
                 <div>
                   <h1 className="text-xl font-bold flex items-center gap-2">
                     {selectedCategory.icon && <selectedCategory.icon className="w-5 h-5" />}
-                    {selectedCategory.name}
+                    {headerTitle}
                   </h1>
                   <p className="text-xs text-muted-foreground">
                     {filteredPhrases.length} {t.library.phrasesFound}
