@@ -145,6 +145,13 @@ const Index = () => {
     gradient: "from-secondary to-accent",
     href: "/routines",
     isPremium: false
+  }, {
+    icon: Info,
+    title: t.home.presentation,
+    description: t.home.presentationDesc,
+    gradient: "from-highlight to-accent",
+    href: "/presentation",
+    isPremium: false
   }];
   return <PageTransition>
     <div className="min-h-screen bg-gradient-to-br from-muted via-background to-secondary/20">
