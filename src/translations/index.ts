@@ -946,7 +946,7 @@ export const translations = {
       medium: "Medio",
       phraseOfTheDay: "Frase del Día",
       phraseOfTheDayText: "¡Buenos días, mi amor! ¿Qué tal empezar el día con una sonrisa?",
-      quickActions: "Acciones Rápidas",
+      quickActions: "Inicio",
       library: "Biblioteca",
       libraryDesc: "500+ frases",
       favorites: "Favoritas",
