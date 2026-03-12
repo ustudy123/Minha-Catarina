@@ -184,12 +184,24 @@ const Library = () => {
   const filteredPhrases = selectedCategory
     ? samplePhrases.filter(phrase => {
         const matchesCategory = phrase.category === selectedCategory.id;
+        const matchesTime = selectedTimeOfDay ? phrase.timeOfDay === selectedTimeOfDay : true;
         const matchesSearch = searchQuery
           ? phrase.text.toLowerCase().includes(searchQuery.toLowerCase())
           : true;
-        return matchesCategory && matchesSearch;
+        return matchesCategory && matchesTime && matchesSearch;
       })
     : [];
+
+  // Time of day sub-categories for "daily"
+  const timeOfDaySubCategories = [
+    { id: "morning", name: language === 'pt' ? 'Manhã' : language === 'en' ? 'Morning' : 'Mañana', icon: Sun },
+    { id: "afternoon", name: language === 'pt' ? 'Tarde' : language === 'en' ? 'Afternoon' : 'Tarde', icon: Sunset },
+    { id: "night", name: language === 'pt' ? 'Noite' : language === 'en' ? 'Night' : 'Noche', icon: Moon },
+  ];
+
+  const getTimeOfDayPhraseCount = (timeId: string) => {
+    return samplePhrases.filter(p => p.category === 'daily' && p.timeOfDay === timeId).length;
+  };
 
   // Category detail view (like routine detail)
   if (selectedCategory && selectedCategory.id === "myPhrases") {
