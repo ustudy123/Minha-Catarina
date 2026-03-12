@@ -509,7 +509,7 @@ export const translations = {
       medium: "Medium",
       phraseOfTheDay: "Phrase of the Day",
       phraseOfTheDayText: "Good morning, my love! How about starting the day with a smile?",
-      quickActions: "Quick Actions",
+      quickActions: "Home",
       library: "Library",
       libraryDesc: "500+ phrases",
       favorites: "Favorites",
