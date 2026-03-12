@@ -29,6 +29,7 @@ import {
   Sun,
   Sunset,
   Moon,
+  GraduationCap,
   Bell,
   Sparkles,
   Lock,
