@@ -8,7 +8,7 @@ import { AudioControls } from "@/components/audio/AudioControls";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { UserMenu } from "@/components/UserMenu";
 import { BluetoothGuide } from "@/components/BluetoothGuide";
-import { BookOpen, Sparkles, Star, ListMusic, Bluetooth, Battery, Volume2, Crown, WifiOff } from "lucide-react";
+import { BookOpen, Sparkles, Star, ListMusic, Bluetooth, Battery, Volume2, Crown, WifiOff, Info } from "lucide-react";
 import { useState } from "react";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useTextToSpeech } from "@/hooks/useTextToSpeech";
