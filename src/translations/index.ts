@@ -81,6 +81,8 @@ export const translations = {
       createPhraseDesc: "IA personalizada",
       routines: "Minhas Rotinas",
       routinesDesc: "Suas sequências",
+      presentation: "Apresentação Catarina",
+      presentationDesc: "Comece por aqui",
     },
     
     // Quick Actions (legacy)
