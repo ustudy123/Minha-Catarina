@@ -24,6 +24,7 @@ import AdminUsers from "./pages/AdminUsers";
 import AdminAudio from "./pages/AdminAudio";
 import Languages from "./pages/Languages";
 import Pricing from "./pages/Pricing";
+import Presentation from "./pages/Presentation";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -120,7 +121,14 @@ const App = () => (
                       </ProtectedRoute>
                     }
                   />
-                  {/* Admin Routes */}
+                  <Route
+                    path="/presentation"
+                    element={
+                      <ProtectedRoute>
+                        <Presentation />
+                      </ProtectedRoute>
+                    }
+                  />
                   <Route
                     path="/admin"
                     element={

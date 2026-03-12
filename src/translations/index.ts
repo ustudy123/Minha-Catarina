@@ -81,6 +81,8 @@ export const translations = {
       createPhraseDesc: "IA personalizada",
       routines: "Minhas Rotinas",
       routinesDesc: "Suas sequências",
+      presentation: "Apresentação Catarina",
+      presentationDesc: "Comece por aqui",
     },
     
     // Quick Actions (legacy)
@@ -518,6 +520,8 @@ export const translations = {
       createPhraseDesc: "Custom AI",
       routines: "My Routines",
       routinesDesc: "Your sequences",
+      presentation: "Meet Catarina",
+      presentationDesc: "Start here",
     },
     
     // Quick Actions (legacy)
@@ -955,6 +959,8 @@ export const translations = {
       createPhraseDesc: "IA personalizada",
       routines: "Mis Rutinas",
       routinesDesc: "Tus secuencias",
+      presentation: "Conoce a Catarina",
+      presentationDesc: "Empieza aquí",
     },
     
     // Quick Actions (legacy)
