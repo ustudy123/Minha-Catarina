@@ -520,6 +520,8 @@ export const translations = {
       createPhraseDesc: "Custom AI",
       routines: "My Routines",
       routinesDesc: "Your sequences",
+      presentation: "Meet Catarina",
+      presentationDesc: "Start here",
     },
     
     // Quick Actions (legacy)
