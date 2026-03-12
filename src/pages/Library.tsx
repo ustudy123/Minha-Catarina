@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useTextToSpeech } from "@/hooks/useTextToSpeech";
 import { useSoundEffects } from "@/hooks/useSoundEffects";
@@ -18,7 +17,6 @@ import { PlayButton } from "@/components/audio/PlayButton";
 import { usePausableAudio, hasPauseMarkers, getTextWithoutPauses } from "@/hooks/usePausableAudio";
 import { AudioControls } from "@/components/audio/AudioControls";
 import { Link, useNavigate } from "react-router-dom";
-
 import { PhraseOptionsMenu } from "@/components/PhraseOptionsMenu";
 import { PremiumGate } from "@/components/PremiumGate";
 import {
@@ -40,6 +38,8 @@ import {
   Gamepad2,
   Languages,
   Timer,
+  ChevronRight,
+  BookOpenText,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -49,16 +49,24 @@ interface Phrase {
   category: string;
   timeOfDay?: 'morning' | 'afternoon' | 'night';
   soundPrompt?: string;
-  phraseKey?: string; // Key for preloaded audio lookup
+  phraseKey?: string;
+}
+
+interface Category {
+  id: string;
+  name: string;
+  icon: any;
+  isLink?: boolean;
+  linkTo?: string;
+  premium?: boolean;
 }
 
 const Library = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("all");
-  
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [playingId, setPlayingId] = useState<string | null>(null);
-  
+
   const audioPlayer = useAudioPlayer();
   const pausableAudio = usePausableAudio();
   const { generate: generateTTS, isGenerating: isGeneratingTTS } = useTextToSpeech();
@@ -70,9 +78,7 @@ const Library = () => {
   const { phrases: savedPhrases, isLoading: loadingSaved, removePhrase, toggleFavorite: toggleSavedFavorite } = useSavedPhrases();
   const t = getTranslations(language);
 
-  // Categories with Languages as a link
-  const categories = [
-    { id: "all", name: t.library.categories.all || "Todas", icon: null },
+  const categories: Category[] = [
     { id: "songs", name: t.library.categories.songs || "Músicas", icon: Music },
     { id: "stories", name: t.library.categories.stories || "Histórias", icon: BookOpen },
     { id: "affection", name: t.library.categories.affection || "Carinho", icon: Heart },
@@ -85,9 +91,8 @@ const Library = () => {
     { id: "myPhrases", name: t.library.categories.myPhrases || "Minhas Frases", icon: Sparkles, premium: true },
   ];
 
-  // Get prerecorded phrases from translations with timeOfDay
+  // Get prerecorded phrases from translations
   const samplePhrases: Phrase[] = t.library.prerecordedPhrases.map((phrase, index) => {
-    // Map old categories to new ones
     const categoryMap: Record<string, string> = {
       routine: 'daily',
       bedtime: 'daily',
@@ -96,14 +101,10 @@ const Library = () => {
       languages: 'education',
     };
     const mappedCategory = categoryMap[phrase.category] || phrase.category;
-    
-    // Use timeOfDay from phrase if available, otherwise assign based on index
     const timeOfDayOptions: Array<'morning' | 'afternoon' | 'night'> = ['morning', 'afternoon', 'night'];
     const timeOfDay = phrase.timeOfDay as 'morning' | 'afternoon' | 'night' || timeOfDayOptions[index % 3];
-    
-    // Generate phraseKey for preloaded audio lookup
     const phraseKey = `${language}_${mappedCategory}_${index}`;
-    
+
     return {
       id: `phrase-${index}`,
       text: phrase.text,
@@ -114,11 +115,9 @@ const Library = () => {
     };
   });
 
-  // Combined loading state
   const isGenerating = isGeneratingTTS || isGeneratingSFX || pausableAudio.isLoading;
 
   const handlePlayPhrase = async (phrase: Phrase) => {
-    // If currently playing this phrase, stop it
     if (playingId === phrase.id) {
       if (pausableAudio.isPlaying) {
         pausableAudio.stop();
@@ -129,20 +128,17 @@ const Library = () => {
       return;
     }
 
-    // Stop any current playback
     pausableAudio.stop();
     audioPlayer.stop();
 
     try {
       setPlayingId(phrase.id);
-      
-      // Check if phrase has pause markers - use pausable audio for these
+
       if (hasPauseMarkers(phrase.text)) {
         pausableAudio.play(phrase.text, language as 'pt' | 'en' | 'es');
         return;
       }
-      
-      // First check for preloaded audio (instant playback)
+
       if (phrase.phraseKey) {
         const preloadedUrl = getAudioUrl(phrase.phraseKey);
         if (preloadedUrl) {
@@ -150,9 +146,7 @@ const Library = () => {
           return;
         }
       }
-      
-      // Fallback: Generate on-demand
-      // Use sound effects API for sounds category, otherwise use TTS
+
       if (phrase.category === 'sounds' && phrase.soundPrompt) {
         const { url } = await generateSFX({ prompt: phrase.soundPrompt, duration: 10 });
         if (url) {
@@ -180,305 +174,130 @@ const Library = () => {
     });
   };
 
-  const filteredPhrases = samplePhrases.filter(phrase => {
-    const matchesSearch = phrase.text.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategory === "all" || phrase.category === selectedCategory;
-    
-    // Don't show phrases if "myPhrases" category is selected (handled separately)
-    if (selectedCategory === "myPhrases") return false;
-    
-    return matchesSearch && matchesCategory;
-  });
+  // Get phrase count per category
+  const getPhrasesForCategory = (categoryId: string) => {
+    return samplePhrases.filter(p => p.category === categoryId);
+  };
 
-  // Handle premium-only "Minhas Frases" category
-  const isMyPhrasesSelected = selectedCategory === "myPhrases";
+  // Filtered phrases for selected category
+  const filteredPhrases = selectedCategory
+    ? samplePhrases.filter(phrase => {
+        const matchesCategory = phrase.category === selectedCategory.id;
+        const matchesSearch = searchQuery
+          ? phrase.text.toLowerCase().includes(searchQuery.toLowerCase())
+          : true;
+        return matchesCategory && matchesSearch;
+      })
+    : [];
 
-  return (
-    <PageTransition>
-      <div className="min-h-screen bg-gradient-to-br from-muted via-background to-accent/10">
-        {/* Header */}
-        <header className="sticky top-0 z-50 glass border-b border-border/50 backdrop-blur-lg">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center gap-3">
-            <Button variant="ghost" size="icon" onClick={() => navigate('/')}>
-              <ArrowLeft className="w-5 h-5" />
-            </Button>
-            <div>
-              <h1 className="text-xl font-bold">{t.library.title}</h1>
-              <p className="text-xs text-muted-foreground">{t.library.subtitle}</p>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <main className="container mx-auto px-4 py-6 max-w-2xl space-y-6">
-        {/* Search */}
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-          <Input 
-            placeholder={t.library.searchPlaceholder}
-            className="pl-10 h-12 rounded-xl border-2"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
-
-        {/* Categories Tabs */}
-        <Tabs value={selectedCategory} onValueChange={(value) => {
-          const cat = categories.find(c => c.id === value);
-          if (cat && (cat as any).isLink && (cat as any).linkTo) {
-            navigate((cat as any).linkTo);
-          } else {
-            setSelectedCategory(value);
-          }
-        }}>
-          <TabsList className="w-full h-auto flex flex-wrap gap-2 bg-transparent p-0 justify-start">
-            {categories.map(cat => (
-              <TabsTrigger
-                key={cat.id}
-                value={cat.id}
-                disabled={(cat as any).premium && !canAccessMyPhrases}
-                className={cn(
-                  "rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground flex items-center gap-1",
-                  (cat as any).premium && !canAccessMyPhrases && "opacity-50"
-                )}
-              >
-                {cat.icon && <cat.icon className="w-4 h-4" />}
-                {(cat as any).premium && !canAccessMyPhrases && <Lock className="w-3 h-3" />}
-                {cat.name}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-
-          {/* My Phrases - Premium Gate */}
-          {isMyPhrasesSelected && !canAccessMyPhrases && (
-            <div className="mt-6">
-              <PremiumGate
-                featureName={t.library.categories.myPhrases || "Minhas Frases"}
-              />
-            </div>
-          )}
-
-          {/* My Phrases - Premium Content */}
-          {isMyPhrasesSelected && canAccessMyPhrases && (
-            <div className="mt-6 space-y-3">
-              {loadingSaved ? (
-                <div className="text-center py-12">
-                  <Loader2 className="w-8 h-8 mx-auto text-primary animate-spin mb-4" />
-                  <p className="text-muted-foreground">
-                    {language === 'pt' ? 'Carregando suas frases...' :
-                     language === 'en' ? 'Loading your phrases...' :
-                     'Cargando tus frases...'}
+  // Category detail view (like routine detail)
+  if (selectedCategory && selectedCategory.id === "myPhrases") {
+    return (
+      <PageTransition>
+        <div className="min-h-screen bg-gradient-to-br from-muted via-background to-accent/10">
+          <header className="sticky top-0 z-50 glass border-b border-border/50 backdrop-blur-lg">
+            <div className="container mx-auto px-4 py-4">
+              <div className="flex items-center gap-3">
+                <Button variant="ghost" size="icon" onClick={() => setSelectedCategory(null)}>
+                  <ArrowLeft className="w-5 h-5" />
+                </Button>
+                <div>
+                  <h1 className="text-xl font-bold">{selectedCategory.name}</h1>
+                  <p className="text-xs text-muted-foreground">
+                    {savedPhrases.length} {savedPhrases.length === 1
+                      ? (language === 'pt' ? 'frase' : language === 'en' ? 'phrase' : 'frase')
+                      : (language === 'pt' ? 'frases' : language === 'en' ? 'phrases' : 'frases')}
                   </p>
                 </div>
-              ) : savedPhrases.length === 0 ? (
-                <div className="text-center py-12">
-                  <Sparkles className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-                  <p className="text-muted-foreground mb-4">
-                    {language === 'pt' ? 'Você ainda não criou nenhuma frase' :
-                     language === 'en' ? 'You haven\'t created any phrases yet' :
-                     'Aún no has creado ninguna frase'}
-                  </p>
-                  <Link to="/create">
-                    <Button className="gap-2">
-                      <Plus className="w-4 h-4" />
-                      {language === 'pt' ? 'Criar Frase' :
-                       language === 'en' ? 'Create Phrase' :
-                       'Crear Frase'}
-                    </Button>
-                  </Link>
-                </div>
-              ) : (
-                <>
-                  <div className="flex items-center justify-between px-1">
-                    <h3 className="text-sm font-semibold text-muted-foreground">
-                      {savedPhrases.length} {savedPhrases.length === 1 ? 
-                        (language === 'pt' ? 'frase' : language === 'en' ? 'phrase' : 'frase') :
-                        (language === 'pt' ? 'frases' : language === 'en' ? 'phrases' : 'frases')}
-                    </h3>
-                    <Link to="/create">
-                      <Button variant="ghost" size="sm" className="gap-1">
-                        <Plus className="w-4 h-4" />
-                        {language === 'pt' ? 'Nova Frase' : language === 'en' ? 'New Phrase' : 'Nueva Frase'}
-                      </Button>
-                    </Link>
-                  </div>
-                  <div className="space-y-2">
-                    {savedPhrases.map((phrase, index) => (
-                      <Card 
-                        key={phrase.id}
-                        className="p-4 border-2 hover-lift animate-fade-in"
-                        style={{ animationDelay: `${index * 0.05}s` }}
-                      >
-                        <div className="flex items-start gap-3">
-                          <PlayButton
-                            isPlaying={playingId === phrase.id && audioPlayer.isPlaying}
-                            isLoading={isGenerating && playingId === phrase.id}
-                            onPlay={async () => {
-                              if (playingId === phrase.id && audioPlayer.isPlaying) {
-                                audioPlayer.pause();
-                                setPlayingId(null);
-                                return;
-                              }
-                              try {
-                                setPlayingId(phrase.id);
-                                if (phrase.audioUrl) {
-                                  await audioPlayer.play(phrase.audioUrl);
-                                } else {
-                                  const { url } = await generateTTS({ text: phrase.text, language: phrase.language as 'pt' | 'en' | 'es' });
-                                  if (url) {
-                                    await audioPlayer.play(url);
-                                  }
-                                }
-                              } catch (error) {
-                                console.error('Error playing saved phrase:', error);
-                                setPlayingId(null);
-                              }
-                            }}
-                            onPause={audioPlayer.pause}
-                            variant="secondary"
-                            size="icon"
-                            className="flex-shrink-0"
-                          />
-                          
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium mb-1 break-words">
-                              {phrase.text}
-                            </p>
-                            <Badge variant="secondary" className="text-xs">
-                              {phrase.language === 'pt' ? 'Português' : 
-                               phrase.language === 'en' ? 'English' : 'Español'}
-                            </Badge>
-                          </div>
-
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="flex-shrink-0"
-                            onClick={() => toggleSavedFavorite(phrase.id)}
-                          >
-                            <Star 
-                              className={cn(
-                                "w-5 h-5",
-                                phrase.isFavorite && "fill-highlight text-highlight"
-                              )}
-                            />
-                          </Button>
-
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="flex-shrink-0 text-destructive hover:text-destructive"
-                            onClick={() => removePhrase(phrase.id)}
-                          >
-                            <Trash2 className="w-5 h-5" />
-                          </Button>
-
-                          <PhraseOptionsMenu
-                            phraseId={phrase.id}
-                            phraseText={phrase.text}
-                            phraseSource="saved"
-                          />
-                        </div>
-
-                        {playingId === phrase.id && audioPlayer.duration > 0 && (
-                          <AudioControls
-                            volume={audioPlayer.volume}
-                            playbackRate={audioPlayer.playbackRate}
-                            currentTime={audioPlayer.currentTime}
-                            duration={audioPlayer.duration}
-                            onVolumeChange={audioPlayer.setVolume}
-                            onPlaybackRateChange={audioPlayer.setPlaybackRate}
-                            onSeek={audioPlayer.seek}
-                            className="mt-3"
-                          />
-                        )}
-                      </Card>
-                    ))}
-                  </div>
-                </>
-              )}
-            </div>
-          )}
-
-          {/* Phrases List */}
-          {!isMyPhrasesSelected && (
-            <TabsContent value={selectedCategory} className="space-y-3 mt-6">
-              <div className="flex items-center justify-between px-1">
-                <h3 className="text-sm font-semibold text-muted-foreground">
-                  {filteredPhrases.length} {t.library.phrasesFound}
-                </h3>
-                {searchQuery && (
-                  <Button 
-                    variant="ghost" 
-                    size="sm"
-                    onClick={() => setSearchQuery("")}
-                  >
-                    {t.common.clear}
-                  </Button>
-                )}
               </div>
+            </div>
+          </header>
 
+          <main className="container mx-auto px-4 py-6 max-w-2xl space-y-6">
+            {!canAccessMyPhrases ? (
+              <PremiumGate featureName={selectedCategory.name} />
+            ) : loadingSaved ? (
+              <div className="text-center py-12">
+                <Loader2 className="w-8 h-8 mx-auto text-primary animate-spin mb-4" />
+                <p className="text-muted-foreground">
+                  {language === 'pt' ? 'Carregando suas frases...' :
+                   language === 'en' ? 'Loading your phrases...' :
+                   'Cargando tus frases...'}
+                </p>
+              </div>
+            ) : savedPhrases.length === 0 ? (
+              <Card className="p-8 text-center border-2 border-dashed">
+                <Sparkles className="w-16 h-16 mx-auto mb-4 text-muted-foreground/50" />
+                <p className="text-muted-foreground mb-4">
+                  {language === 'pt' ? 'Você ainda não criou nenhuma frase' :
+                   language === 'en' ? 'You haven\'t created any phrases yet' :
+                   'Aún no has creado ninguna frase'}
+                </p>
+                <Link to="/create">
+                  <Button className="gap-2">
+                    <Plus className="w-4 h-4" />
+                    {language === 'pt' ? 'Criar Frase' :
+                     language === 'en' ? 'Create Phrase' :
+                     'Crear Frase'}
+                  </Button>
+                </Link>
+              </Card>
+            ) : (
               <div className="space-y-2">
-                {filteredPhrases.map((phrase, index) => (
-                  <Card 
+                {savedPhrases.map((phrase, index) => (
+                  <Card
                     key={phrase.id}
                     className="p-4 border-2 hover-lift animate-fade-in"
                     style={{ animationDelay: `${index * 0.05}s` }}
                   >
                     <div className="flex items-start gap-3">
                       <PlayButton
-                        isPlaying={playingId === phrase.id && (audioPlayer.isPlaying || pausableAudio.isPlaying)}
+                        isPlaying={playingId === phrase.id && audioPlayer.isPlaying}
                         isLoading={isGenerating && playingId === phrase.id}
-                        onPlay={() => handlePlayPhrase(phrase)}
-                        onPause={() => {
-                          pausableAudio.stop();
-                          audioPlayer.pause();
-                          setPlayingId(null);
+                        onPlay={async () => {
+                          if (playingId === phrase.id && audioPlayer.isPlaying) {
+                            audioPlayer.pause();
+                            setPlayingId(null);
+                            return;
+                          }
+                          try {
+                            setPlayingId(phrase.id);
+                            if (phrase.audioUrl) {
+                              await audioPlayer.play(phrase.audioUrl);
+                            } else {
+                              const { url } = await generateTTS({ text: phrase.text, language: phrase.language as 'pt' | 'en' | 'es' });
+                              if (url) {
+                                await audioPlayer.play(url);
+                              }
+                            }
+                          } catch (error) {
+                            console.error('Error playing saved phrase:', error);
+                            setPlayingId(null);
+                          }
                         }}
+                        onPause={audioPlayer.pause}
                         variant="secondary"
                         size="icon"
                         className="flex-shrink-0"
                       />
-                      
+
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium mb-1 break-words">
-                          {getTextWithoutPauses(phrase.text)}
-                        </p>
+                        <p className="text-sm font-medium mb-1 break-words">{phrase.text}</p>
                         <Badge variant="secondary" className="text-xs">
-                          {categories.find(c => c.id === phrase.category)?.name || phrase.category}
+                          {phrase.language === 'pt' ? 'Português' :
+                           phrase.language === 'en' ? 'English' : 'Español'}
                         </Badge>
-                        
-                        {/* Pause indicator */}
-                        {playingId === phrase.id && pausableAudio.isPaused && (
-                          <div className="mt-2 flex items-center gap-2 text-xs text-primary animate-pulse">
-                            <Timer className="w-4 h-4" />
-                            <span>
-                              {language === 'pt' ? 'Sua vez de falar!' : language === 'en' ? 'Your turn to speak!' : '¡Tu turno de hablar!'} ({pausableAudio.pauseTimeRemaining}s)
-                            </span>
-                          </div>
-                        )}
                       </div>
 
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="flex-shrink-0"
-                        onClick={() => handleToggleFavorite(phrase)}
-                      >
-                        <Star 
-                          className={cn(
-                            "w-5 h-5",
-                            isFavorite(phrase.id) && "fill-highlight text-highlight"
-                          )}
-                        />
+                      <Button size="icon" variant="ghost" className="flex-shrink-0" onClick={() => toggleSavedFavorite(phrase.id)}>
+                        <Star className={cn("w-5 h-5", phrase.isFavorite && "fill-highlight text-highlight")} />
                       </Button>
 
-                      <PhraseOptionsMenu
-                        phraseId={phrase.id}
-                        phraseText={phrase.text}
-                        phraseSource="library"
-                      />
+                      <Button size="icon" variant="ghost" className="flex-shrink-0 text-destructive hover:text-destructive" onClick={() => removePhrase(phrase.id)}>
+                        <Trash2 className="w-5 h-5" />
+                      </Button>
+
+                      <PhraseOptionsMenu phraseId={phrase.id} phraseText={phrase.text} phraseSource="saved" />
                     </div>
 
                     {playingId === phrase.id && audioPlayer.duration > 0 && (
@@ -496,12 +315,206 @@ const Library = () => {
                   </Card>
                 ))}
               </div>
-            </TabsContent>
-          )}
-        </Tabs>
+            )}
 
-        <div className="h-20" />
-      </main>
+            {/* Add Phrase Button */}
+            {canAccessMyPhrases && (
+              <Link to="/create">
+                <Card className="p-4 border-2 border-dashed cursor-pointer hover:bg-muted/50 transition-colors">
+                  <div className="flex items-center justify-center gap-2 text-muted-foreground">
+                    <Plus className="w-5 h-5" />
+                    <span>{language === 'pt' ? 'Criar Frase' : language === 'en' ? 'Create Phrase' : 'Crear Frase'}</span>
+                  </div>
+                </Card>
+              </Link>
+            )}
+
+            <div className="h-20" />
+          </main>
+        </div>
+      </PageTransition>
+    );
+  }
+
+  // Category detail view (regular categories)
+  if (selectedCategory) {
+    return (
+      <PageTransition>
+        <div className="min-h-screen bg-gradient-to-br from-muted via-background to-accent/10">
+          <header className="sticky top-0 z-50 glass border-b border-border/50 backdrop-blur-lg">
+            <div className="container mx-auto px-4 py-4">
+              <div className="flex items-center gap-3">
+                <Button variant="ghost" size="icon" onClick={() => { setSelectedCategory(null); setSearchQuery(""); }}>
+                  <ArrowLeft className="w-5 h-5" />
+                </Button>
+                <div>
+                  <h1 className="text-xl font-bold flex items-center gap-2">
+                    {selectedCategory.icon && <selectedCategory.icon className="w-5 h-5" />}
+                    {selectedCategory.name}
+                  </h1>
+                  <p className="text-xs text-muted-foreground">
+                    {filteredPhrases.length} {t.library.phrasesFound}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </header>
+
+          <main className="container mx-auto px-4 py-6 max-w-2xl space-y-6">
+            {/* Search */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+              <Input
+                placeholder={t.library.searchPlaceholder}
+                className="pl-10 h-12 rounded-xl border-2"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+
+            {/* Phrases */}
+            <div className="space-y-2">
+              {filteredPhrases.map((phrase, index) => (
+                <Card
+                  key={phrase.id}
+                  className="p-4 border-2 hover-lift animate-fade-in"
+                  style={{ animationDelay: `${index * 0.05}s` }}
+                >
+                  <div className="flex items-start gap-3">
+                    <PlayButton
+                      isPlaying={playingId === phrase.id && (audioPlayer.isPlaying || pausableAudio.isPlaying)}
+                      isLoading={isGenerating && playingId === phrase.id}
+                      onPlay={() => handlePlayPhrase(phrase)}
+                      onPause={() => {
+                        pausableAudio.stop();
+                        audioPlayer.pause();
+                        setPlayingId(null);
+                      }}
+                      variant="secondary"
+                      size="icon"
+                      className="flex-shrink-0"
+                    />
+
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium mb-1 break-words">
+                        {getTextWithoutPauses(phrase.text)}
+                      </p>
+
+                      {playingId === phrase.id && pausableAudio.isPaused && (
+                        <div className="mt-2 flex items-center gap-2 text-xs text-primary animate-pulse">
+                          <Timer className="w-4 h-4" />
+                          <span>
+                            {language === 'pt' ? 'Sua vez de falar!' : language === 'en' ? 'Your turn to speak!' : '¡Tu turno de hablar!'} ({pausableAudio.pauseTimeRemaining}s)
+                          </span>
+                        </div>
+                      )}
+                    </div>
+
+                    <Button size="icon" variant="ghost" className="flex-shrink-0" onClick={() => handleToggleFavorite(phrase)}>
+                      <Star className={cn("w-5 h-5", isFavorite(phrase.id) && "fill-highlight text-highlight")} />
+                    </Button>
+
+                    <PhraseOptionsMenu phraseId={phrase.id} phraseText={phrase.text} phraseSource="library" />
+                  </div>
+
+                  {playingId === phrase.id && audioPlayer.duration > 0 && (
+                    <AudioControls
+                      volume={audioPlayer.volume}
+                      playbackRate={audioPlayer.playbackRate}
+                      currentTime={audioPlayer.currentTime}
+                      duration={audioPlayer.duration}
+                      onVolumeChange={audioPlayer.setVolume}
+                      onPlaybackRateChange={audioPlayer.setPlaybackRate}
+                      onSeek={audioPlayer.seek}
+                      className="mt-3"
+                    />
+                  )}
+                </Card>
+              ))}
+            </div>
+
+            <div className="h-20" />
+          </main>
+        </div>
+      </PageTransition>
+    );
+  }
+
+  // Categories list view (like routines list)
+  return (
+    <PageTransition>
+      <div className="min-h-screen bg-gradient-to-br from-muted via-background to-accent/10">
+        <header className="sticky top-0 z-50 glass border-b border-border/50 backdrop-blur-lg">
+          <div className="container mx-auto px-4 py-4">
+            <div className="flex items-center gap-3">
+              <Button variant="ghost" size="icon" onClick={() => navigate('/')}>
+                <ArrowLeft className="w-5 h-5" />
+              </Button>
+              <div>
+                <h1 className="text-xl font-bold flex items-center gap-2">
+                  <BookOpenText className="w-5 h-5" />
+                  {t.library.title}
+                </h1>
+                <p className="text-xs text-muted-foreground">{t.library.subtitle}</p>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <main className="container mx-auto px-4 py-6 max-w-2xl space-y-6">
+          {/* Categories as cards */}
+          <div className="space-y-3">
+            {categories.map((cat, index) => {
+              const phraseCount = cat.id === "myPhrases"
+                ? savedPhrases.length
+                : getPhrasesForCategory(cat.id).length;
+              const IconComp = cat.icon;
+
+              return (
+                <Card
+                  key={cat.id}
+                  className={cn(
+                    "p-4 border-2 cursor-pointer hover-lift animate-fade-in transition-all",
+                    cat.premium && !canAccessMyPhrases && "opacity-60"
+                  )}
+                  style={{ animationDelay: `${index * 0.05}s` }}
+                  onClick={() => {
+                    if (cat.isLink && cat.linkTo) {
+                      navigate(cat.linkTo);
+                    } else if (cat.premium && !canAccessMyPhrases) {
+                      setSelectedCategory(cat);
+                    } else {
+                      setSelectedCategory(cat);
+                    }
+                  }}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-secondary to-accent flex items-center justify-center">
+                        {IconComp && <IconComp className="w-5 h-5 text-white" />}
+                      </div>
+                      <div>
+                        <h3 className="font-semibold flex items-center gap-2">
+                          {cat.name}
+                          {cat.premium && !canAccessMyPhrases && <Lock className="w-3 h-3 text-muted-foreground" />}
+                        </h3>
+                        <p className="text-xs text-muted-foreground">
+                          {phraseCount} {phraseCount === 1
+                            ? (language === 'pt' ? 'frase' : language === 'en' ? 'phrase' : 'frase')
+                            : (language === 'pt' ? 'frases' : language === 'en' ? 'phrases' : 'frases')}
+                        </p>
+                      </div>
+                    </div>
+
+                    <ChevronRight className="w-5 h-5 text-muted-foreground" />
+                  </div>
+                </Card>
+              );
+            })}
+          </div>
+
+          <div className="h-20" />
+        </main>
       </div>
     </PageTransition>
   );
