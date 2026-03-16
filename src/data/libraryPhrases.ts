@@ -5,6 +5,7 @@ export interface LibraryPhraseData {
   text: string;
   category: string;
   timeOfDay?: string;
+  subCategory?: string;
   soundPrompt?: string;
 }
 
