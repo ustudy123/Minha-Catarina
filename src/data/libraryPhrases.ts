@@ -69,7 +69,7 @@ export const libraryPhrasesData: LibraryPhraseData[] = [
   { text: "Que bom brincar com você. Você é muito querida, você é a minha melhor amiga.", category: "daily", timeOfDay: "afternoon" },
   { text: "A brincadeira foi boa e muito divertida.", category: "daily", timeOfDay: "afternoon" },
   { text: "Hora de guardar os brinquedos e arrumar essa bagunça. Cada coisa no lugar e vai ficar bem lindo e organizado.", category: "daily", timeOfDay: "afternoon" },
-  { text: "Tá na hora do lanchinho. Estou com fome.", category: "daily", timeOfDay: "afternoon" },
+  { text: "Tá na hora do lanchinho. Estou com fome.", category: "daily", timeOfDay: "afternoon", soundPrompt: "baby crying because hungry, whimpering baby girl wanting food, realistic infant cry" },
   { text: "O que vai fazer para eu comer?", category: "daily", timeOfDay: "afternoon" },
   { text: "Que delícia eu vou comer tudinho e ficar muito grande e forte.", category: "daily", timeOfDay: "afternoon" },
   { text: "Já comi tudo.", category: "daily", timeOfDay: "afternoon" },
