@@ -64,8 +64,15 @@ interface Phrase {
   text: string;
   category: string;
   timeOfDay?: 'morning' | 'afternoon' | 'night';
+  subCategory?: string;
   soundPrompt?: string;
   phraseKey?: string;
+}
+
+interface SubCategory {
+  id: string;
+  name: string;
+  icon: any;
 }
 
 interface Category {
