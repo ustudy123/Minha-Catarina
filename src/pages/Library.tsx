@@ -135,10 +135,46 @@ const Library = () => {
       text: phrase.text,
       category: mappedCategory,
       timeOfDay,
+      subCategory: (phrase as { subCategory?: string }).subCategory,
       soundPrompt: (phrase as { soundPrompt?: string }).soundPrompt,
       phraseKey,
     };
   });
+
+  // Sub-category definitions per category
+  const subCategoryDefinitions: Record<string, SubCategory[]> = {
+    education: [
+      { id: "bons-costumes", name: "Bons Costumes", icon: Award },
+      { id: "arco-iris", name: "Arco-Íris", icon: Rainbow },
+      { id: "numeros", name: "Números", icon: Hash },
+      { id: "animais", name: "Animais", icon: PawPrint },
+      { id: "partes-do-corpo", name: "Partes do Corpo", icon: Brain },
+      { id: "cores", name: "Cores", icon: Palette },
+      { id: "formas-geometricas", name: "Formas Geométricas", icon: Shapes },
+      { id: "outros-temas", name: "Outros Temas", icon: Lightbulb },
+    ],
+    playtime: [
+      { id: "encontre", name: "Encontre", icon: SearchIcon },
+      { id: "imitacao", name: "Imitação", icon: Copy },
+      { id: "partes-do-corpo", name: "Partes do Corpo", icon: Brain },
+      { id: "caretas", name: "Caretas", icon: Smile },
+    ],
+    prayers: [
+      { id: "santo-anjo", name: "Santo Anjo", icon: HandHeart },
+      { id: "pai-nosso", name: "Pai Nosso", icon: HandHeart },
+      { id: "sao-longuinho", name: "São Longuinho", icon: Eye },
+    ],
+    stories: [
+      { id: "historias", name: "Histórias", icon: BookHeart },
+      { id: "poemas", name: "Poemas", icon: Feather },
+    ],
+  };
+
+  const hasSubCategories = (categoryId: string) => !!subCategoryDefinitions[categoryId];
+
+  const getSubCategoryPhraseCount = (categoryId: string, subId: string) => {
+    return samplePhrases.filter(p => p.category === categoryId && p.subCategory === subId).length;
+  };
 
   const isGenerating = isGeneratingTTS || isGeneratingSFX || pausableAudio.isLoading;
 
