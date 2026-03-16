@@ -8,9 +8,7 @@ export interface LibraryPhraseData {
   timeOfDay?: string;
 }
 
-export const libraryPhrasesData: LibraryPhraseData[] = [
-
-  // ==================== APRESENTAÇÃO DE CATARINA ====================
+export const libraryPhrasesData: LibraryPhraseData[] = [];
   { text: "Oi eu sou a boneca Catarina da Carmell", category: "affection" },
   { text: "Estou muito feliz que você vai cuidar de mim.", category: "affection" },
   { text: "Como é o seu nome?", category: "affection" },
