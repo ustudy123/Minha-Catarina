@@ -117,6 +117,15 @@ const Index = () => {
     }
   };
   const actionTexts = quickActionsTexts[language];
+  const presentationAction = {
+    icon: Info,
+    title: t.home.presentation,
+    description: t.home.presentationDesc,
+    gradient: "from-highlight to-accent",
+    href: "/presentation",
+    isPremium: false
+  };
+
   const quickActions = [{
     icon: BookOpen,
     title: actionTexts.library.title,
@@ -144,13 +153,6 @@ const Index = () => {
     description: actionTexts.routines.description,
     gradient: "from-secondary to-accent",
     href: "/routines",
-    isPremium: false
-  }, {
-    icon: Info,
-    title: t.home.presentation,
-    description: t.home.presentationDesc,
-    gradient: "from-highlight to-accent",
-    href: "/presentation",
     isPremium: false
   }];
   return <PageTransition>
@@ -256,9 +258,27 @@ const Index = () => {
             {audioPlayer.duration > 0 && <AudioControls volume={audioPlayer.volume} playbackRate={audioPlayer.playbackRate} currentTime={audioPlayer.currentTime} duration={audioPlayer.duration} onVolumeChange={audioPlayer.setVolume} onPlaybackRateChange={audioPlayer.setPlaybackRate} onSeek={audioPlayer.seek} className="mt-4" />}
           </Card>}
 
-        {/* Quick Actions Grid - 4 cards */}
+        {/* Quick Actions */}
         <div className="space-y-3">
           <h3 className="text-lg font-semibold px-1">{t.home.quickActions}</h3>
+          
+          {/* Apresentação - Full width on top */}
+          <Link to={presentationAction.href}>
+            <Card className="relative overflow-hidden border-2 cursor-pointer group hover-lift animate-fade-in-scale">
+              <div className={cn("absolute inset-0 bg-gradient-to-br opacity-10 group-hover:opacity-20 transition-opacity", presentationAction.gradient)} />
+              <div className="relative p-4 sm:p-5 flex items-center gap-4">
+                <div className={cn("w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br flex items-center justify-center shadow-md", presentationAction.gradient)}>
+                  <presentationAction.icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                </div>
+                <div className="flex-1">
+                  <h4 className="font-semibold text-sm sm:text-base leading-tight">{presentationAction.title}</h4>
+                  <p className="text-xs text-muted-foreground">{presentationAction.description}</p>
+                </div>
+              </div>
+            </Card>
+          </Link>
+
+          {/* 2x2 Grid */}
           <div className="grid grid-cols-2 gap-3">
             {quickActions.map((action, index) => <Link key={index} to={action.href}>
                 <Card className={cn("relative overflow-hidden border-2 cursor-pointer group hover-lift h-full", "animate-fade-in-scale")} style={{
@@ -271,7 +291,6 @@ const Index = () => {
                       <div className={cn("w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br flex items-center justify-center shadow-md", action.gradient)}>
                         <action.icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                       </div>
-                      
                     </div>
                     
                     <div className="flex-1">
