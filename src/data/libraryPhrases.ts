@@ -48,7 +48,7 @@ export const libraryPhrasesData: LibraryPhraseData[] = [
   { text: "Fiz cocô. Limpa meu bumbum, por favor.", category: "daily", timeOfDay: "morning" },
   { text: "Minha mão tá suja. Limpa minhas mãos, por favor.", category: "daily", timeOfDay: "morning" },
   { text: "Hora de almoçar. Precisamos comer para crescer. O que você quer comer?", category: "daily", timeOfDay: "morning" },
-  { text: "Estou com fome.", category: "daily", timeOfDay: "morning" },
+  { text: "Estou com fome.", category: "daily", timeOfDay: "morning", soundPrompt: "baby crying because hungry, whimpering baby girl wanting food, realistic infant cry" },
   { text: "O que tem para comer hoje?", category: "daily", timeOfDay: "morning" },
   { text: "Hum, que delícia, que gostoso. Quero mais.", category: "daily", timeOfDay: "morning" },
   { text: "Já comi tudo. Vou ficar mais linda e forte.", category: "daily", timeOfDay: "morning" },
