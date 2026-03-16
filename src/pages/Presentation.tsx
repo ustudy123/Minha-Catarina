@@ -13,14 +13,12 @@ import catarinaMascot from "@/assets/catarina-mascot.png";
 
 const presentationPhrases: Record<string, string[]> = {
   pt: [
-    "Oi! Eu sou a Catarina, sua amiguinha especial!",
-    "Eu adoro conversar, cantar e contar histórias!",
-    "Você pode me pedir para falar qualquer coisa!",
-    "Eu falo português, inglês e espanhol!",
-    "Vamos ser melhores amigas? Me conecta no Bluetooth!",
-    "Eu tenho uma biblioteca com mais de 500 frases!",
-    "Você pode criar frases novas só pra mim falar!",
-    "Também posso seguir rotinas com várias frases em sequência!",
+    "Oi eu sou a boneca Catarina da Carmell. Estou muito feliz que você vai cuidar de mim. Como é o seu nome?",
+    "Que nome lindo você tem. Quem escolheu o seu nome?",
+    "Quantos anos você tem?",
+    "Muito prazer em te conhecer! Me dá um abraço bem gostoso?",
+    "Obrigada pelo carinho! Gostei muito de você! O que você gosta de fazer?",
+    "Vamos ser amigas e brincar muito juntas! Me mostra a sua casa?",
   ],
   en: [
     "Hi! I'm Catarina, your special little friend!",
