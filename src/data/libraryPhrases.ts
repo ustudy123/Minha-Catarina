@@ -174,7 +174,7 @@ export const libraryPhrasesData: LibraryPhraseData[] = [
   { text: "O que você aprendeu na escola hoje?", category: "affection" },
   { text: "Parabéns. Eu fiquei orgulhosa de você.", category: "affection" },
   { text: "Eu gosto muito de você, do jeitinho que você é. Me dá um colinho?", category: "affection" },
-  { text: "Que colinho gostoso, que soninho.", category: "affection" },
+  { text: "Que colinho gostoso, que soninho.", category: "affection", soundPrompt: "cute baby yawning, sleepy baby girl yawn, adorable infant yawning sound" },
   { text: "Eu gostei do nosso tempo juntas.", category: "affection" },
 
   // ==================== QUANDO A CRIANÇA CHORA (affection) ====================
