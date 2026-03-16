@@ -22,7 +22,7 @@ export const libraryPhrasesData: LibraryPhraseData[] = [
   { text: "Sol e chuva casamento de viúva. Chuva e sol casamento de espanhol.", category: "daily", timeOfDay: "morning", soundPrompt: "cute baby girl laughing and giggling happily, realistic child laughter" },
   { text: "Vamos tomar café da manhã?", category: "daily", timeOfDay: "morning" },
   { text: "O café da manhã é uma refeição muito importante. O que você gosta de comer de manhã?", category: "daily", timeOfDay: "morning" },
-  { text: "Estou com fome.", category: "daily", timeOfDay: "morning" },
+  { text: "Estou com fome.", category: "daily", timeOfDay: "morning", soundPrompt: "baby crying because hungry, whimpering baby girl wanting food, realistic infant cry" },
   { text: "Estou com sede. Quero água, por favor.", category: "daily", timeOfDay: "morning" },
   { text: "Já bebi tudo. Obrigada.", category: "daily", timeOfDay: "morning" },
   { text: "Quero um leitinho.", category: "daily", timeOfDay: "morning" },
