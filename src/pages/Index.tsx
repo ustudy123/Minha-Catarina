@@ -266,11 +266,11 @@ const Index = () => {
           <Link to={presentationAction.href}>
             <Card className="relative overflow-hidden border-2 cursor-pointer group hover-lift animate-fade-in-scale">
               <div className={cn("absolute inset-0 bg-gradient-to-br opacity-10 group-hover:opacity-20 transition-opacity", presentationAction.gradient)} />
-              <div className="relative p-4 sm:p-5 flex items-center gap-4">
+              <div className="relative p-4 sm:p-5 space-y-3 flex flex-col items-center text-center">
                 <div className={cn("w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br flex items-center justify-center shadow-md", presentationAction.gradient)}>
                   <presentationAction.icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                 </div>
-                <div className="flex-1">
+                <div>
                   <h4 className="font-semibold text-sm sm:text-base leading-tight">{presentationAction.title}</h4>
                   <p className="text-xs text-muted-foreground">{presentationAction.description}</p>
                 </div>
