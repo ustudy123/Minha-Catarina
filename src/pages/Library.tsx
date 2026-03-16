@@ -254,10 +254,11 @@ const Library = () => {
     ? samplePhrases.filter(phrase => {
         const matchesCategory = phrase.category === selectedCategory.id;
         const matchesTime = selectedTimeOfDay ? phrase.timeOfDay === selectedTimeOfDay : true;
+        const matchesSub = selectedSubCategory ? phrase.subCategory === selectedSubCategory : true;
         const matchesSearch = searchQuery
           ? phrase.text.toLowerCase().includes(searchQuery.toLowerCase())
           : true;
-        return matchesCategory && matchesTime && matchesSearch;
+        return matchesCategory && matchesTime && matchesSub && matchesSearch;
       })
     : [];
 
