@@ -42,6 +42,20 @@ import {
   Timer,
   ChevronRight,
   BookOpenText,
+  Rainbow,
+  Hash,
+  PawPrint,
+  Brain,
+  Palette,
+  Shapes,
+  Lightbulb,
+  Award,
+  Eye,
+  Smile,
+  Search as SearchIcon,
+  Copy,
+  BookHeart,
+  Feather,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
