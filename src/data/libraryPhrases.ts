@@ -54,7 +54,7 @@ export const libraryPhrasesData: LibraryPhraseData[] = [
   { text: "Já comi tudo. Vou ficar mais linda e forte.", category: "daily", timeOfDay: "morning" },
   { text: "Preciso escovar os dentes agora! Você precisa escovar os dentes, para não ter bichinhos.", category: "daily", timeOfDay: "morning" },
   { text: "Que dentes lindos e limpinhos.", category: "daily", timeOfDay: "morning" },
-  { text: "Estou com sono.", category: "daily", timeOfDay: "morning" },
+  { text: "Estou com sono.", category: "daily", timeOfDay: "morning", soundPrompt: "sleepy baby crying softly, tired infant whimpering, baby girl drowsy cry" },
   { text: "Quero colinho para dormir. Estou com sono. Canta uma música para eu dormir?", category: "daily", timeOfDay: "morning" },
 
   // ==================== ROTINA TARDE (daily - afternoon) ====================
