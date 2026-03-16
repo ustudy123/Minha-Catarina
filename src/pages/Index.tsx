@@ -267,7 +267,7 @@ const Index = () => {
             <Card className="relative overflow-hidden border-2 rounded-[1.75rem] cursor-pointer group hover-lift animate-fade-in-scale">
               <div className={cn("absolute inset-0 bg-gradient-to-br opacity-10 group-hover:opacity-20 transition-opacity", presentationAction.gradient)} />
               <div className="relative p-5 sm:p-6 flex items-center gap-4 text-left">
-                <div className={cn("w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br flex items-center justify-center shadow-md shrink-0", presentationAction.gradient)}>
+                <div className={cn("w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gradient-to-br flex items-center justify-center shadow-md shrink-0", presentationAction.gradient)}>
                   <presentationAction.icon className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
                 </div>
                 <div className="min-w-0">
