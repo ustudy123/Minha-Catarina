@@ -117,6 +117,15 @@ const Index = () => {
     }
   };
   const actionTexts = quickActionsTexts[language];
+  const presentationAction = {
+    icon: Info,
+    title: t.home.presentation,
+    description: t.home.presentationDesc,
+    gradient: "from-highlight to-accent",
+    href: "/presentation",
+    isPremium: false
+  };
+
   const quickActions = [{
     icon: BookOpen,
     title: actionTexts.library.title,
@@ -144,13 +153,6 @@ const Index = () => {
     description: actionTexts.routines.description,
     gradient: "from-secondary to-accent",
     href: "/routines",
-    isPremium: false
-  }, {
-    icon: Info,
-    title: t.home.presentation,
-    description: t.home.presentationDesc,
-    gradient: "from-highlight to-accent",
-    href: "/presentation",
     isPremium: false
   }];
   return <PageTransition>
