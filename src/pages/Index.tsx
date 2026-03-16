@@ -264,15 +264,15 @@ const Index = () => {
           
           {/* Apresentação - Full width on top */}
           <Link to={presentationAction.href}>
-            <Card className="relative overflow-hidden border-2 cursor-pointer group hover-lift animate-fade-in-scale">
+            <Card className="relative overflow-hidden border-2 rounded-[1.75rem] cursor-pointer group hover-lift animate-fade-in-scale">
               <div className={cn("absolute inset-0 bg-gradient-to-br opacity-10 group-hover:opacity-20 transition-opacity", presentationAction.gradient)} />
-              <div className="relative p-4 sm:p-5 space-y-3 flex flex-col items-center text-center">
-                <div className={cn("w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br flex items-center justify-center shadow-md", presentationAction.gradient)}>
-                  <presentationAction.icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+              <div className="relative p-5 sm:p-6 flex items-center gap-4 text-left">
+                <div className={cn("w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br flex items-center justify-center shadow-md shrink-0", presentationAction.gradient)}>
+                  <presentationAction.icon className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
                 </div>
-                <div>
-                  <h4 className="font-semibold text-sm sm:text-base leading-tight">{presentationAction.title}</h4>
-                  <p className="text-xs text-muted-foreground">{presentationAction.description}</p>
+                <div className="min-w-0">
+                  <h4 className="font-semibold text-lg leading-tight">{presentationAction.title}</h4>
+                  <p className="text-sm text-muted-foreground">{presentationAction.description}</p>
                 </div>
               </div>
             </Card>
