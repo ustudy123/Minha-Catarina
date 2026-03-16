@@ -142,7 +142,7 @@ export const libraryPhrasesData: LibraryPhraseData[] = [
   { text: "Eu gostei de ouvir você. Eu gostei de falar com você.", category: "affection" },
   { text: "Qual a sua brincadeira favorita?", category: "affection" },
   { text: "Essa brincadeira é legal.", category: "affection" },
-  { text: "Me dá um beijinho?", category: "affection" },
+  { text: "Me dá um beijinho?", category: "affection", soundPrompt: "sweet kiss sound, gentle kissing sound, cute baby kiss mwah" },
   { text: "Que delícia. Obrigada pelo carinho. Eu te amo. I love you.", category: "affection" },
 
   // ==================== SENTIMENTOS (affection) ====================
