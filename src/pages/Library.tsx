@@ -151,14 +151,23 @@ const Library = () => {
       }
 
       if (phrase.category === 'sounds' && phrase.soundPrompt) {
+        // Sound-only phrase: just play SFX
         const { url } = await generateSFX({ prompt: phrase.soundPrompt, duration: 10 });
         if (url) {
           await audioPlayer.play(url);
         }
       } else {
+        // Generate and play TTS
         const { url } = await generateTTS({ text: phrase.text, language });
         if (url) {
           await audioPlayer.play(url);
+        }
+        // If phrase has an associated sound effect, play it after TTS
+        if (phrase.soundPrompt && phrase.category !== 'sounds') {
+          const { url: sfxUrl } = await generateSFX({ prompt: phrase.soundPrompt, duration: 10 });
+          if (sfxUrl) {
+            await audioPlayer.play(sfxUrl);
+          }
         }
       }
     } catch (error) {
