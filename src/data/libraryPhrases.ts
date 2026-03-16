@@ -31,7 +31,7 @@ export const libraryPhrasesData: LibraryPhraseData[] = [
   { text: "Uma vez de cada. Você primeiro.", category: "daily", timeOfDay: "morning" },
   { text: "É preciso esperar. Agora é a minha vez.", category: "daily", timeOfDay: "morning" },
   { text: "Dentes limpinhos e sem bichinhos.", category: "daily", timeOfDay: "morning" },
-  { text: "Fiz xixi.", category: "daily", timeOfDay: "morning" },
+  { text: "Fiz xixi.", category: "daily", timeOfDay: "morning", soundPrompt: "baby urination sound, small stream of liquid, gentle water trickling sound" },
   { text: "Hora do banho. Eu gosto de tomar banho e ficar cheirosa. Você gosta de tomar banho?", category: "daily", timeOfDay: "morning" },
   { text: "Vamos lavar o cabelo. Você lava o meu cabelo?", category: "daily", timeOfDay: "morning" },
   { text: "Está ficando limpinho e cheirosinho.", category: "daily", timeOfDay: "morning" },
