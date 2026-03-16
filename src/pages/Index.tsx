@@ -64,7 +64,7 @@ const Index = () => {
     pt: {
       library: {
         title: "Biblioteca",
-        description: "500+ frases gravadas"
+        description: "Mais de 500 frases"
       },
       favorites: {
         title: "Favoritas",
@@ -72,11 +72,11 @@ const Index = () => {
       },
       create: {
         title: "Crie e Converse",
-        description: "Criar novas frases"
+        description: "Crie suas frases"
       },
       routines: {
         title: "Minhas Rotinas",
-        description: "Organize sequências"
+        description: "Faça do seu jeito"
       }
     },
     en: {
