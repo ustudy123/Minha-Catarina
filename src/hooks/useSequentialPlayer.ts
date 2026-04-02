@@ -155,14 +155,14 @@ export function useSequentialPlayer() {
     }
   }, [generate, language, cleanup]);
 
-  const startPlayAll = useCallback((phrases: PlayablePhrase[], random: boolean = false, intervalMinutes: number = 1) => {
+  const startPlayAll = useCallback((phrases: PlayablePhrase[], random: boolean = false, intervalMinutes: number = 1, useSeconds: boolean = false) => {
     if (phrases.length === 0) return;
 
     cleanup();
     phrasesRef.current = phrases;
     isPlayingRef.current = true;
 
-    const intervalSeconds = intervalMinutes * 60;
+    const intervalSeconds = useSeconds ? intervalMinutes : intervalMinutes * 60;
 
     setState({
       isPlaying: true,
