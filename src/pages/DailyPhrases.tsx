@@ -174,6 +174,12 @@ export default function DailyPhrases() {
           ))}
         </div>
 
+        {/* Auto Play */}
+        <AutoPlayControls
+          phrases={filteredPhrases.map(p => ({ id: p.id, text: p.text }))}
+          sequentialPlayer={sequentialPlayer}
+        />
+
         {/* Phrases List */}
         <div className="space-y-4">
           {filteredPhrases.length === 0 ? (
