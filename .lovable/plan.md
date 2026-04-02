@@ -1,98 +1,56 @@
 
-# Plano: Nova Categoria "Idiomas" na Biblioteca
 
-## Resumo
-Criar uma nova categoria principal chamada "Idiomas" na Biblioteca que servirá como porta de entrada para duas subcategorias: "Aprendendo Inglês" e "Aprendendo Espanhol". Ao clicar em "Idiomas", o usuário será levado a uma nova página dedicada onde poderá escolher qual idioma deseja aprender.
+## Plan: Reorganizar Histórias, Poemas, Músicas e Categorias da Biblioteca
 
-## Estrutura Proposta
+### Problemas Identificados
 
-```text
-Biblioteca
-├── Todas
-├── Músicas
-├── Histórias e Poemas
-├── Carinho
-├── Dia a Dia
-├── Educação
-├── Brincadeiras
-├── Sons
-├── Orações
-├── Idiomas (NOVA) ──────▶ Página separada com:
-│                            ├── Aprendendo Inglês
-│                            └── Aprendendo Espanhol
-└── Minhas Frases (Premium)
-```
+1. **Histórias**: Todas as 20+ histórias estão misturadas numa única subcategoria `"historias"`. Cada história deveria ser uma subcategoria separada (Os Três Porquinhos, Chapeuzinho Vermelho, etc.)
 
-## Etapas de Implementação
+2. **Poemas**: Todos os poemas estão numa única subcategoria `"poemas"`. Cada poema deveria ser separado (Dedinhos, Batatinha, Uni Duni, etc.), com as 9 frases introdutórias antes dos poemas individuais.
 
-### 1. Criar Nova Página de Idiomas
-Criar `src/pages/Languages.tsx` com:
-- Cabeçalho com botão voltar para a Biblioteca
-- Dois cards grandes para seleção:
-  - "Aprendendo Inglês" (com bandeira 🇺🇸/🇬🇧)
-  - "Aprendendo Espanhol" (com bandeira 🇪🇸)
-- Cada card exibe uma lista de frases educativas no idioma escolhido
-- Botão de play para ouvir a pronúncia
-- Design consistente com o resto da aplicação
+3. **Músicas**: Todas as músicas estão sem subcategoria, misturadas. Cada música deveria ser uma subcategoria separada (Ciranda Cirandinha, Barata, Alecrim, etc.), com as 4 frases introdutórias antes.
 
-### 2. Atualizar Arquivo de Rotas
-Modificar `src/App.tsx`:
-- Adicionar rota `/languages` protegida
+4. **Categoria "Carinho" (affection)** não existe mais no documento. Foi substituída por: **Acolhimento**, **Sentimentos**, **Bons Costumes**, **Quando a Criança Chora**, **Entrevista com a Criança**.
 
-### 3. Atualizar Biblioteca
-Modificar `src/pages/Library.tsx`:
-- Adicionar categoria "Idiomas" com ícone `Languages` do Lucide
-- Ao clicar, redirecionar para `/languages` em vez de filtrar frases
+### Mudanças Planejadas
 
-### 4. Adicionar Traduções
-Modificar `src/translations/index.ts`:
-- Adicionar traduções para a nova seção em PT, EN e ES:
-  - Título da página
-  - Nome das subcategorias
-  - Frases educativas para cada idioma
+#### 1. Atualizar `src/data/libraryPhrases.ts`
 
-### 5. Conteúdo das Frases
+**Histórias** - Cada história ganha sua própria `subCategory`:
+- Frases 1-4 introdutórias ficam em `subCategory: "introducao-historias"`
+- `"tres-porquinhos"`, `"chapeuzinho-vermelho"`, `"galinha-ruiva"`, `"coelhinho-pascoa"`, `"leao-e-ratinho"`, `"sapo-bocarrao"`, `"nuvem-dividir"`, `"ursinho-esperar"`, `"coelhinha-verdade"`, `"leao-gentil"`, `"dragao-raiva"`, `"macaquinho-brinquedos"`, `"lebre-tartaruga"`, `"branca-de-neve"`, `"aladim"`, `"cinderela"`, `"pinoquio"`, `"viloes-aprender"`, `"grande-baile"`, `"jardim-eden"`, `"sementinha-corajosa"`, `"tartaruga-apressada"`, `"princesa-escola"`, `"lapis-magico"`, `"pirata-tesouros"`, `"astronauta-estrelas"`
 
-**Aprendendo Inglês** (frases para ensinar inglês às crianças):
-- Cores: "Red is vermelho", "Blue is azul", "Yellow is amarelo"
-- Números: "One, two, three - Um, dois, três"
-- Saudações: "Hello means Olá", "Goodbye means Tchau"
-- Animais: "Dog is cachorro", "Cat is gato"
-- Família: "Mom is mamãe", "Dad is papai"
+**Poemas** - Cada poema ganha sua própria `subCategory`:
+- Frases 1-9 introdutórias em `subCategory: "introducao-poemas"`
+- `"dedinhos"`, `"batatinha"`, `"uni-duni"`, `"1-2-3"`, `"sou-pequena"`, `"mamae-papai"`, `"rei-capitao"`, `"casinha-vo"`, `"bruxinha"`, `"galinha"`, `"colo"`
 
-**Aprendendo Espanhol** (frases para ensinar espanhol às crianças):
-- Cores: "Rojo es vermelho", "Azul es azul", "Amarillo es amarelo"
-- Números: "Uno, dos, tres - Um, dois, três"
-- Saudações: "Hola significa Olá", "Adiós significa Tchau"
-- Animais: "Perro es cachorro", "Gato es gato"
-- Família: "Mamá es mamãe", "Papá es papai"
+**Músicas** - Cada música ganha sua própria `subCategory`:
+- Frases 1-4 introdutórias em `subCategory: "introducao-musicas"`
+- `"ciranda"`, `"abraco"`, `"barata"`, `"alecrim"`, `"pombinha-branca"`, `"indiozinho"`, `"numero-zero"`, `"mestre-andre"`, `"boi-cara-preta"`, `"bota-aqui"`, `"requebradinha"`, `"borboletas"`, `"achou"`, `"dedinhos-musica"`, `"parabens"`, `"casinha"`, `"vira-virou"`, `"estatua"`, `"banho"`, `"parque"`, `"guarda"`, `"janta"`
 
----
+**Categorias reformuladas** - Substituir `"affection"` (Carinho):
+- `category: "affection"` com `subCategory: "acolhimento"` (frases 1-17 do Acolhimento)
+- `category: "affection"` com `subCategory: "sentimentos"` (frases 1-30 dos Sentimentos)
+- `category: "affection"` com `subCategory: "bons-costumes"` → mover de education para affection (ou manter em education)
+- `category: "affection"` com `subCategory: "quando-chora"` (frases 1-6)
+- `category: "affection"` com `subCategory: "entrevista"` (frases 1-12)
 
-## Detalhes Técnicos
+#### 2. Atualizar `src/pages/Library.tsx`
 
-### Novo Arquivo: `src/pages/Languages.tsx`
-- Componente React com Tabs para alternar entre inglês e espanhol
-- Reutiliza `PlayButton`, `AudioControls` e hooks existentes
-- Usa `useTextToSpeech` para gerar áudio das frases
-- Cards com layout similar à página da Biblioteca
+- Atualizar `subCategoryDefinitions` para incluir todas as novas subcategorias de histórias, poemas e músicas
+- Renomear a categoria "Carinho" para usar as novas subcategorias (Acolhimento, Sentimentos, Quando a Criança Chora, Entrevista)
+- Adicionar ícones apropriados para cada subcategoria
 
-### Modificação em `src/pages/Library.tsx`
-- Nova entrada no array `categories`:
-```javascript
-{ id: "languages", name: t.library.categories.languages, icon: Languages, isLink: true, linkTo: "/languages" }
-```
-- Lógica para redirecionar ao clicar na categoria
+#### 3. Atualizar `src/translations/index.ts`
 
-### Modificação em `src/translations/index.ts`
-- Adicionar novo objeto `languageLearning` em cada idioma (pt, en, es) contendo:
-  - `title`: Título da página
-  - `subtitle`: Subtítulo
-  - `learningEnglish`: "Aprendendo Inglês"
-  - `learningSpanish`: "Aprendendo Espanhol"
-  - `englishPhrases`: Array de frases para aprender inglês
-  - `spanishPhrases`: Array de frases para aprender espanhol
+- Atualizar o nome da categoria "Carinho" se necessário
+- Garantir que os nomes das subcategorias estejam corretos
 
-### Modificação em `src/App.tsx`
-- Importar nova página `Languages`
-- Adicionar rota protegida `/languages`
+### Resultado Final
+
+- Ao entrar em **Histórias**, o usuário verá cards para cada história individual (Os Três Porquinhos, Chapeuzinho, etc.)
+- Ao entrar em **Poemas**, verá cards para cada poema (Dedinhos, Batatinha, etc.)
+- Ao entrar em **Músicas**, verá cards para cada música (Ciranda, Barata, etc.)
+- A reprodução automática continua funcionando dentro de cada subcategoria
+- A navegação hierárquica segue o mesmo padrão já existente (Educação, Brincadeiras, etc.)
+
