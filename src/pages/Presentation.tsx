@@ -1,14 +1,14 @@
-import { useState } from "react";
 import { PageTransition } from "@/components/PageTransition";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PlayButton } from "@/components/audio/PlayButton";
+import { AutoPlayControls } from "@/components/AutoPlayControls";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTextToSpeech } from "@/hooks/useTextToSpeech";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useSequentialPlayer, PlayablePhrase } from "@/hooks/useSequentialPlayer";
 import { getTranslations } from "@/translations";
-import { ArrowLeft, Heart, Play, Square, Timer } from "lucide-react";
+import { ArrowLeft, Heart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import catarinaMascot from "@/assets/catarina-mascot.png";
 
@@ -43,13 +43,6 @@ const presentationPhrases: Record<string, string[]> = {
   ],
 };
 
-const intervalOptions = [
-  { label: "3s", value: 3 },
-  { label: "5s", value: 5 },
-  { label: "10s", value: 10 },
-  { label: "15s", value: 15 },
-];
-
 const Presentation = () => {
   const { language } = useLanguage();
   const navigate = useNavigate();
@@ -58,7 +51,11 @@ const Presentation = () => {
   const sequentialPlayer = useSequentialPlayer();
   const t = getTranslations(language);
   const phrases = presentationPhrases[language] || presentationPhrases.pt;
-  const [intervalSeconds, setIntervalSeconds] = useState(5);
+
+  const playablePhrases: PlayablePhrase[] = phrases.map((text, i) => ({
+    id: `presentation-${i}`,
+    text,
+  }));
 
   const handlePlay = async (text: string) => {
     if (audioPlayer.isPlaying) {
@@ -73,18 +70,6 @@ const Presentation = () => {
     } catch (error) {
       console.error("Error playing phrase:", error);
     }
-  };
-
-  const handlePlayAll = () => {
-    if (sequentialPlayer.isPlaying) {
-      sequentialPlayer.stop();
-      return;
-    }
-    const playablePhrases: PlayablePhrase[] = phrases.map((text, i) => ({
-      id: `presentation-${i}`,
-      text,
-    }));
-    sequentialPlayer.startPlayAll(playablePhrases, false, intervalSeconds, true);
   };
 
   const pageTitle = language === "en"
@@ -129,67 +114,7 @@ const Presentation = () => {
           </Card>
 
           {/* Auto-play Controls */}
-          <Card className="p-4 border-2 border-primary/20">
-            <div className="flex flex-col gap-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Timer className="w-4 h-4 text-primary" />
-                  <span className="text-sm font-medium">
-                    {language === "en" ? "Auto Play" : language === "es" ? "Reproducción automática" : "Reprodução automática"}
-                  </span>
-                </div>
-                <Button
-                  onClick={handlePlayAll}
-                  variant={sequentialPlayer.isPlaying ? "destructive" : "default"}
-                  size="sm"
-                  className="gap-2"
-                >
-                  {sequentialPlayer.isPlaying ? (
-                    <>
-                      <Square className="w-4 h-4" />
-                      {language === "en" ? "Stop" : "Parar"}
-                    </>
-                  ) : (
-                    <>
-                      <Play className="w-4 h-4" />
-                      {language === "en" ? "Play All" : language === "es" ? "Reproducir todo" : "Tocar Todas"}
-                    </>
-                  )}
-                </Button>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <span className="text-xs text-muted-foreground">
-                  {language === "en" ? "Interval:" : "Intervalo:"}
-                </span>
-                <div className="flex gap-1">
-                  {intervalOptions.map((opt) => (
-                    <Button
-                      key={opt.value}
-                      variant={intervalSeconds === opt.value ? "secondary" : "ghost"}
-                      size="sm"
-                      onClick={() => setIntervalSeconds(opt.value)}
-                      className="h-7 px-3 text-xs"
-                      disabled={sequentialPlayer.isPlaying}
-                    >
-                      {opt.label}
-                    </Button>
-                  ))}
-                </div>
-              </div>
-
-              {sequentialPlayer.isPlaying && (
-                <div className="text-xs text-muted-foreground text-center animate-pulse">
-                  {language === "en"
-                    ? `Playing ${sequentialPlayer.currentIndex + 1} of ${sequentialPlayer.totalPhrases}`
-                    : `Reproduzindo ${sequentialPlayer.currentIndex + 1} de ${sequentialPlayer.totalPhrases}`}
-                  {sequentialPlayer.timeRemaining > 0 && (
-                    <span> — {language === "en" ? "next in" : "próxima em"} {sequentialPlayer.timeRemaining}s</span>
-                  )}
-                </div>
-              )}
-            </div>
-          </Card>
+          <AutoPlayControls phrases={playablePhrases} sequentialPlayer={sequentialPlayer} />
 
           {/* Phrases */}
           <div className="space-y-3">

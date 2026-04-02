@@ -16,6 +16,8 @@ import { getTranslations } from "@/translations";
 import { PlayButton } from "@/components/audio/PlayButton";
 import { usePausableAudio, hasPauseMarkers, getTextWithoutPauses } from "@/hooks/usePausableAudio";
 import { AudioControls } from "@/components/audio/AudioControls";
+import { AutoPlayControls } from "@/components/AutoPlayControls";
+import { useSequentialPlayer, PlayablePhrase } from "@/hooks/useSequentialPlayer";
 import { Link, useNavigate } from "react-router-dom";
 import { PhraseOptionsMenu } from "@/components/PhraseOptionsMenu";
 import { PremiumGate } from "@/components/PremiumGate";
