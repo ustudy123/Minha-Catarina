@@ -109,7 +109,7 @@ const Library = () => {
   const categories: Category[] = [
     { id: "songs", name: t.library.categories.songs || "Músicas", icon: Music },
     { id: "stories", name: t.library.categories.stories || "Histórias", icon: BookOpen },
-    { id: "affection", name: t.library.categories.affection || "Carinho", icon: Heart },
+    { id: "affection", name: t.library.categories.affection || "Acolhimento", icon: Heart },
     { id: "daily", name: t.library.categories.daily || "Dia a Dia", icon: Sun },
     { id: "education", name: t.library.categories.education || "Educação", icon: GraduationCap },
     { id: "playtime", name: t.library.categories.playtime || "Brincadeiras", icon: Gamepad2 },
