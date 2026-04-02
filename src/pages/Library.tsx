@@ -605,10 +605,12 @@ const Library = () => {
 
             {/* Phrases */}
             <div className="space-y-2">
-              {filteredPhrases.map((phrase, index) => (
+              {filteredPhrases.map((phrase, index) => {
+                const isAutoPlaying = sequentialPlayer.isPlaying && sequentialPlayer.currentPhraseId === phrase.id;
+                return (
                 <Card
                   key={phrase.id}
-                  className="p-4 border-2 hover-lift animate-fade-in"
+                  className={`p-4 border-2 hover-lift animate-fade-in transition-colors ${isAutoPlaying ? "border-primary bg-primary/5" : ""}`}
                   style={{ animationDelay: `${index * 0.05}s` }}
                 >
                   <div className="flex items-start gap-3">
