@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Play, Heart, Clock, Sun, Sunset, Moon, BookOpen, Sparkles, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,8 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { getTranslations } from "@/translations";
 import { useFavorites } from "@/hooks/useFavorites";
 import { AudioControls } from "@/components/audio/AudioControls";
+import { AutoPlayControls } from "@/components/AutoPlayControls";
+import { useSequentialPlayer } from "@/hooks/useSequentialPlayer";
 import { PlayButton } from "@/components/audio/PlayButton";
 import { toast } from "sonner";
 
@@ -48,6 +50,7 @@ export default function DailyPhrases() {
   const { language } = useLanguage();
   const t = getTranslations(language);
   const { isFavorite, toggleFavorite: toggleFav } = useFavorites();
+  const sequentialPlayer = useSequentialPlayer();
 
   // Get phrases from translations and add isFavorite state
   const phrases = useMemo(() => {
@@ -170,6 +173,12 @@ export default function DailyPhrases() {
             </Card>
           ))}
         </div>
+
+        {/* Auto Play */}
+        <AutoPlayControls
+          phrases={filteredPhrases.map(p => ({ id: p.id, text: p.text }))}
+          sequentialPlayer={sequentialPlayer}
+        />
 
         {/* Phrases List */}
         <div className="space-y-4">

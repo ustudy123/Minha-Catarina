@@ -16,6 +16,8 @@ import { getTranslations } from "@/translations";
 import { PlayButton } from "@/components/audio/PlayButton";
 import { usePausableAudio, hasPauseMarkers, getTextWithoutPauses } from "@/hooks/usePausableAudio";
 import { AudioControls } from "@/components/audio/AudioControls";
+import { AutoPlayControls } from "@/components/AutoPlayControls";
+import { useSequentialPlayer, PlayablePhrase } from "@/hooks/useSequentialPlayer";
 import { Link, useNavigate } from "react-router-dom";
 import { PhraseOptionsMenu } from "@/components/PhraseOptionsMenu";
 import { PremiumGate } from "@/components/PremiumGate";
@@ -102,6 +104,7 @@ const Library = () => {
   const { isPremium, canAccessMyPhrases } = useSubscription();
   const { phrases: savedPhrases, isLoading: loadingSaved, removePhrase, toggleFavorite: toggleSavedFavorite } = useSavedPhrases();
   const t = getTranslations(language);
+  const sequentialPlayer = useSequentialPlayer();
 
   const categories: Category[] = [
     { id: "songs", name: t.library.categories.songs || "Músicas", icon: Music },
@@ -594,12 +597,20 @@ const Library = () => {
               />
             </div>
 
+            {/* Auto Play */}
+            <AutoPlayControls
+              phrases={filteredPhrases.map(p => ({ id: p.id, text: getTextWithoutPauses(p.text) }))}
+              sequentialPlayer={sequentialPlayer}
+            />
+
             {/* Phrases */}
             <div className="space-y-2">
-              {filteredPhrases.map((phrase, index) => (
+              {filteredPhrases.map((phrase, index) => {
+                const isAutoPlaying = sequentialPlayer.isPlaying && sequentialPlayer.currentPhraseId === phrase.id;
+                return (
                 <Card
                   key={phrase.id}
-                  className="p-4 border-2 hover-lift animate-fade-in"
+                  className={`p-4 border-2 hover-lift animate-fade-in transition-colors ${isAutoPlaying ? "border-primary bg-primary/5" : ""}`}
                   style={{ animationDelay: `${index * 0.05}s` }}
                 >
                   <div className="flex items-start gap-3">
@@ -652,7 +663,8 @@ const Library = () => {
                     />
                   )}
                 </Card>
-              ))}
+                );
+              })}
             </div>
 
             <div className="h-20" />
