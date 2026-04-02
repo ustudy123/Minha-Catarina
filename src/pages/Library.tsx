@@ -597,6 +597,12 @@ const Library = () => {
               />
             </div>
 
+            {/* Auto Play */}
+            <AutoPlayControls
+              phrases={filteredPhrases.map(p => ({ id: p.id, text: getTextWithoutPauses(p.text) }))}
+              sequentialPlayer={sequentialPlayer}
+            />
+
             {/* Phrases */}
             <div className="space-y-2">
               {filteredPhrases.map((phrase, index) => (
