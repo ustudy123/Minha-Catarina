@@ -663,7 +663,8 @@ const Library = () => {
                     />
                   )}
                 </Card>
-              ))}
+                );
+              })}
             </div>
 
             <div className="h-20" />
