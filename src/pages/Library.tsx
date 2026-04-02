@@ -104,6 +104,7 @@ const Library = () => {
   const { isPremium, canAccessMyPhrases } = useSubscription();
   const { phrases: savedPhrases, isLoading: loadingSaved, removePhrase, toggleFavorite: toggleSavedFavorite } = useSavedPhrases();
   const t = getTranslations(language);
+  const sequentialPlayer = useSequentialPlayer();
 
   const categories: Category[] = [
     { id: "songs", name: t.library.categories.songs || "Músicas", icon: Music },
