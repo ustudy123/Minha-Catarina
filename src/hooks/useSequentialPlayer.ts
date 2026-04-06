@@ -15,58 +15,114 @@ interface SequentialPlayerState {
   totalPhrases: number;
 }
 
+const INITIAL_STATE: SequentialPlayerState = {
+  isPlaying: false,
+  currentIndex: 0,
+  timeRemaining: 0,
+  currentPhraseId: null,
+  totalPhrases: 0,
+};
+
 export function useSequentialPlayer() {
   const { language } = useLanguage();
   const { generate } = useTextToSpeech();
 
-  const [state, setState] = useState<SequentialPlayerState>({
-    isPlaying: false,
-    currentIndex: 0,
-    timeRemaining: 0,
-    currentPhraseId: null,
-    totalPhrases: 0,
-  });
+  const [state, setState] = useState<SequentialPlayerState>(INITIAL_STATE);
 
-  const phrasesRef = useRef<PlayablePhrase[]>([]);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isPlayingRef = useRef(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  const cleanup = useCallback(() => {
+  const resetPlayerState = useCallback(() => {
+    setState(INITIAL_STATE);
+  }, []);
+
+  const clearScheduledPlayback = useCallback(() => {
     if (timerRef.current) {
       clearInterval(timerRef.current);
       timerRef.current = null;
     }
+
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
       timeoutRef.current = null;
     }
+  }, []);
+
+  const cleanup = useCallback(() => {
+    clearScheduledPlayback();
+
     if (audioRef.current) {
       audioRef.current.pause();
-      audioRef.current = null;
+      audioRef.current.currentTime = 0;
     }
-  }, []);
+  }, [clearScheduledPlayback]);
+
+  const finishPlayback = useCallback(() => {
+    isPlayingRef.current = false;
+    cleanup();
+    resetPlayerState();
+  }, [cleanup, resetPlayerState]);
 
   useEffect(() => {
     return cleanup;
   }, [cleanup]);
 
-  const playNext = useCallback(async (index: number, phrases: PlayablePhrase[], random: boolean, intervalSeconds: number) => {
-    if (!isPlayingRef.current || index >= phrases.length) {
-      cleanup();
-      setState({
-        isPlaying: false,
-        currentIndex: 0,
-        timeRemaining: 0,
-        currentPhraseId: null,
-        totalPhrases: 0,
+  const playAudioUrl = useCallback(async (url: string): Promise<boolean> => {
+    const audio = audioRef.current ?? new Audio();
+    audioRef.current = audio;
+
+    return new Promise<boolean>((resolve) => {
+      let settled = false;
+
+      const finalize = (success: boolean) => {
+        if (settled) return;
+        settled = true;
+        audio.removeEventListener('ended', handleEnded);
+        audio.removeEventListener('error', handleError);
+        resolve(success);
+      };
+
+      const handleEnded = () => finalize(true);
+      const handleError = () => finalize(false);
+
+      audio.pause();
+      audio.currentTime = 0;
+      audio.addEventListener('ended', handleEnded);
+      audio.addEventListener('error', handleError);
+      audio.src = url;
+      audio.load();
+
+      audio.play().catch((error) => {
+        console.error('Error starting sequential audio:', error);
+        finalize(false);
       });
-      isPlayingRef.current = false;
+    });
+  }, []);
+
+  const playNext = useCallback(async (index: number, phrases: PlayablePhrase[], random: boolean, intervalSeconds: number) => {
+    clearScheduledPlayback();
+
+    if (!isPlayingRef.current || index >= phrases.length) {
+      finishPlayback();
       return;
     }
 
     const currentPhrase = phrases[index];
+
+    if (!currentPhrase?.text?.trim()) {
+      const nextIndex = random && phrases.length > 1
+        ? phrases.findIndex((_, phraseIndex) => phraseIndex !== index)
+        : index + 1;
+
+      if (nextIndex >= 0) {
+        playNext(nextIndex, phrases, random, intervalSeconds);
+      } else {
+        finishPlayback();
+      }
+      return;
+    }
 
     setState(prev => ({
       ...prev,
@@ -77,21 +133,26 @@ export function useSequentialPlayer() {
 
     try {
       const { url } = await generate({ text: currentPhrase.text, language });
-      if (!url || !isPlayingRef.current) return;
+      if (!isPlayingRef.current) return;
 
-      // Play audio and wait for it to end
-      const audio = new Audio(url);
-      audioRef.current = audio;
+      if (!url) {
+        finishPlayback();
+        return;
+      }
 
-      await new Promise<void>((resolve) => {
-        audio.onended = () => resolve();
-        audio.onerror = () => resolve();
-        audio.play().catch(() => resolve());
-      });
+      let playedSuccessfully = await playAudioUrl(url);
+
+      if (!playedSuccessfully && isPlayingRef.current) {
+        playedSuccessfully = await playAudioUrl(url);
+      }
 
       if (!isPlayingRef.current) return;
 
-      // Determine next index
+      if (!playedSuccessfully) {
+        finishPlayback();
+        return;
+      }
+
       let nextIndex = index + 1;
       if (random && phrases.length > 1) {
         do {
@@ -99,23 +160,12 @@ export function useSequentialPlayer() {
         } while (nextIndex === index);
       }
 
-      // If there are more phrases, wait the interval then play next
       if (nextIndex < phrases.length || (random && isPlayingRef.current)) {
-        // For random mode, allow looping; for sequential, stop at end
         if (!random && nextIndex >= phrases.length) {
-          cleanup();
-          setState({
-            isPlaying: false,
-            currentIndex: 0,
-            timeRemaining: 0,
-            currentPhraseId: null,
-            totalPhrases: 0,
-          });
-          isPlayingRef.current = false;
+          finishPlayback();
           return;
         }
 
-        // Start countdown for interval
         let remaining = intervalSeconds;
         setState(prev => ({ ...prev, timeRemaining: remaining }));
 
@@ -129,46 +179,29 @@ export function useSequentialPlayer() {
         }, 1000);
 
         timeoutRef.current = setTimeout(() => {
+          timeoutRef.current = null;
           playNext(nextIndex, phrases, random, intervalSeconds);
         }, intervalSeconds * 1000);
       } else {
-        // Done
-        cleanup();
-        setState({
-          isPlaying: false,
-          currentIndex: 0,
-          timeRemaining: 0,
-          currentPhraseId: null,
-          totalPhrases: 0,
-        });
-        isPlayingRef.current = false;
+        finishPlayback();
       }
     } catch (error) {
       console.error('Error playing phrase:', error);
-      // Try next phrase on error
-      const nextIndex = random 
-        ? Math.floor(Math.random() * phrases.length)
-        : index + 1;
-      if (isPlayingRef.current) {
-        playNext(nextIndex, phrases, random, intervalSeconds);
-      }
+      finishPlayback();
     }
-  }, [generate, language, cleanup]);
+  }, [clearScheduledPlayback, finishPlayback, generate, language, playAudioUrl]);
 
   const startPlayAll = useCallback((phrases: PlayablePhrase[], random: boolean = false, intervalMinutes: number = 1, useSeconds: boolean = false) => {
     if (phrases.length === 0) return;
 
     cleanup();
-    phrasesRef.current = phrases;
     isPlayingRef.current = true;
 
     const intervalSeconds = useSeconds ? intervalMinutes : intervalMinutes * 60;
 
     setState({
+      ...INITIAL_STATE,
       isPlaying: true,
-      currentIndex: 0,
-      timeRemaining: 0,
-      currentPhraseId: null,
       totalPhrases: phrases.length,
     });
 
@@ -177,16 +210,8 @@ export function useSequentialPlayer() {
   }, [playNext, cleanup]);
 
   const stop = useCallback(() => {
-    isPlayingRef.current = false;
-    cleanup();
-    setState({
-      isPlaying: false,
-      currentIndex: 0,
-      timeRemaining: 0,
-      currentPhraseId: null,
-      totalPhrases: 0,
-    });
-  }, [cleanup]);
+    finishPlayback();
+  }, [finishPlayback]);
 
   return {
     ...state,
