@@ -228,6 +228,31 @@ const Library = () => {
 
   const hasSubCategories = (categoryId: string) => !!subCategoryDefinitions[categoryId];
 
+  // Get prerecorded phrases from translations
+  const samplePhrases: Phrase[] = t.library.prerecordedPhrases.map((phrase, index) => {
+    const categoryMap: Record<string, string> = {
+      routine: 'daily',
+      bedtime: 'daily',
+      meals: 'daily',
+      bath: 'daily',
+      languages: 'education',
+    };
+    const mappedCategory = categoryMap[phrase.category] || phrase.category;
+    const timeOfDayOptions: Array<'morning' | 'afternoon' | 'night'> = ['morning', 'afternoon', 'night'];
+    const timeOfDay = phrase.timeOfDay as 'morning' | 'afternoon' | 'night' || timeOfDayOptions[index % 3];
+    const phraseKey = `${language}_${mappedCategory}_${index}`;
+
+    return {
+      id: `phrase-${index}`,
+      text: phrase.text,
+      category: mappedCategory,
+      timeOfDay,
+      subCategory: (phrase as { subCategory?: string }).subCategory,
+      soundPrompt: (phrase as { soundPrompt?: string }).soundPrompt,
+      phraseKey,
+    };
+  });
+
   const getSubCategoryPhraseCount = (categoryId: string, subId: string) => {
     return samplePhrases.filter(p => p.category === categoryId && p.subCategory === subId).length;
   };
@@ -265,18 +290,15 @@ const Library = () => {
       }
 
       if (phrase.category === 'sounds' && phrase.soundPrompt) {
-        // Sound-only phrase: just play SFX
         const { url } = await generateSFX({ prompt: phrase.soundPrompt, duration: 10 });
         if (url) {
           await audioPlayer.play(url);
         }
       } else {
-        // Generate and play TTS
         const { url } = await generateTTS({ text: phrase.text, language });
         if (url) {
           await audioPlayer.play(url);
         }
-        // If phrase has an associated sound effect, play it after TTS
         if (phrase.soundPrompt && phrase.category !== 'sounds') {
           const { url: sfxUrl } = await generateSFX({ prompt: phrase.soundPrompt, duration: 10 });
           if (sfxUrl) {
@@ -300,34 +322,35 @@ const Library = () => {
     });
   };
 
-  // Get phrase count per category
-  const getPhrasesForCategory = (categoryId: string) => {
-    return samplePhrases.filter(p => p.category === categoryId);
+  // Get phrase count for a top-level category
+  const getPhrasesForCategory = (cat: Category) => {
+    if (cat.dataCategory && cat.dataSubCategory) {
+      return samplePhrases.filter(p => p.category === cat.dataCategory && p.subCategory === cat.dataSubCategory);
+    }
+    if (cat.dataCategory && cat.dataTimeOfDay) {
+      return samplePhrases.filter(p => p.category === cat.dataCategory && p.timeOfDay === cat.dataTimeOfDay);
+    }
+    return samplePhrases.filter(p => p.category === cat.id);
   };
 
   // Filtered phrases for selected category
   const filteredPhrases = selectedCategory
     ? samplePhrases.filter(phrase => {
+        // Virtual category filtering
+        if (selectedCategory.dataCategory) {
+          const matchesCat = phrase.category === selectedCategory.dataCategory;
+          const matchesSub = selectedCategory.dataSubCategory ? phrase.subCategory === selectedCategory.dataSubCategory : true;
+          const matchesTime = selectedCategory.dataTimeOfDay ? phrase.timeOfDay === selectedCategory.dataTimeOfDay : true;
+          const matchesSearch = searchQuery ? phrase.text.toLowerCase().includes(searchQuery.toLowerCase()) : true;
+          return matchesCat && matchesSub && matchesTime && matchesSearch;
+        }
+        // Regular category filtering
         const matchesCategory = phrase.category === selectedCategory.id;
-        const matchesTime = selectedTimeOfDay ? phrase.timeOfDay === selectedTimeOfDay : true;
         const matchesSub = selectedSubCategory ? phrase.subCategory === selectedSubCategory : true;
-        const matchesSearch = searchQuery
-          ? phrase.text.toLowerCase().includes(searchQuery.toLowerCase())
-          : true;
-        return matchesCategory && matchesTime && matchesSub && matchesSearch;
+        const matchesSearch = searchQuery ? phrase.text.toLowerCase().includes(searchQuery.toLowerCase()) : true;
+        return matchesCategory && matchesSub && matchesSearch;
       })
     : [];
-
-  // Time of day sub-categories for "daily"
-  const timeOfDaySubCategories = [
-    { id: "morning", name: language === 'pt' ? 'Manhã' : language === 'en' ? 'Morning' : 'Mañana', icon: Sun },
-    { id: "afternoon", name: language === 'pt' ? 'Tarde' : language === 'en' ? 'Afternoon' : 'Tarde', icon: Sunset },
-    { id: "night", name: language === 'pt' ? 'Noite' : language === 'en' ? 'Night' : 'Noche', icon: Moon },
-  ];
-
-  const getTimeOfDayPhraseCount = (timeId: string) => {
-    return samplePhrases.filter(p => p.category === 'daily' && p.timeOfDay === timeId).length;
-  };
 
   // Category detail view (like routine detail)
   if (selectedCategory && selectedCategory.id === "myPhrases") {
