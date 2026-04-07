@@ -20,6 +20,7 @@ interface LanguagePhrase {
 }
 
 const Languages = () => {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const tabParam = searchParams.get("tab");
   const lockedLanguage = tabParam === "english" || tabParam === "spanish" ? tabParam : null;
