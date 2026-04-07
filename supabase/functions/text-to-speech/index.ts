@@ -147,33 +147,46 @@ serve(async (req) => {
 
     console.log('Cache MISS. Generating speech with ElevenLabs:', { textLength: finalText.length, voiceId });
 
-    // Generate speech from text using ElevenLabs
-    const response = await fetch(
-      `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`,
-      {
-        method: 'POST',
-        headers: {
-          'xi-api-key': ELEVENLABS_API_KEY,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          text: finalText,
-          model_id: 'eleven_multilingual_v2',
-          voice_settings: {
-            stability: 0.15,        // Muito baixo para variação natural de tom (como criança)
-            similarity_boost: 0.9,  // Alto para manter características da voz
-            style: 0.85,            // Alto para expressividade e emoção infantil
-            use_speaker_boost: true,
-            speed: 1.15,            // Ligeiramente mais rápido (crianças falam animadas)
+    // Generate speech from text using ElevenLabs (with retry for rate limits)
+    let response: Response | null = null;
+    const maxRetries = 3;
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+      response = await fetch(
+        `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`,
+        {
+          method: 'POST',
+          headers: {
+            'xi-api-key': ELEVENLABS_API_KEY,
+            'Content-Type': 'application/json',
           },
-        }),
-      }
-    );
+          body: JSON.stringify({
+            text: finalText,
+            model_id: 'eleven_multilingual_v2',
+            voice_settings: {
+              stability: 0.15,
+              similarity_boost: 0.9,
+              style: 0.85,
+              use_speaker_boost: true,
+              speed: 1.15,
+            },
+          }),
+        }
+      );
 
-    if (!response.ok) {
-      const error = await response.text();
-      console.error('ElevenLabs API error:', response.status, error);
-      throw new Error(`ElevenLabs API error: ${response.status}`);
+      if (response.status === 429 && attempt < maxRetries - 1) {
+        const waitMs = Math.pow(2, attempt + 1) * 1000; // 2s, 4s
+        console.warn(`Rate limited (429). Retrying in ${waitMs}ms (attempt ${attempt + 1}/${maxRetries})`);
+        await response.text(); // consume body
+        await new Promise(r => setTimeout(r, waitMs));
+        continue;
+      }
+      break;
+    }
+
+    if (!response || !response.ok) {
+      const error = response ? await response.text() : 'No response';
+      console.error('ElevenLabs API error:', response?.status, error);
+      throw new Error(`ElevenLabs API error: ${response?.status}`);
     }
 
     const arrayBuffer = await response.arrayBuffer();
