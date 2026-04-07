@@ -149,7 +149,8 @@ const Languages = () => {
 
         <main className="container mx-auto px-4 py-6 max-w-2xl space-y-6">
           {/* Language Selection Tabs */}
-          <Tabs value={selectedLanguage} onValueChange={(v) => setSelectedLanguage(v as "english" | "spanish")}>
+          <Tabs value={selectedLanguage} onValueChange={(v) => !lockedLanguage && setSelectedLanguage(v as "english" | "spanish")}>
+            {!lockedLanguage && (
             <TabsList className="w-full grid grid-cols-2 h-auto p-1">
               <TabsTrigger 
                 value="english" 
@@ -166,6 +167,7 @@ const Languages = () => {
                 <span className="font-medium">{t.languageLearning.learningSpanish}</span>
               </TabsTrigger>
             </TabsList>
+            )}
 
             <TabsContent value="english" className="space-y-6 mt-6">
               {currentPhrases.length === 0 ? (
