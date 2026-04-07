@@ -87,6 +87,10 @@ interface Category {
   isLink?: boolean;
   linkTo?: string;
   premium?: boolean;
+  // Virtual category filter
+  dataCategory?: string;
+  dataSubCategory?: string;
+  dataTimeOfDay?: string;
 }
 
 const Library = () => {
