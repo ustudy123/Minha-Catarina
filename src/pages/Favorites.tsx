@@ -233,17 +233,17 @@ const Favorites = () => {
                 <DropdownMenuSub>
                   <DropdownMenuSubTrigger className="cursor-pointer">
                     <Timer className="w-4 h-4 mr-2" />
-                    {t.interval}: {intervalMinutes} {t.minutes}
+                    {t.interval}: {intervalMinutes}s
                   </DropdownMenuSubTrigger>
                   <DropdownMenuSubContent className="bg-popover">
-                    {[1, 3, 5].map((mins) => (
+                    {[3, 5, 10, 15].map((secs) => (
                       <DropdownMenuItem
-                        key={mins}
-                        onClick={() => updateSettings(playRandom, mins)}
+                        key={secs}
+                        onClick={() => updateSettings(playRandom, secs)}
                         className="flex items-center justify-between cursor-pointer"
                       >
-                        <span>{mins} {t.minutes}</span>
-                        {intervalMinutes === mins && <Check className="w-4 h-4" />}
+                        <span>{secs}s</span>
+                        {intervalMinutes === secs && <Check className="w-4 h-4" />}
                       </DropdownMenuItem>
                     ))}
                   </DropdownMenuSubContent>
