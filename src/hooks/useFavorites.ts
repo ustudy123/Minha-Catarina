@@ -15,7 +15,7 @@ export function useFavorites() {
   const [favorites, setFavorites] = useState<FavoritePhrase[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [playRandom, setPlayRandom] = useState(false);
-  const [intervalMinutes, setIntervalMinutes] = useState(1);
+  const [intervalMinutes, setIntervalMinutes] = useState(3);
 
   // Load favorites from Supabase (saved_phrases where is_favorite = true)
   useEffect(() => {

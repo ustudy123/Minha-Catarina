@@ -23,7 +23,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { toast } from 'sonner';
 import { ArrowLeft, Plus, MoreVertical, Shuffle, Clock, Play, Trash2, Edit, ListMusic, ChevronRight, Lock, Crown, Check, Sparkles, Square } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { presetRoutines, PresetRoutine } from '@/data/presetRoutines';
+import { presetRoutines, PresetRoutine } from '@/data/presetRoutines'; // kept for potential future use
 const Routines = () => {
   const navigate = useNavigate();
   const {
@@ -682,57 +682,6 @@ const Routines = () => {
               </Card>)}
           </div>}
 
-        {/* Preset Routines Section */}
-        {availablePresets.length > 0 && (
-          <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-primary" />
-              <div>
-                <h2 className="font-semibold">{t.presetRoutines}</h2>
-                <p className="text-xs text-muted-foreground">{t.presetSubtitle}</p>
-              </div>
-            </div>
-            
-            <div className="grid gap-3">
-              {availablePresets.map((preset, index) => (
-                <Card 
-                  key={preset.id} 
-                  className="p-4 border-2 cursor-pointer hover-lift animate-fade-in transition-all"
-                  style={{ animationDelay: `${index * 0.05}s` }}
-                  onClick={() => setPreviewPreset(preset)}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center text-xl">
-                      {preset.icon}
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold">{preset.name[language]}</h3>
-                      <p className="text-xs text-muted-foreground">
-                        {preset.phrases.length} {t.phrases}
-                      </p>
-                    </div>
-                    <Button 
-                      variant="outline" 
-                      size="icon" 
-                      className="flex-shrink-0"
-                      disabled={isAddingPreset || !canCreateMore}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleAddPresetRoutine(preset);
-                      }}
-                    >
-                      {isAddingPreset ? (
-                        <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                      ) : (
-                        <Plus className="w-4 h-4" />
-                      )}
-                    </Button>
-                  </div>
-                </Card>
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* Premium Upsell */}
         {!isPremium && routines.length >= maxRoutines && <Card className="p-6 border-2 border-highlight/30 bg-highlight/5">
@@ -781,43 +730,6 @@ const Routines = () => {
             </Button>
             <Button onClick={handleEditName} disabled={!newRoutineName.trim()}>
               {t.save}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-      {/* Preset Preview Dialog */}
-      <Dialog open={!!previewPreset} onOpenChange={(open) => !open && setPreviewPreset(null)}>
-        <DialogContent className="max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <span className="text-xl">{previewPreset?.icon}</span>
-              {previewPreset?.name[language]}
-            </DialogTitle>
-          </DialogHeader>
-          <div className="space-y-2 mt-2">
-            {previewPreset?.phrases.map((phrase, i) => (
-              <div key={i} className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
-                <span className="text-xs text-muted-foreground w-5 text-right flex-shrink-0">{i + 1}</span>
-                <p className="text-sm">{phrase}</p>
-              </div>
-            ))}
-          </div>
-          <DialogFooter className="mt-4">
-            <Button variant="outline" onClick={() => setPreviewPreset(null)}>
-              {t.cancel}
-            </Button>
-            <Button 
-              variant="gradient"
-              disabled={isAddingPreset || !canCreateMore}
-              onClick={() => {
-                if (previewPreset) {
-                  handleAddPresetRoutine(previewPreset);
-                  setPreviewPreset(null);
-                }
-              }}
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              {isAddingPreset ? t.adding : t.create}
             </Button>
           </DialogFooter>
         </DialogContent>
