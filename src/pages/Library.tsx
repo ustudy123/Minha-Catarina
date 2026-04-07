@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { PageTransition } from "@/components/PageTransition";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -13,6 +13,7 @@ import { useFavorites } from "@/hooks/useFavorites";
 import { useSubscription } from "@/hooks/useSubscription";
 import { useSavedPhrases } from "@/hooks/useSavedPhrases";
 import { getTranslations } from "@/translations";
+import { englishPhrasesData, spanishPhrasesData } from "@/data/languagePhrases";
 import { PlayButton } from "@/components/audio/PlayButton";
 import { usePausableAudio, hasPauseMarkers, getTextWithoutPauses } from "@/hooks/usePausableAudio";
 import { AudioControls } from "@/components/audio/AudioControls";
@@ -710,6 +711,10 @@ const Library = () => {
             {categories.map((cat, index) => {
               const phraseCount = cat.id === "myPhrases"
                 ? savedPhrases.length
+                : cat.id === "english"
+                ? englishPhrasesData.length
+                : cat.id === "spanish"
+                ? spanishPhrasesData.length
                 : getPhrasesForCategory(cat).length;
               const IconComp = cat.icon;
 
