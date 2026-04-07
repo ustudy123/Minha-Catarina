@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { PageTransition } from "@/components/PageTransition";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -9,7 +9,7 @@ import { useAudioPreloader } from "@/hooks/useAudioPreloader";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { getTranslations } from "@/translations";
 import { PlayButton } from "@/components/audio/PlayButton";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { ArrowLeft, Timer, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -20,8 +20,12 @@ interface LanguagePhrase {
 }
 
 const Languages = () => {
-  const navigate = useNavigate();
-  const [selectedLanguage, setSelectedLanguage] = useState<"english" | "spanish">("english");
+  const [searchParams] = useSearchParams();
+  const tabParam = searchParams.get("tab");
+  const lockedLanguage = tabParam === "english" || tabParam === "spanish" ? tabParam : null;
+  const [selectedLanguage, setSelectedLanguage] = useState<"english" | "spanish">(
+    (tabParam === "english" || tabParam === "spanish") ? tabParam : "english"
+  );
   const [playingId, setPlayingId] = useState<string | null>(null);
   
   const pausableAudio = usePausableAudio();
