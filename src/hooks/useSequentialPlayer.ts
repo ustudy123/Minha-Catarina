@@ -133,7 +133,8 @@ export function useSequentialPlayer() {
 
     try {
       // Don't pass language to avoid unwanted AI translation of library phrases
-      const { url } = await generate({ text: currentPhrase.text });
+      // Use silent mode to prevent toast spam during auto-play
+      const { url } = await generate({ text: currentPhrase.text, silent: true });
       if (!isPlayingRef.current) return;
 
       if (!url) {
