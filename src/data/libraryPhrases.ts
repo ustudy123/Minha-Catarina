@@ -306,57 +306,57 @@ export const libraryPhrasesData: LibraryPhraseData[] = [
   { text: "Com paciência vamos encontrar. Talvez demore um pouco.", category: "prayers", subCategory: "sao-longuinho" },
   { text: "Precisamos ter cuidado com nossas coisas para não perder.", category: "prayers", subCategory: "sao-longuinho" },
 
-  // ==================== POEMAS - INTRODUÇÃO (stories - introducao-poemas) ====================
-  { text: "Eu adoro poemas. Você sabe o que é um poema?", category: "stories", subCategory: "introducao-poemas" },
-  { text: "Um poema é um texto divertido formado por versos e estrofes. Você vai gostar também. Você conhece algum poema?", category: "stories", subCategory: "introducao-poemas" },
-  { text: "Conta um poema para mim?", category: "stories", subCategory: "introducao-poemas" },
-  { text: "Eu vou te ensinar. Aprender é muito legal. Vou te falar alguns poemas que eu sei.", category: "stories", subCategory: "introducao-poemas" },
-  { text: "Corre cutia, na casa da tia. Corre cipó, na casa da avó. Lencinho na mão, caiu no chão. Moça bonita, do meu coração... Um, dois, três!", category: "stories", subCategory: "introducao-poemas" },
-  { text: "Gostou?", category: "stories", subCategory: "introducao-poemas" },
-  { text: "É bem legal né. Vou contar de novo para aprender.", category: "stories", subCategory: "introducao-poemas" },
-  { text: "Corre cutia, na casa da tia. Corre cipó, na casa da avó. Lencinho na mão, caiu no chão. Moça bonita, do meu coração... Um, dois, três!", category: "stories", subCategory: "introducao-poemas" },
-  { text: "Quer ouvir mais um? Eu sei vários.", category: "stories", subCategory: "introducao-poemas" },
+  // ==================== POEMAS - INTRODUÇÃO (poems - introducao-poemas) ====================
+  { text: "Eu adoro poemas. Você sabe o que é um poema?", category: "poems", subCategory: "introducao-poemas" },
+  { text: "Um poema é um texto divertido formado por versos e estrofes. Você vai gostar também. Você conhece algum poema?", category: "poems", subCategory: "introducao-poemas" },
+  { text: "Conta um poema para mim?", category: "poems", subCategory: "introducao-poemas" },
+  { text: "Eu vou te ensinar. Aprender é muito legal. Vou te falar alguns poemas que eu sei.", category: "poems", subCategory: "introducao-poemas" },
+  { text: "Corre cutia, na casa da tia. Corre cipó, na casa da avó. Lencinho na mão, caiu no chão. Moça bonita, do meu coração... Um, dois, três!", category: "poems", subCategory: "introducao-poemas" },
+  { text: "Gostou?", category: "poems", subCategory: "introducao-poemas" },
+  { text: "É bem legal né. Vou contar de novo para aprender.", category: "poems", subCategory: "introducao-poemas" },
+  { text: "Corre cutia, na casa da tia. Corre cipó, na casa da avó. Lencinho na mão, caiu no chão. Moça bonita, do meu coração... Um, dois, três!", category: "poems", subCategory: "introducao-poemas" },
+  { text: "Quer ouvir mais um? Eu sei vários.", category: "poems", subCategory: "introducao-poemas" },
 
   // ==================== POEMA - DEDINHOS ====================
-  { text: "Vou te ensinar um poema bem legal com nossos dedinhos. Escute com atenção.", category: "stories", subCategory: "dedinhos" },
-  { text: "Dedo mindinho é o menorzinho, do lado é o seu vizinho, depois vem o pai de todos, o fura bolo e o mata piolho.", category: "stories", subCategory: "dedinhos" },
-  { text: "Mindinho, seu vizinho, papai de todos, fura bolo e mata piolho.", category: "stories", subCategory: "dedinhos" },
-  { text: "Quer mais um?", category: "stories", subCategory: "dedinhos" },
+  { text: "Vou te ensinar um poema bem legal com nossos dedinhos. Escute com atenção.", category: "poems", subCategory: "dedinhos" },
+  { text: "Dedo mindinho é o menorzinho, do lado é o seu vizinho, depois vem o pai de todos, o fura bolo e o mata piolho.", category: "poems", subCategory: "dedinhos" },
+  { text: "Mindinho, seu vizinho, papai de todos, fura bolo e mata piolho.", category: "poems", subCategory: "dedinhos" },
+  { text: "Quer mais um?", category: "poems", subCategory: "dedinhos" },
 
   // ==================== POEMA - BATATINHA ====================
-  { text: "Vou dizer um poema bem bonitinho para você aprender. Escute bem.", category: "stories", subCategory: "batatinha" },
-  { text: "Batatinha quando nasce, se esparrama pelo chão, Menininha quando dorme, põe a mão no coração. Gostou desse poema?", category: "stories", subCategory: "batatinha" },
-  { text: "Você já sabia?", category: "stories", subCategory: "batatinha" },
-  { text: "Mais uma vez, mais uma vez. Batatinha quando nasce, se esparrama pelo chão, Menininha quando dorme, põe a mão no coração. Legal não é?", category: "stories", subCategory: "batatinha" },
-  { text: "Eu posso te ensinar mais um, você quer?", category: "stories", subCategory: "batatinha" },
+  { text: "Vou dizer um poema bem bonitinho para você aprender. Escute bem.", category: "poems", subCategory: "batatinha" },
+  { text: "Batatinha quando nasce, se esparrama pelo chão, Menininha quando dorme, põe a mão no coração. Gostou desse poema?", category: "poems", subCategory: "batatinha" },
+  { text: "Você já sabia?", category: "poems", subCategory: "batatinha" },
+  { text: "Mais uma vez, mais uma vez. Batatinha quando nasce, se esparrama pelo chão, Menininha quando dorme, põe a mão no coração. Legal não é?", category: "poems", subCategory: "batatinha" },
+  { text: "Eu posso te ensinar mais um, você quer?", category: "poems", subCategory: "batatinha" },
 
   // ==================== POEMA - UNI DUNI ====================
-  { text: "Vou te dar uma dica bem legal. Quando você estiver em dúvida de qual escolha fazer, tem um poeminha que pode te ajudar e é bem legal. Vou te ensinar.", category: "stories", subCategory: "uni-duni" },
-  { text: "Uni, duni, tê, Salamê, mingüê, Um sorvete colorê, O escolhido foi você!", category: "stories", subCategory: "uni-duni" },
+  { text: "Vou te dar uma dica bem legal. Quando você estiver em dúvida de qual escolha fazer, tem um poeminha que pode te ajudar e é bem legal. Vou te ensinar.", category: "poems", subCategory: "uni-duni" },
+  { text: "Uni, duni, tê, Salamê, mingüê, Um sorvete colorê, O escolhido foi você!", category: "poems", subCategory: "uni-duni" },
 
   // ==================== POEMA - 1, 2, 3 ====================
-  { text: "Um, dois, feijão com arroz, Três, quatro, feijão no prato, Cinco, seis, falar inglês, Sete, oito, comer biscoito, Nove, dez, comer pastéis.", category: "stories", subCategory: "1-2-3" },
+  { text: "Um, dois, feijão com arroz, Três, quatro, feijão no prato, Cinco, seis, falar inglês, Sete, oito, comer biscoito, Nove, dez, comer pastéis.", category: "poems", subCategory: "1-2-3" },
 
   // ==================== POEMA - SOU PEQUENA ====================
-  { text: "Eu sou pequena, Da perna grossa, Vestido curto, Papai não gosta.", category: "stories", subCategory: "sou-pequena" },
+  { text: "Eu sou pequena, Da perna grossa, Vestido curto, Papai não gosta.", category: "poems", subCategory: "sou-pequena" },
 
   // ==================== POEMA - MAMÃE E PAPAI ====================
-  { text: "Eu sou pequenininha, do tamanho de um botão, Carrego o papai no bolso, e a mamãe no coração.", category: "stories", subCategory: "mamae-papai" },
+  { text: "Eu sou pequenininha, do tamanho de um botão, Carrego o papai no bolso, e a mamãe no coração.", category: "poems", subCategory: "mamae-papai" },
 
   // ==================== POEMA - REI CAPITÃO ====================
-  { text: "Rei, capitão, soldado, ladrão, moça bonita, Do meu coração.", category: "stories", subCategory: "rei-capitao" },
+  { text: "Rei, capitão, soldado, ladrão, moça bonita, Do meu coração.", category: "poems", subCategory: "rei-capitao" },
 
   // ==================== POEMA - CASINHA DA VÓ ====================
-  { text: "A casinha da vovó, trançadinha de cipó; se o café está demorando, com certeza falta pó.", category: "stories", subCategory: "casinha-vo" },
+  { text: "A casinha da vovó, trançadinha de cipó; se o café está demorando, com certeza falta pó.", category: "poems", subCategory: "casinha-vo" },
 
   // ==================== POEMA - BRUXINHA ====================
-  { text: "Era uma bruxa, À meia-noite, Em um castelo mal-assombrado, com uma faca na mão, Passando manteiga no pão.", category: "stories", subCategory: "bruxinha" },
+  { text: "Era uma bruxa, À meia-noite, Em um castelo mal-assombrado, com uma faca na mão, Passando manteiga no pão.", category: "poems", subCategory: "bruxinha" },
 
   // ==================== POEMA - GALINHA ====================
-  { text: "Galinha choca, comeu minhoca, saiu pulando, que nem pipoca.", category: "stories", subCategory: "galinha" },
+  { text: "Galinha choca, comeu minhoca, saiu pulando, que nem pipoca.", category: "poems", subCategory: "galinha" },
 
   // ==================== POEMA - COLO ====================
-  { text: "Cheirinho de colo, cheirinho de pão, cheirinho gostoso, do meu coração.", category: "stories", subCategory: "colo" },
+  { text: "Cheirinho de colo, cheirinho de pão, cheirinho gostoso, do meu coração.", category: "poems", subCategory: "colo" },
 
   // ==================== BRINCADEIRAS - ENCONTRE (playtime) ====================
   { text: "Eu tive uma ideia. Vamos brincar?", category: "playtime", subCategory: "encontre" },
@@ -434,13 +434,13 @@ export const libraryPhrasesData: LibraryPhraseData[] = [
   { text: "Um, dois, três indiozinhos, quatro, cinco, seis indiozinhos, Sete, oito, nove indiozinhos, Dez num pequeno bote. Iam navegando pelo rio abaixo, Quando um jacaré se aproximou, E o pequeno bote dos indiozinhos, Quase, quase virou.", category: "songs", subCategory: "indiozinho" },
 
   // ==================== MÚSICA - NÚMERO ZERO ====================
-  { text: "Se essa rua, Se essa rua fosse minha, Eu mandava, Eu mandava ladrilhar, Com pedrinhas, Com pedrinhas de brilhante, Para o meu, Para o meu amor passar. Nessa rua, Nessa rua tem um bosque, Que se chama, Que se chama solidão, Dentro dele, Dentro dele mora um anjo, Que roubou, Que roubou meu coração.", category: "songs", subCategory: "numero-zero" },
+  { text: "Se essa rua, Se essa rua fosse minha, Eu mandava, Eu mandava ladrilhar, Com pedrinhas, Com pedrinhas de brilhante, Para o meu, Para o meu amor passar. Nessa rua, Nessa rua tem um bosque, Que se chama, Que se chama solidão, Dentro dele, Dentro dele mora um anjo, Que roubou, Que roubou meu coração. Se eu roubei, Se eu roubei teu coração, Tu roubaste, Tu roubaste o meu também. Se eu roubei, Se eu roubei teu coração, É porque, É porque te quero bem.", category: "songs", subCategory: "numero-zero" },
 
   // ==================== MÚSICA - MESTRE ANDRÉ ====================
-  { text: "Foi na loja do Mestre André, Que eu comprei um pianinho, Plim, plim, plim, um pianinho, Ai olé, ai olé! Foi na loja do Mestre André! Foi na loja do Mestre André, Que eu comprei um violão, Dão, dão, dão, um violão, Plim, plim, plim, um pianinho, Ai olé, ai olé! Foi na loja do Mestre André!", category: "songs", subCategory: "mestre-andre" },
+  { text: "Foi na loja do Mestre André, Que eu comprei um pianinho, Plim, plim, plim, um pianinho, Ai olé, ai olé! Foi na loja do Mestre André! Foi na loja do Mestre André, Que eu comprei um violão, Dão, dão, dão, um violão, Plim, plim, plim, um pianinho, Ai olé, ai olé! Foi na loja do Mestre André! Foi na loja do Mestre André, Que eu comprei uma flautinha, Flá, flá, flá, uma flautinha, Dão, dão, dão, um violão, Plim, plim, plim, um pianinho, Ai olé, ai olé! Foi na loja do Mestre André! Foi na loja do Mestre André, Que eu comprei um tamborzinho, Dum, dum, dum, um tamborzinho, Flá, flá, flá, uma flautinha, Dão, dão, dão, um violão, Plim, plim, plim, um pianinho, Ai olé, ai olé! Foi na loja do Mestre André!", category: "songs", subCategory: "mestre-andre" },
 
   // ==================== MÚSICA - BOI DA CARA PRETA ====================
-  { text: "Boi, boi, boi, Boi da cara preta, Pega esta criança que tem medo de careta. Boi, boi, boi, Boi do Piauí, Pega essa criança Que não gosta de dormir. Não, não, não, Não pega ela não, Ela é bonitinha, ela chora coitadinha.", category: "songs", subCategory: "boi-cara-preta" },
+  { text: "Boi, boi, boi, Boi da cara preta, Pega esta criança que tem medo de careta. Boi, boi, boi, Boi do Piauí, Pega essa criança Que não gosta de dormir. Não, não, não, Não pega ela não, Ela é bonitinha, ela chora coitadinha. Boi, boi, boi, Boi do Maranhão, Pega essa criança Que não quer fazer lição. Boi, boi, boi, Boi lá de Goiás, Pega essa criança Que não quer comer jamais. Não, não, não, Não pega ela não, Ela é bonitinha, ela chora coitadinha. Boi lá da Bahia, Pega essa criança que é teimosa todo dia. Boi, boi, boi, Boi do Sol Nascente, Pega essa criança que não quer escovar os dentes. Boi, boi, boi, Boi lá do Pará, Pega essas crianças Que não largam o celular!", category: "songs", subCategory: "boi-cara-preta" },
 
   // ==================== MÚSICA - BOTA AQUI ====================
   { text: "Ai bota aqui, Ai bota aqui o seu pezinho, Seu pezinho bem juntinho com o meu. E depois não vá dizer, Que você se arrependeu!", category: "songs", subCategory: "bota-aqui" },
@@ -473,7 +473,7 @@ export const libraryPhrasesData: LibraryPhraseData[] = [
   { text: "Tchau, preguiça! Tchau, sujeira! Adeus, cheirinho de suor! Lava, lava, lava, lava, lava, lava. Uma orelha, uma orelha, Outra orelha, outra orelha. Lava, lava, lava, lava, lava. Lava a testa, a bochecha, Lava o queixo, lava a coxa, E lava até... Meu pé, meu querido pé, Que me aguenta o dia inteiro. E o meu nariz, meu pescoço, O meu tórax e o meu bumbum. La, la, laiá, laiá, la. Banho é bom! Banho é bom! Banho é muito bom! Agora acabou!", category: "songs", subCategory: "banho" },
   { text: "Eu vou, eu vou para o parque agora eu vou… Pararatimbum, pararatimbum, eu vou, eu vou… Eu vou, eu vou para o parque agora eu vou… Pararatimbum, pararatimbum, eu vou, eu vou…", category: "songs", subCategory: "parque" },
   { text: "Guarda, guarda, guarda, bem direitinho, quem guarda tudo, acha tudo arrumadinho. Guarda, guarda, guarda, bem direitinho, quem guarda tudo, acha tudo arrumadinho.", category: "songs", subCategory: "guarda" },
-  { text: "Minha janta, minha janta, vou comer… vou comer… Para ficar fortinho, para ficar fortinho e crescer. E crescer. Se não comer, se não comer, Passa mal, passa mal. Fica doentinho, fica doentinho. Vai pro hospital, comer mingau.", category: "songs", subCategory: "janta" },
+  { text: "Meu lanchinho, meu lanchinho, vou comer… vou comer… Para ficar fortinho, para ficar fortinho e crescer. E crescer. Se não comer, se não comer, Passa mal, passa mal. Fica doentinho, fica doentinho. Vai pro hospital, comer mingau.", category: "songs", subCategory: "lanchinho" },
 
   // ==================== HISTÓRIAS - INTRODUÇÃO (stories - introducao-historias) ====================
   { text: "É hora da história. Eu amo histórias. Você sabe contar alguma história?", category: "stories", subCategory: "introducao-historias" },

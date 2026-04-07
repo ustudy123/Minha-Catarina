@@ -58,6 +58,9 @@ import {
   Copy,
   BookHeart,
   Feather,
+  Mic,
+  MessageCircleQuestion,
+  Baby,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -84,6 +87,10 @@ interface Category {
   isLink?: boolean;
   linkTo?: string;
   premium?: boolean;
+  // Virtual category filter
+  dataCategory?: string;
+  dataSubCategory?: string;
+  dataTimeOfDay?: string;
 }
 
 const Library = () => {
@@ -107,53 +114,29 @@ const Library = () => {
   const sequentialPlayer = useSequentialPlayer();
 
   const categories: Category[] = [
+    { id: "daily-morning", name: language === 'pt' ? "Rotina Manhã" : language === 'en' ? "Morning Routine" : "Rutina Mañana", icon: Sun, dataCategory: "daily", dataTimeOfDay: "morning" },
+    { id: "daily-afternoon", name: language === 'pt' ? "Rotina Tarde" : language === 'en' ? "Afternoon Routine" : "Rutina Tarde", icon: Sunset, dataCategory: "daily", dataTimeOfDay: "afternoon" },
+    { id: "daily-night", name: language === 'pt' ? "Rotina Noite" : language === 'en' ? "Night Routine" : "Rutina Noche", icon: Moon, dataCategory: "daily", dataTimeOfDay: "night" },
+    { id: "acolhimento", name: language === 'pt' ? "Acolhimento" : language === 'en' ? "Welcome" : "Acogida", icon: Heart, dataCategory: "affection", dataSubCategory: "acolhimento" },
+    { id: "sentimentos", name: language === 'pt' ? "Sentimentos" : language === 'en' ? "Feelings" : "Sentimientos", icon: Smile, dataCategory: "affection", dataSubCategory: "sentimentos" },
+    { id: "bons-costumes", name: language === 'pt' ? "Bons Costumes" : language === 'en' ? "Good Manners" : "Buenos Modales", icon: Award, dataCategory: "education", dataSubCategory: "bons-costumes" },
+    { id: "prayers", name: t.library.categories.prayers || "Orações", icon: HandHeart },
+    { id: "playtime", name: t.library.categories.playtime || "Brincadeiras", icon: Gamepad2 },
     { id: "songs", name: t.library.categories.songs || "Músicas", icon: Music },
     { id: "stories", name: t.library.categories.stories || "Histórias", icon: BookOpen },
-    { id: "affection", name: t.library.categories.affection || "Acolhimento", icon: Heart },
-    { id: "daily", name: t.library.categories.daily || "Dia a Dia", icon: Sun },
+    { id: "poems", name: language === 'pt' ? "Poemas" : language === 'en' ? "Poems" : "Poemas", icon: Feather },
     { id: "education", name: t.library.categories.education || "Educação", icon: GraduationCap },
-    { id: "playtime", name: t.library.categories.playtime || "Brincadeiras", icon: Gamepad2 },
-    { id: "sounds", name: t.library.categories.sounds || "Sons", icon: Bell },
-    { id: "prayers", name: t.library.categories.prayers || "Orações", icon: HandHeart },
-    { id: "languages", name: t.library.categories.languagesCategory || "Idiomas", icon: Languages, isLink: true, linkTo: "/languages" },
+    { id: "english", name: language === 'pt' ? "Aprendendo Inglês" : language === 'en' ? "Learning English" : "Aprendiendo Inglés", icon: Languages, isLink: true, linkTo: "/languages?tab=english" },
+    { id: "spanish", name: language === 'pt' ? "Aprendendo Espanhol" : language === 'en' ? "Learning Spanish" : "Aprendiendo Español", icon: Languages, isLink: true, linkTo: "/languages?tab=spanish" },
+    { id: "quando-chora", name: language === 'pt' ? "Quando a Criança Chora" : language === 'en' ? "When the Child Cries" : "Cuando el Niño Llora", icon: Baby, dataCategory: "affection", dataSubCategory: "quando-chora" },
+    { id: "entrevista", name: language === 'pt' ? "Entrevista com a Criança" : language === 'en' ? "Interview with the Child" : "Entrevista con el Niño", icon: MessageCircleQuestion, dataCategory: "affection", dataSubCategory: "entrevista" },
+    { id: "sounds", name: language === 'pt' ? "Sons de Catarina" : language === 'en' ? "Catarina's Sounds" : "Sonidos de Catarina", icon: Mic },
     { id: "myPhrases", name: t.library.categories.myPhrases || "Minhas Frases", icon: Sparkles, premium: true },
   ];
 
-  // Get prerecorded phrases from translations
-  const samplePhrases: Phrase[] = t.library.prerecordedPhrases.map((phrase, index) => {
-    const categoryMap: Record<string, string> = {
-      routine: 'daily',
-      bedtime: 'daily',
-      meals: 'daily',
-      bath: 'daily',
-      languages: 'education',
-    };
-    const mappedCategory = categoryMap[phrase.category] || phrase.category;
-    const timeOfDayOptions: Array<'morning' | 'afternoon' | 'night'> = ['morning', 'afternoon', 'night'];
-    const timeOfDay = phrase.timeOfDay as 'morning' | 'afternoon' | 'night' || timeOfDayOptions[index % 3];
-    const phraseKey = `${language}_${mappedCategory}_${index}`;
-
-    return {
-      id: `phrase-${index}`,
-      text: phrase.text,
-      category: mappedCategory,
-      timeOfDay,
-      subCategory: (phrase as { subCategory?: string }).subCategory,
-      soundPrompt: (phrase as { soundPrompt?: string }).soundPrompt,
-      phraseKey,
-    };
-  });
-
-  // Sub-category definitions per category
+  // Sub-category definitions per category (only for categories that still need drilling down)
   const subCategoryDefinitions: Record<string, SubCategory[]> = {
-    affection: [
-      { id: "acolhimento", name: "Acolhimento", icon: Heart },
-      { id: "sentimentos", name: "Sentimentos", icon: Smile },
-      { id: "quando-chora", name: "Quando a Criança Chora", icon: Heart },
-      { id: "entrevista", name: "Entrevista com a Criança", icon: BookOpenText },
-    ],
     education: [
-      { id: "bons-costumes", name: "Bons Costumes", icon: Award },
       { id: "arco-iris", name: "Arco-Íris", icon: Rainbow },
       { id: "numeros", name: "Números", icon: Hash },
       { id: "animais", name: "Animais", icon: PawPrint },
@@ -201,7 +184,9 @@ const Library = () => {
       { id: "lapis-magico", name: "O Lápis Mágico da Escola", icon: BookHeart },
       { id: "pirata-tesouros", name: "O Pirata que Procurava Tesouros", icon: BookHeart },
       { id: "astronauta-estrelas", name: "O Astronauta que Conversava com Estrelas", icon: BookHeart },
-      { id: "introducao-poemas", name: "Introdução aos Poemas", icon: Feather },
+    ],
+    poems: [
+      { id: "introducao-poemas", name: "Introdução", icon: Feather },
       { id: "dedinhos", name: "Dedinhos", icon: Feather },
       { id: "batatinha", name: "Batatinha", icon: Feather },
       { id: "uni-duni", name: "Uni Duni", icon: Feather },
@@ -237,11 +222,36 @@ const Library = () => {
       { id: "banho", name: "Banho", icon: Music },
       { id: "parque", name: "Parque", icon: Music },
       { id: "guarda", name: "Guarda", icon: Music },
-      { id: "janta", name: "Janta", icon: Music },
+      { id: "lanchinho", name: "Meu Lanchinho", icon: Music },
     ],
   };
 
   const hasSubCategories = (categoryId: string) => !!subCategoryDefinitions[categoryId];
+
+  // Get prerecorded phrases from translations
+  const samplePhrases: Phrase[] = t.library.prerecordedPhrases.map((phrase, index) => {
+    const categoryMap: Record<string, string> = {
+      routine: 'daily',
+      bedtime: 'daily',
+      meals: 'daily',
+      bath: 'daily',
+      languages: 'education',
+    };
+    const mappedCategory = categoryMap[phrase.category] || phrase.category;
+    const timeOfDayOptions: Array<'morning' | 'afternoon' | 'night'> = ['morning', 'afternoon', 'night'];
+    const timeOfDay = phrase.timeOfDay as 'morning' | 'afternoon' | 'night' || timeOfDayOptions[index % 3];
+    const phraseKey = `${language}_${mappedCategory}_${index}`;
+
+    return {
+      id: `phrase-${index}`,
+      text: phrase.text,
+      category: mappedCategory,
+      timeOfDay,
+      subCategory: (phrase as { subCategory?: string }).subCategory,
+      soundPrompt: (phrase as { soundPrompt?: string }).soundPrompt,
+      phraseKey,
+    };
+  });
 
   const getSubCategoryPhraseCount = (categoryId: string, subId: string) => {
     return samplePhrases.filter(p => p.category === categoryId && p.subCategory === subId).length;
@@ -280,18 +290,15 @@ const Library = () => {
       }
 
       if (phrase.category === 'sounds' && phrase.soundPrompt) {
-        // Sound-only phrase: just play SFX
         const { url } = await generateSFX({ prompt: phrase.soundPrompt, duration: 10 });
         if (url) {
           await audioPlayer.play(url);
         }
       } else {
-        // Generate and play TTS
         const { url } = await generateTTS({ text: phrase.text, language });
         if (url) {
           await audioPlayer.play(url);
         }
-        // If phrase has an associated sound effect, play it after TTS
         if (phrase.soundPrompt && phrase.category !== 'sounds') {
           const { url: sfxUrl } = await generateSFX({ prompt: phrase.soundPrompt, duration: 10 });
           if (sfxUrl) {
@@ -315,34 +322,35 @@ const Library = () => {
     });
   };
 
-  // Get phrase count per category
-  const getPhrasesForCategory = (categoryId: string) => {
-    return samplePhrases.filter(p => p.category === categoryId);
+  // Get phrase count for a top-level category
+  const getPhrasesForCategory = (cat: Category) => {
+    if (cat.dataCategory && cat.dataSubCategory) {
+      return samplePhrases.filter(p => p.category === cat.dataCategory && p.subCategory === cat.dataSubCategory);
+    }
+    if (cat.dataCategory && cat.dataTimeOfDay) {
+      return samplePhrases.filter(p => p.category === cat.dataCategory && p.timeOfDay === cat.dataTimeOfDay);
+    }
+    return samplePhrases.filter(p => p.category === cat.id);
   };
 
   // Filtered phrases for selected category
   const filteredPhrases = selectedCategory
     ? samplePhrases.filter(phrase => {
+        // Virtual category filtering
+        if (selectedCategory.dataCategory) {
+          const matchesCat = phrase.category === selectedCategory.dataCategory;
+          const matchesSub = selectedCategory.dataSubCategory ? phrase.subCategory === selectedCategory.dataSubCategory : true;
+          const matchesTime = selectedCategory.dataTimeOfDay ? phrase.timeOfDay === selectedCategory.dataTimeOfDay : true;
+          const matchesSearch = searchQuery ? phrase.text.toLowerCase().includes(searchQuery.toLowerCase()) : true;
+          return matchesCat && matchesSub && matchesTime && matchesSearch;
+        }
+        // Regular category filtering
         const matchesCategory = phrase.category === selectedCategory.id;
-        const matchesTime = selectedTimeOfDay ? phrase.timeOfDay === selectedTimeOfDay : true;
         const matchesSub = selectedSubCategory ? phrase.subCategory === selectedSubCategory : true;
-        const matchesSearch = searchQuery
-          ? phrase.text.toLowerCase().includes(searchQuery.toLowerCase())
-          : true;
-        return matchesCategory && matchesTime && matchesSub && matchesSearch;
+        const matchesSearch = searchQuery ? phrase.text.toLowerCase().includes(searchQuery.toLowerCase()) : true;
+        return matchesCategory && matchesSub && matchesSearch;
       })
     : [];
-
-  // Time of day sub-categories for "daily"
-  const timeOfDaySubCategories = [
-    { id: "morning", name: language === 'pt' ? 'Manhã' : language === 'en' ? 'Morning' : 'Mañana', icon: Sun },
-    { id: "afternoon", name: language === 'pt' ? 'Tarde' : language === 'en' ? 'Afternoon' : 'Tarde', icon: Sunset },
-    { id: "night", name: language === 'pt' ? 'Noite' : language === 'en' ? 'Night' : 'Noche', icon: Moon },
-  ];
-
-  const getTimeOfDayPhraseCount = (timeId: string) => {
-    return samplePhrases.filter(p => p.category === 'daily' && p.timeOfDay === timeId).length;
-  };
 
   // Category detail view (like routine detail)
   if (selectedCategory && selectedCategory.id === "myPhrases") {
@@ -490,69 +498,6 @@ const Library = () => {
     );
   }
 
-  // Daily category - show time of day sub-categories
-  if (selectedCategory && selectedCategory.id === "daily" && !selectedTimeOfDay) {
-    return (
-      <PageTransition>
-        <div className="min-h-screen bg-gradient-to-br from-muted via-background to-accent/10">
-          <header className="sticky top-0 z-50 glass border-b border-border/50 backdrop-blur-lg">
-            <div className="container mx-auto px-4 py-4">
-              <div className="flex items-center gap-3">
-                <Button variant="ghost" size="icon" onClick={() => { setSelectedCategory(null); }}>
-                  <ArrowLeft className="w-5 h-5" />
-                </Button>
-                <div>
-                  <h1 className="text-xl font-bold flex items-center gap-2">
-                    <Sun className="w-5 h-5" />
-                    {selectedCategory.name}
-                  </h1>
-                  <p className="text-xs text-muted-foreground">
-                    {language === 'pt' ? 'Escolha o período do dia' : language === 'en' ? 'Choose time of day' : 'Elige el período del día'}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </header>
-
-          <main className="container mx-auto px-4 py-6 max-w-2xl space-y-6">
-            <div className="space-y-3">
-              {timeOfDaySubCategories.map((sub, index) => {
-                const count = getTimeOfDayPhraseCount(sub.id);
-                const SubIcon = sub.icon;
-                return (
-                  <Card
-                    key={sub.id}
-                    className="p-4 border-2 cursor-pointer hover-lift animate-fade-in transition-all"
-                    style={{ animationDelay: `${index * 0.05}s` }}
-                    onClick={() => setSelectedTimeOfDay(sub.id)}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-secondary to-accent flex items-center justify-center">
-                          <SubIcon className="w-5 h-5 text-white" />
-                        </div>
-                        <div>
-                          <h3 className="font-semibold">{sub.name}</h3>
-                          <p className="text-xs text-muted-foreground">
-                            {count} {count === 1
-                              ? (language === 'pt' ? 'frase' : language === 'en' ? 'phrase' : 'frase')
-                              : (language === 'pt' ? 'frases' : language === 'en' ? 'phrases' : 'frases')}
-                          </p>
-                        </div>
-                      </div>
-                      <ChevronRight className="w-5 h-5 text-muted-foreground" />
-                    </div>
-                  </Card>
-                );
-              })}
-            </div>
-            <div className="h-20" />
-          </main>
-        </div>
-      </PageTransition>
-    );
-  }
-
   // Categories with sub-categories (education, playtime, prayers, stories)
   if (selectedCategory && hasSubCategories(selectedCategory.id) && !selectedSubCategory) {
     const subs = subCategoryDefinitions[selectedCategory.id];
@@ -620,14 +565,10 @@ const Library = () => {
 
   // Category detail view (regular categories)
   if (selectedCategory) {
-    const backAction = selectedCategory.id === "daily" && selectedTimeOfDay
-      ? () => { setSelectedTimeOfDay(null); setSearchQuery(""); }
-      : selectedSubCategory
+    const backAction = selectedSubCategory
       ? () => { setSelectedSubCategory(null); setSearchQuery(""); }
       : () => { setSelectedCategory(null); setSearchQuery(""); };
-    const headerTitle = selectedCategory.id === "daily" && selectedTimeOfDay
-      ? timeOfDaySubCategories.find(s => s.id === selectedTimeOfDay)?.name || selectedCategory.name
-      : selectedSubCategory && subCategoryDefinitions[selectedCategory.id]
+    const headerTitle = selectedSubCategory && subCategoryDefinitions[selectedCategory.id]
       ? subCategoryDefinitions[selectedCategory.id].find(s => s.id === selectedSubCategory)?.name || selectedCategory.name
       : selectedCategory.name;
 
@@ -769,7 +710,7 @@ const Library = () => {
             {categories.map((cat, index) => {
               const phraseCount = cat.id === "myPhrases"
                 ? savedPhrases.length
-                : getPhrasesForCategory(cat.id).length;
+                : getPhrasesForCategory(cat).length;
               const IconComp = cat.icon;
 
               return (
