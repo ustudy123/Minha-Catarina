@@ -278,7 +278,7 @@ const Library = () => {
       setPlayingId(phrase.id);
 
       if (hasPauseMarkers(phrase.text)) {
-        pausableAudio.play(phrase.text, language as 'pt' | 'en' | 'es');
+        pausableAudio.play(phrase.text);
         return;
       }
 
@@ -296,7 +296,7 @@ const Library = () => {
           await audioPlayer.play(url);
         }
       } else {
-        const { url } = await generateTTS({ text: phrase.text, language });
+        const { url } = await generateTTS({ text: phrase.text });
         if (url) {
           await audioPlayer.play(url);
         }
