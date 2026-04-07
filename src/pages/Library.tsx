@@ -58,6 +58,9 @@ import {
   Copy,
   BookHeart,
   Feather,
+  Mic,
+  MessageCircleQuestion,
+  Baby,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
