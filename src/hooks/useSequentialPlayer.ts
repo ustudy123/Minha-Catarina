@@ -131,14 +131,52 @@ export function useSequentialPlayer() {
       timeRemaining: 0,
     }));
 
+    // Helper to compute next index
+    const getNextIndex = () => {
+      if (random && phrases.length > 1) {
+        let ni: number;
+        do {
+          ni = Math.floor(Math.random() * phrases.length);
+        } while (ni === index);
+        return ni;
+      }
+      return index + 1;
+    };
+
+    // Helper to schedule the next phrase after interval
+    const scheduleNext = (nextIdx: number) => {
+      if (!random && nextIdx >= phrases.length) {
+        finishPlayback();
+        return;
+      }
+
+      let remaining = intervalSeconds;
+      setState(prev => ({ ...prev, timeRemaining: remaining }));
+
+      timerRef.current = setInterval(() => {
+        remaining -= 1;
+        setState(prev => ({ ...prev, timeRemaining: Math.max(0, remaining) }));
+        if (remaining <= 0 && timerRef.current) {
+          clearInterval(timerRef.current);
+          timerRef.current = null;
+        }
+      }, 1000);
+
+      timeoutRef.current = setTimeout(() => {
+        timeoutRef.current = null;
+        playNext(nextIdx, phrases, random, intervalSeconds);
+      }, intervalSeconds * 1000);
+    };
+
     try {
-      // Don't pass language to avoid unwanted AI translation of library phrases
-      // Use silent mode to prevent toast spam during auto-play
       const { url } = await generate({ text: currentPhrase.text, silent: true });
       if (!isPlayingRef.current) return;
 
       if (!url) {
-        finishPlayback();
+        // Skip to next phrase instead of stopping
+        console.warn('No audio URL, skipping phrase:', currentPhrase.text.substring(0, 50));
+        const nextIdx = getNextIndex();
+        scheduleNext(nextIdx);
         return;
       }
 
@@ -151,47 +189,23 @@ export function useSequentialPlayer() {
       if (!isPlayingRef.current) return;
 
       if (!playedSuccessfully) {
-        finishPlayback();
+        // Skip to next phrase instead of stopping
+        console.warn('Audio playback failed, skipping phrase:', currentPhrase.text.substring(0, 50));
+        const nextIdx = getNextIndex();
+        scheduleNext(nextIdx);
         return;
       }
 
-      let nextIndex = index + 1;
-      if (random && phrases.length > 1) {
-        do {
-          nextIndex = Math.floor(Math.random() * phrases.length);
-        } while (nextIndex === index);
-      }
-
-      if (nextIndex < phrases.length || (random && isPlayingRef.current)) {
-        if (!random && nextIndex >= phrases.length) {
-          finishPlayback();
-          return;
-        }
-
-        let remaining = intervalSeconds;
-        setState(prev => ({ ...prev, timeRemaining: remaining }));
-
-        timerRef.current = setInterval(() => {
-          remaining -= 1;
-          setState(prev => ({ ...prev, timeRemaining: Math.max(0, remaining) }));
-          if (remaining <= 0 && timerRef.current) {
-            clearInterval(timerRef.current);
-            timerRef.current = null;
-          }
-        }, 1000);
-
-        timeoutRef.current = setTimeout(() => {
-          timeoutRef.current = null;
-          playNext(nextIndex, phrases, random, intervalSeconds);
-        }, intervalSeconds * 1000);
-      } else {
-        finishPlayback();
-      }
+      const nextIdx = getNextIndex();
+      scheduleNext(nextIdx);
     } catch (error) {
-      console.error('Error playing phrase:', error);
-      finishPlayback();
+      console.error('Error playing phrase, skipping to next:', error);
+      if (!isPlayingRef.current) return;
+      // Skip to next phrase instead of stopping entirely
+      const nextIdx = getNextIndex();
+      scheduleNext(nextIdx);
     }
-  }, [clearScheduledPlayback, finishPlayback, generate, language, playAudioUrl]);
+  }, [clearScheduledPlayback, finishPlayback, generate, playAudioUrl]);
 
   const startPlayAll = useCallback((phrases: PlayablePhrase[], random: boolean = false, intervalMinutes: number = 1, useSeconds: boolean = false) => {
     if (phrases.length === 0) return;
