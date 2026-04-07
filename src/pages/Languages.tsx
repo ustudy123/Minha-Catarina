@@ -122,7 +122,13 @@ const Languages = () => {
                 <ArrowLeft className="w-5 h-5" />
               </Button>
               <div>
-                <h1 className="text-xl font-bold">{t.languageLearning.title}</h1>
+                <h1 className="text-xl font-bold">
+                  {lockedLanguage === "english" 
+                    ? (language === 'pt' ? "Aprendendo Inglês" : language === 'en' ? "Learning English" : "Aprendiendo Inglés")
+                    : lockedLanguage === "spanish"
+                    ? (language === 'pt' ? "Aprendendo Espanhol" : language === 'en' ? "Learning Spanish" : "Aprendiendo Español")
+                    : t.languageLearning.title}
+                </h1>
                 <p className="text-xs text-muted-foreground">
                   {t.languageLearning.subtitle}
                   {isPreloading && (
