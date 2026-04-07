@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { PageTransition } from "@/components/PageTransition";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -9,7 +9,7 @@ import { useAudioPreloader } from "@/hooks/useAudioPreloader";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { getTranslations } from "@/translations";
 import { PlayButton } from "@/components/audio/PlayButton";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { ArrowLeft, Timer, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -21,7 +21,12 @@ interface LanguagePhrase {
 
 const Languages = () => {
   const navigate = useNavigate();
-  const [selectedLanguage, setSelectedLanguage] = useState<"english" | "spanish">("english");
+  const [searchParams] = useSearchParams();
+  const tabParam = searchParams.get("tab");
+  const lockedLanguage = tabParam === "english" || tabParam === "spanish" ? tabParam : null;
+  const [selectedLanguage, setSelectedLanguage] = useState<"english" | "spanish">(
+    (tabParam === "english" || tabParam === "spanish") ? tabParam : "english"
+  );
   const [playingId, setPlayingId] = useState<string | null>(null);
   
   const pausableAudio = usePausableAudio();
@@ -117,7 +122,13 @@ const Languages = () => {
                 <ArrowLeft className="w-5 h-5" />
               </Button>
               <div>
-                <h1 className="text-xl font-bold">{t.languageLearning.title}</h1>
+                <h1 className="text-xl font-bold">
+                  {lockedLanguage === "english" 
+                    ? (language === 'pt' ? "Aprendendo Inglês" : language === 'en' ? "Learning English" : "Aprendiendo Inglés")
+                    : lockedLanguage === "spanish"
+                    ? (language === 'pt' ? "Aprendendo Espanhol" : language === 'en' ? "Learning Spanish" : "Aprendiendo Español")
+                    : t.languageLearning.title}
+                </h1>
                 <p className="text-xs text-muted-foreground">
                   {t.languageLearning.subtitle}
                   {isPreloading && (
@@ -138,7 +149,8 @@ const Languages = () => {
 
         <main className="container mx-auto px-4 py-6 max-w-2xl space-y-6">
           {/* Language Selection Tabs */}
-          <Tabs value={selectedLanguage} onValueChange={(v) => setSelectedLanguage(v as "english" | "spanish")}>
+          <Tabs value={selectedLanguage} onValueChange={(v) => !lockedLanguage && setSelectedLanguage(v as "english" | "spanish")}>
+            {!lockedLanguage && (
             <TabsList className="w-full grid grid-cols-2 h-auto p-1">
               <TabsTrigger 
                 value="english" 
@@ -155,6 +167,7 @@ const Languages = () => {
                 <span className="font-medium">{t.languageLearning.learningSpanish}</span>
               </TabsTrigger>
             </TabsList>
+            )}
 
             <TabsContent value="english" className="space-y-6 mt-6">
               {currentPhrases.length === 0 ? (
