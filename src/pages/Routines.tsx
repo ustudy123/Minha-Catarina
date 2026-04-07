@@ -734,43 +734,6 @@ const Routines = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      {/* Preset Preview Dialog */}
-      <Dialog open={!!previewPreset} onOpenChange={(open) => !open && setPreviewPreset(null)}>
-        <DialogContent className="max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <span className="text-xl">{previewPreset?.icon}</span>
-              {previewPreset?.name[language]}
-            </DialogTitle>
-          </DialogHeader>
-          <div className="space-y-2 mt-2">
-            {previewPreset?.phrases.map((phrase, i) => (
-              <div key={i} className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
-                <span className="text-xs text-muted-foreground w-5 text-right flex-shrink-0">{i + 1}</span>
-                <p className="text-sm">{phrase}</p>
-              </div>
-            ))}
-          </div>
-          <DialogFooter className="mt-4">
-            <Button variant="outline" onClick={() => setPreviewPreset(null)}>
-              {t.cancel}
-            </Button>
-            <Button 
-              variant="gradient"
-              disabled={isAddingPreset || !canCreateMore}
-              onClick={() => {
-                if (previewPreset) {
-                  handleAddPresetRoutine(previewPreset);
-                  setPreviewPreset(null);
-                }
-              }}
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              {isAddingPreset ? t.adding : t.create}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   </PageTransition>;
 };
