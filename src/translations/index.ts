@@ -175,7 +175,7 @@ export const translations = {
       categories: {
         all: "Todas",
         songs: "Músicas",
-        stories: "Histórias e Poemas",
+        stories: "Histórias",
         affection: "Carinho",
         daily: "Dia a Dia",
         education: "Educação",
@@ -614,7 +614,7 @@ export const translations = {
       categories: {
         all: "All",
         songs: "Songs",
-        stories: "Stories & Poems",
+        stories: "Stories",
         affection: "Affection",
         daily: "Daily Life",
         education: "Education",
@@ -1053,7 +1053,7 @@ export const translations = {
       categories: {
         all: "Todas",
         songs: "Canciones",
-        stories: "Historias y Poemas",
+        stories: "Historias",
         affection: "Cariño",
         daily: "Día a Día",
         education: "Educación",
