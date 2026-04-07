@@ -132,7 +132,8 @@ export function useSequentialPlayer() {
     }));
 
     try {
-      const { url } = await generate({ text: currentPhrase.text, language });
+      // Don't pass language to avoid unwanted AI translation of library phrases
+      const { url } = await generate({ text: currentPhrase.text });
       if (!isPlayingRef.current) return;
 
       if (!url) {
