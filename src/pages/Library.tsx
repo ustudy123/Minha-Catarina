@@ -114,53 +114,29 @@ const Library = () => {
   const sequentialPlayer = useSequentialPlayer();
 
   const categories: Category[] = [
+    { id: "daily-morning", name: language === 'pt' ? "Rotina Manhã" : language === 'en' ? "Morning Routine" : "Rutina Mañana", icon: Sun, dataCategory: "daily", dataTimeOfDay: "morning" },
+    { id: "daily-afternoon", name: language === 'pt' ? "Rotina Tarde" : language === 'en' ? "Afternoon Routine" : "Rutina Tarde", icon: Sunset, dataCategory: "daily", dataTimeOfDay: "afternoon" },
+    { id: "daily-night", name: language === 'pt' ? "Rotina Noite" : language === 'en' ? "Night Routine" : "Rutina Noche", icon: Moon, dataCategory: "daily", dataTimeOfDay: "night" },
+    { id: "acolhimento", name: language === 'pt' ? "Acolhimento" : language === 'en' ? "Welcome" : "Acogida", icon: Heart, dataCategory: "affection", dataSubCategory: "acolhimento" },
+    { id: "sentimentos", name: language === 'pt' ? "Sentimentos" : language === 'en' ? "Feelings" : "Sentimientos", icon: Smile, dataCategory: "affection", dataSubCategory: "sentimentos" },
+    { id: "bons-costumes", name: language === 'pt' ? "Bons Costumes" : language === 'en' ? "Good Manners" : "Buenos Modales", icon: Award, dataCategory: "education", dataSubCategory: "bons-costumes" },
+    { id: "prayers", name: t.library.categories.prayers || "Orações", icon: HandHeart },
+    { id: "playtime", name: t.library.categories.playtime || "Brincadeiras", icon: Gamepad2 },
     { id: "songs", name: t.library.categories.songs || "Músicas", icon: Music },
     { id: "stories", name: t.library.categories.stories || "Histórias", icon: BookOpen },
-    { id: "affection", name: t.library.categories.affection || "Acolhimento", icon: Heart },
-    { id: "daily", name: t.library.categories.daily || "Dia a Dia", icon: Sun },
+    { id: "poems", name: language === 'pt' ? "Poemas" : language === 'en' ? "Poems" : "Poemas", icon: Feather },
     { id: "education", name: t.library.categories.education || "Educação", icon: GraduationCap },
-    { id: "playtime", name: t.library.categories.playtime || "Brincadeiras", icon: Gamepad2 },
-    { id: "sounds", name: t.library.categories.sounds || "Sons", icon: Bell },
-    { id: "prayers", name: t.library.categories.prayers || "Orações", icon: HandHeart },
-    { id: "languages", name: t.library.categories.languagesCategory || "Idiomas", icon: Languages, isLink: true, linkTo: "/languages" },
+    { id: "english", name: language === 'pt' ? "Aprendendo Inglês" : language === 'en' ? "Learning English" : "Aprendiendo Inglés", icon: Languages, isLink: true, linkTo: "/languages?tab=english" },
+    { id: "spanish", name: language === 'pt' ? "Aprendendo Espanhol" : language === 'en' ? "Learning Spanish" : "Aprendiendo Español", icon: Languages, isLink: true, linkTo: "/languages?tab=spanish" },
+    { id: "quando-chora", name: language === 'pt' ? "Quando a Criança Chora" : language === 'en' ? "When the Child Cries" : "Cuando el Niño Llora", icon: Baby, dataCategory: "affection", dataSubCategory: "quando-chora" },
+    { id: "entrevista", name: language === 'pt' ? "Entrevista com a Criança" : language === 'en' ? "Interview with the Child" : "Entrevista con el Niño", icon: MessageCircleQuestion, dataCategory: "affection", dataSubCategory: "entrevista" },
+    { id: "sounds", name: language === 'pt' ? "Sons de Catarina" : language === 'en' ? "Catarina's Sounds" : "Sonidos de Catarina", icon: Mic },
     { id: "myPhrases", name: t.library.categories.myPhrases || "Minhas Frases", icon: Sparkles, premium: true },
   ];
 
-  // Get prerecorded phrases from translations
-  const samplePhrases: Phrase[] = t.library.prerecordedPhrases.map((phrase, index) => {
-    const categoryMap: Record<string, string> = {
-      routine: 'daily',
-      bedtime: 'daily',
-      meals: 'daily',
-      bath: 'daily',
-      languages: 'education',
-    };
-    const mappedCategory = categoryMap[phrase.category] || phrase.category;
-    const timeOfDayOptions: Array<'morning' | 'afternoon' | 'night'> = ['morning', 'afternoon', 'night'];
-    const timeOfDay = phrase.timeOfDay as 'morning' | 'afternoon' | 'night' || timeOfDayOptions[index % 3];
-    const phraseKey = `${language}_${mappedCategory}_${index}`;
-
-    return {
-      id: `phrase-${index}`,
-      text: phrase.text,
-      category: mappedCategory,
-      timeOfDay,
-      subCategory: (phrase as { subCategory?: string }).subCategory,
-      soundPrompt: (phrase as { soundPrompt?: string }).soundPrompt,
-      phraseKey,
-    };
-  });
-
-  // Sub-category definitions per category
+  // Sub-category definitions per category (only for categories that still need drilling down)
   const subCategoryDefinitions: Record<string, SubCategory[]> = {
-    affection: [
-      { id: "acolhimento", name: "Acolhimento", icon: Heart },
-      { id: "sentimentos", name: "Sentimentos", icon: Smile },
-      { id: "quando-chora", name: "Quando a Criança Chora", icon: Heart },
-      { id: "entrevista", name: "Entrevista com a Criança", icon: BookOpenText },
-    ],
     education: [
-      { id: "bons-costumes", name: "Bons Costumes", icon: Award },
       { id: "arco-iris", name: "Arco-Íris", icon: Rainbow },
       { id: "numeros", name: "Números", icon: Hash },
       { id: "animais", name: "Animais", icon: PawPrint },
@@ -208,7 +184,9 @@ const Library = () => {
       { id: "lapis-magico", name: "O Lápis Mágico da Escola", icon: BookHeart },
       { id: "pirata-tesouros", name: "O Pirata que Procurava Tesouros", icon: BookHeart },
       { id: "astronauta-estrelas", name: "O Astronauta que Conversava com Estrelas", icon: BookHeart },
-      { id: "introducao-poemas", name: "Introdução aos Poemas", icon: Feather },
+    ],
+    poems: [
+      { id: "introducao-poemas", name: "Introdução", icon: Feather },
       { id: "dedinhos", name: "Dedinhos", icon: Feather },
       { id: "batatinha", name: "Batatinha", icon: Feather },
       { id: "uni-duni", name: "Uni Duni", icon: Feather },
@@ -244,7 +222,7 @@ const Library = () => {
       { id: "banho", name: "Banho", icon: Music },
       { id: "parque", name: "Parque", icon: Music },
       { id: "guarda", name: "Guarda", icon: Music },
-      { id: "janta", name: "Janta", icon: Music },
+      { id: "lanchinho", name: "Meu Lanchinho", icon: Music },
     ],
   };
 
