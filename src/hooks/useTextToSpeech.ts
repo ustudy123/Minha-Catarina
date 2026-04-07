@@ -7,6 +7,7 @@ export interface TTSOptions {
   text: string;
   language?: 'pt' | 'en' | 'es';
   voiceId?: string;
+  silent?: boolean; // suppress toast notifications (for auto-play)
 }
 
 export interface TTSState {
@@ -27,7 +28,7 @@ export const useTextToSpeech = () => {
     cached: false,
   });
 
-  const generate = useCallback(async ({ text, language, voiceId }: TTSOptions) => {
+  const generate = useCallback(async ({ text, language, voiceId, silent }: TTSOptions) => {
     try {
       setState(prev => ({ ...prev, isGenerating: true, error: null }));
 
@@ -96,7 +97,7 @@ export const useTextToSpeech = () => {
         cached: isCached,
       });
 
-      toast.success(isCached ? 'Áudio carregado do cache!' : 'Voz gerada com sucesso!');
+      if (!silent) toast.success(isCached ? 'Áudio carregado do cache!' : 'Voz gerada com sucesso!');
       return { blob, url, cached: isCached };
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
@@ -105,7 +106,7 @@ export const useTextToSpeech = () => {
         isGenerating: false,
         error: errorMessage,
       }));
-      toast.error(errorMessage);
+      if (!silent) toast.error(errorMessage);
       throw error;
     }
   }, [selectedVoice]);
