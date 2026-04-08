@@ -218,13 +218,15 @@ export const libraryPhrasesData: LibraryPhraseData[] = [
   { text: "Gostou de aprender isso?", category: "education", subCategory: "bons-costumes" },
 
   // ==================== EDUCAÇÃO - ARCO-ÍRIS (education) ====================
-  { text: "Vou te contar umas curiosidades, quer ouvir? Você vai gostar e aprender comigo. E você pode ensinar para seus amigos e amigas. Posso começar?", category: "education", subCategory: "arco-iris" },
+  { text: "Vou te contar umas curiosidades, quer ouvir?", category: "education", subCategory: "arco-iris" },
+  { text: "Você vai gostar e aprender comigo. E você pode ensinar para seus amigos e amigas. Posso começar?", category: "education", subCategory: "arco-iris" },
   { text: "O arco-íris é colorido e muito lindo, ele aparece quando o sol e a chuva brincam juntos.", category: "education", subCategory: "arco-iris" },
   { text: "Você sabia que o arco-íris tem 7 cores? Uma, duas, três, quatro, cinco, seis, sete cores.", category: "education", subCategory: "arco-iris" },
   { text: "Vou te dizer todas as cores do arco-íris na ordem certinha, começa no vermelho e termina no violeta. Vermelho, Laranja, Amarelo, Verde, Azul, Anil e por último Violeta.", category: "education", subCategory: "arco-iris" },
 
   // ==================== EDUCAÇÃO - NÚMEROS (education) ====================
-  { text: "Vamos contar de zero até dez? Conta comigo?", category: "education", subCategory: "numeros" },
+  { text: "Vamos contar de zero até dez?", category: "education", subCategory: "numeros" },
+  { text: "Conta comigo?", category: "education", subCategory: "numeros" },
   { text: "Zero, um, dois, três, quatro, cinco, seis, sete, oito, nove, dez. Conseguimos!", category: "education", subCategory: "numeros" },
   { text: "Agora vamos de dez até zero?", category: "education", subCategory: "numeros" },
   { text: "Dez, nove, oito, sete, seis, cinco, quatro, três, dois, um, zero. Ufa, acabou!", category: "education", subCategory: "numeros" },
@@ -235,7 +237,8 @@ export const libraryPhrasesData: LibraryPhraseData[] = [
 
   // ==================== EDUCAÇÃO - ANIMAIS (education) ====================
   { text: "Vou te contar algumas coisas sobre os animais.", category: "education", subCategory: "animais" },
-  { text: "Você sabia que os polvos têm 3 corações? É verdade, o polvo tem 3 corações, legal né!? Um, dois, três corações.", category: "education", subCategory: "animais" },
+  { text: "Você sabia que os polvos têm 3 corações?", category: "education", subCategory: "animais" },
+  { text: "É verdade, o polvo tem 3 corações, legal né!? Um, dois, três corações.", category: "education", subCategory: "animais" },
   { text: "Aprender é muito legal. Conte isso para seus amigos e amigas.", category: "education", subCategory: "animais" },
   { text: "Mais uma curiosidade, você sabia que a coruja consegue virar a cabeça quase toda para trás. Ela consegue ver muita coisa que acontece atrás dela.", category: "education", subCategory: "animais" },
   { text: "A formiga, mesmo pequenininha, é muito forte e pode carregar coisas maiores que ela, sabia disso?", category: "education", subCategory: "animais" },
