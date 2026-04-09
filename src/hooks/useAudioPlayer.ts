@@ -51,20 +51,20 @@ export const useAudioPlayer = () => {
       audioRef.current.volume = state.volume;
       audioRef.current.playbackRate = state.playbackRate;
 
-      // Event listeners
-      audio.addEventListener('loadedmetadata', () => {
+      // Event listeners with cleanup tracking
+      const handleLoadedMetadata = () => {
         setState(prev => ({ 
           ...prev, 
           duration: audio.duration,
           isLoading: false 
         }));
-      });
+      };
 
-      audio.addEventListener('timeupdate', () => {
+      const handleTimeUpdate = () => {
         setState(prev => ({ ...prev, currentTime: audio.currentTime }));
-      });
+      };
 
-      audio.addEventListener('ended', () => {
+      const handleEnded = () => {
         setState(prev => ({ 
           ...prev, 
           isPlaying: false, 
@@ -73,9 +73,14 @@ export const useAudioPlayer = () => {
         if (currentSourceRef.current && typeof audioSource === 'object') {
           URL.revokeObjectURL(currentSourceRef.current);
         }
-      });
+        // Clean up listeners
+        audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
+        audio.removeEventListener('timeupdate', handleTimeUpdate);
+        audio.removeEventListener('ended', handleEnded);
+        audio.removeEventListener('error', handleError);
+      };
 
-      audio.addEventListener('error', (e) => {
+      const handleError = (e: Event) => {
         setState(prev => ({ 
           ...prev, 
           isPlaying: false, 
@@ -83,7 +88,17 @@ export const useAudioPlayer = () => {
           error: 'Erro ao reproduzir áudio' 
         }));
         console.error('Audio playback error:', e);
-      });
+        // Clean up listeners
+        audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
+        audio.removeEventListener('timeupdate', handleTimeUpdate);
+        audio.removeEventListener('ended', handleEnded);
+        audio.removeEventListener('error', handleError);
+      };
+
+      audio.addEventListener('loadedmetadata', handleLoadedMetadata);
+      audio.addEventListener('timeupdate', handleTimeUpdate);
+      audio.addEventListener('ended', handleEnded);
+      audio.addEventListener('error', handleError);
 
       await audio.play();
       setState(prev => ({ ...prev, isPlaying: true, isLoading: false }));
