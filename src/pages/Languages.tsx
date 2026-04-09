@@ -85,9 +85,11 @@ const Languages = () => {
   };
 
   // Reset playingId when audio stops
-  if (playingId && !pausableAudio.isPlaying) {
-    setPlayingId(null);
-  }
+  useEffect(() => {
+    if (playingId && !pausableAudio.isPlaying) {
+      setPlayingId(null);
+    }
+  }, [playingId, pausableAudio.isPlaying]);
 
   const currentPhrases = selectedLanguage === "english" ? englishPhrases : spanishPhrases;
 

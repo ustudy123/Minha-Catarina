@@ -178,7 +178,7 @@ const Favorites = () => {
     if (sequentialPlayer.isPlaying) {
       sequentialPlayer.stop();
     } else {
-      sequentialPlayer.startPlayAll(favorites, playRandom);
+      sequentialPlayer.startPlayAll(favorites, playRandom, intervalMinutes, true);
     }
   };
 
