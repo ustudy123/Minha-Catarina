@@ -60,6 +60,17 @@ export const FEMALE_VOICES: ChildVoice[] = [
     voiceId: 'UBstFxPdreTeinYQDaw0',
     gender: 'female',
   },
+  {
+    id: 'moranguinho2',
+    name: 'Moranguinho 2',
+    description: {
+      pt: 'Voz doce e alegre',
+      en: 'Sweet and cheerful voice',
+      es: 'Voz dulce y alegre',
+    },
+    voiceId: '7p2vHN3pSmIQ7Dd52CVK',
+    gender: 'female',
+  },
 ];
 
 // Vozes para Antônio (usando vozes neutras que soam infantis)
