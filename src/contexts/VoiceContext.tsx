@@ -24,7 +24,9 @@ export const FEMALE_VOICES: ChildVoice[] = [
       en: 'Natural child voice',
       es: 'Voz infantil natural',
     },
-    voiceId: 'jj2TcaVLZHLBxUPLvvwu',
+    // Substituída: o ID anterior (jj2TcaVLZHLBxUPLvvwu) retornava 404 (voice_not_found) na ElevenLabs.
+    // Usando a voz Moranguinho como fallback estável.
+    voiceId: 'UBstFxPdreTeinYQDaw0',
     gender: 'female',
   },
   {
