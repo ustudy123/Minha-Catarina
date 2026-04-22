@@ -52,17 +52,6 @@ export const FEMALE_VOICES: ChildVoice[] = [
     gender: 'female',
   },
   {
-    id: 'moranguinho',
-    name: 'Moranguinho',
-    description: {
-      pt: 'Voz doce e encantadora',
-      en: 'Sweet and charming voice',
-      es: 'Voz dulce y encantadora',
-    },
-    voiceId: 'UBstFxPdreTeinYQDaw0',
-    gender: 'female',
-  },
-  {
     id: 'moranguinho2',
     name: 'Moranguinho 2',
     description: {
