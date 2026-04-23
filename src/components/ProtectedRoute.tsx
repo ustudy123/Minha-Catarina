@@ -14,7 +14,7 @@ export function ProtectedRoute({ children, skipOnboardingCheck = false }: Protec
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-muted via-background to-secondary/20">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-muted via-background to-secondary/5">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     );
