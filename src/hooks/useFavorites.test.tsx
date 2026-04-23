@@ -4,16 +4,20 @@ import { useFavorites } from './useFavorites';
 import { supabase } from '@/integrations/supabase/client';
 import React from 'react';
 
-// Create a persistent mock query builder
+// persistent mocks
+const orderMock = vi.fn().mockImplementation(() => Promise.resolve({ data: [], error: null }));
+const maybeSingleMock = vi.fn().mockImplementation(() => Promise.resolve({ data: null, error: null }));
+const singleMock = vi.fn().mockImplementation(() => Promise.resolve({ data: { id: '1', text: 'Test' }, error: null }));
+
 const mockQueryBuilder = {
   select: vi.fn().mockReturnThis(),
   insert: vi.fn().mockReturnThis(),
   update: vi.fn().mockReturnThis(),
   delete: vi.fn().mockReturnThis(),
   eq: vi.fn().mockReturnThis(),
-  order: vi.fn().mockReturnThis(),
-  single: vi.fn().mockImplementation(() => Promise.resolve({ data: { id: '1', text: 'Test' }, error: null })),
-  maybeSingle: vi.fn().mockImplementation(() => Promise.resolve({ data: null, error: null })),
+  order: orderMock,
+  single: singleMock,
+  maybeSingle: maybeSingleMock,
 };
 
 // Mock Supabase
@@ -31,13 +35,12 @@ vi.mock('@/contexts/AuthContext', () => ({
 describe('useFavorites', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    // Re-setup mock implementation for specific tests
-    mockQueryBuilder.order.mockImplementation(() => Promise.resolve({ data: [], error: null }));
+    orderMock.mockResolvedValue({ data: [], error: null });
   });
 
   it('should initialize and load favorites', async () => {
     const mockData = [{ id: '1', text: 'Hello', category: 'daily', is_favorite: true, created_at: '2023-01-01' }];
-    mockQueryBuilder.order.mockImplementationOnce(() => Promise.resolve({ data: mockData, error: null }));
+    orderMock.mockResolvedValueOnce({ data: mockData, error: null });
 
     const { result } = renderHook(() => useFavorites());
 

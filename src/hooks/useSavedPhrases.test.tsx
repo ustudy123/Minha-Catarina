@@ -4,15 +4,18 @@ import { useSavedPhrases } from './useSavedPhrases';
 import { supabase } from '@/integrations/supabase/client';
 import React from 'react';
 
+const orderMock = vi.fn().mockImplementation(() => Promise.resolve({ data: [], error: null }));
+const singleMock = vi.fn().mockImplementation(() => Promise.resolve({ data: { id: '1', text: 'Test', created_at: '2023-01-01' }, error: null }));
+
 const mockQueryBuilder = {
   select: vi.fn().mockReturnThis(),
   insert: vi.fn().mockReturnThis(),
   update: vi.fn().mockReturnThis(),
   delete: vi.fn().mockReturnThis(),
   eq: vi.fn().mockReturnThis(),
-  order: vi.fn().mockReturnThis(),
-  single: vi.fn().mockImplementation(() => Promise.resolve({ data: { id: '1', text: 'Test', created_at: '2023-01-01' }, error: null })),
-  maybeSingle: vi.fn().mockImplementation(() => Promise.resolve({ data: null, error: null })),
+  order: orderMock,
+  single: singleMock,
+  maybeSingle: vi.fn().mockReturnThis(),
 };
 
 vi.mock('@/integrations/supabase/client', () => ({
@@ -28,7 +31,7 @@ vi.mock('@/contexts/AuthContext', () => ({
 describe('useSavedPhrases', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockQueryBuilder.order.mockImplementation(() => Promise.resolve({ data: [], error: null }));
+    orderMock.mockResolvedValue({ data: [], error: null });
   });
 
   it('should fetch phrases on mount', async () => {
@@ -36,7 +39,7 @@ describe('useSavedPhrases', () => {
       { id: '1', text: 'Hello', language: 'pt', created_at: '2023-01-01', is_favorite: false }
     ];
     
-    mockQueryBuilder.order.mockImplementationOnce(() => Promise.resolve({ data: mockPhrases, error: null }));
+    orderMock.mockResolvedValueOnce({ data: mockPhrases, error: null });
 
     const { result } = renderHook(() => useSavedPhrases());
 

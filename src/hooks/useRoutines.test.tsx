@@ -3,15 +3,18 @@ import { renderHook, act } from '@testing-library/react';
 import { useRoutines } from './useRoutines';
 import { supabase } from '@/integrations/supabase/client';
 
+const orderMock = vi.fn().mockImplementation(() => Promise.resolve({ data: [], error: null }));
+const singleMock = vi.fn().mockImplementation(() => Promise.resolve({ data: { id: '1', name: 'Test' }, error: null }));
+
 const mockQueryBuilder = {
   select: vi.fn().mockReturnThis(),
   insert: vi.fn().mockReturnThis(),
   update: vi.fn().mockReturnThis(),
   delete: vi.fn().mockReturnThis(),
   eq: vi.fn().mockReturnThis(),
-  order: vi.fn().mockReturnThis(),
-  single: vi.fn().mockImplementation(() => Promise.resolve({ data: { id: '1', name: 'Test' }, error: null })),
-  maybeSingle: vi.fn().mockImplementation(() => Promise.resolve({ data: null, error: null })),
+  order: orderMock,
+  single: singleMock,
+  maybeSingle: vi.fn().mockReturnThis(),
 };
 
 vi.mock('@/integrations/supabase/client', () => ({
@@ -27,12 +30,12 @@ vi.mock('@/contexts/AuthContext', () => ({
 describe('useRoutines', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockQueryBuilder.order.mockImplementation(() => Promise.resolve({ data: [], error: null }));
+    orderMock.mockResolvedValue({ data: [], error: null });
   });
 
   it('should fetch routines on mount', async () => {
     const mockRoutines = [{ id: '1', name: 'Morning', play_random: false, interval_minutes: 5 }];
-    mockQueryBuilder.order.mockImplementationOnce(() => Promise.resolve({ data: mockRoutines, error: null }));
+    orderMock.mockResolvedValueOnce({ data: mockRoutines, error: null });
 
     const { result } = renderHook(() => useRoutines());
 
