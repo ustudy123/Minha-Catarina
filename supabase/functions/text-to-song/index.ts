@@ -118,8 +118,18 @@ serve(async (req) => {
 
     // Music API request body
     const musicBody: Record<string, unknown> = { prompt };
-    if (typeof durationSeconds === 'number' && durationSeconds > 0) {
-      musicBody.music_length_ms = Math.round(durationSeconds * 1000);
+    
+    // Estimate a good duration if not provided to avoid skipping words
+    let finalDuration = durationSeconds;
+    if (!finalDuration || finalDuration <= 0) {
+      const wordCount = text.split(/\s+/).length;
+      // Children's songs are usually slower (~0.7s - 1s per word)
+      finalDuration = Math.max(15, Math.min(90, Math.ceil(wordCount * 0.75) + 5));
+    }
+    
+    if (finalDuration > 0) {
+      musicBody.music_length_ms = Math.round(finalDuration * 1000);
+      console.log(`[text-to-song] requested duration: ${finalDuration}s for ${text.split(/\s+/).length} words`);
     }
 
     const response = await fetch('https://api.elevenlabs.io/v1/music', {
