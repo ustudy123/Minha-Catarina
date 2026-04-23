@@ -190,7 +190,7 @@ const Favorites = () => {
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-gradient-to-br from-muted via-background to-highlight/10">
+      <div className="min-h-screen bg-gradient-to-br from-muted via-background to-primary/5">
         {/* Header */}
         <header className="sticky top-0 z-50 glass border-b border-border/50 backdrop-blur-lg">
         <div className="container mx-auto px-4 py-4">
@@ -254,7 +254,7 @@ const Favorites = () => {
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-6 max-w-2xl space-y-6">
+      <main className="container mx-auto px-4 py-8 max-w-2xl space-y-8 animate-fade-in">
         {favorites.length === 0 ? (
           <Card className="p-8 text-center border-2 border-dashed">
             <Star className="w-16 h-16 mx-auto mb-4 text-muted-foreground/50" />
