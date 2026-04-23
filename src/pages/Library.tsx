@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, memo, useCallback } from "react";
 import { PageTransition } from "@/components/PageTransition";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -19,7 +19,7 @@ import { PlayButton } from "@/components/audio/PlayButton";
 import { usePausableAudio, hasPauseMarkers, getTextWithoutPauses } from "@/hooks/usePausableAudio";
 import { AudioControls } from "@/components/audio/AudioControls";
 import { AutoPlayControls } from "@/components/AutoPlayControls";
-import { useSequentialPlayer, PlayablePhrase } from "@/hooks/useSequentialPlayer";
+import { useSequentialPlayer } from "@/hooks/useSequentialPlayer";
 import { Link, useNavigate } from "react-router-dom";
 import { PhraseOptionsMenu } from "@/components/PhraseOptionsMenu";
 import { PremiumGate } from "@/components/PremiumGate";
@@ -75,6 +75,83 @@ interface Phrase {
   soundPrompt?: string;
   phraseKey?: string;
 }
+
+const PhraseItem = memo(({ 
+  phrase, 
+  index, 
+  isPlaying, 
+  isLoading, 
+  isAutoPlaying,
+  isPaused,
+  pauseTimeRemaining,
+  isFavorite,
+  onPlay,
+  onPause,
+  onToggleFavorite,
+  duration,
+  audioControlsProps
+}: {
+  phrase: Phrase;
+  index: number;
+  isPlaying: boolean;
+  isLoading: boolean;
+  isAutoPlaying: boolean;
+  isPaused: boolean;
+  pauseTimeRemaining: number;
+  isFavorite: boolean;
+  onPlay: (phrase: Phrase) => void;
+  onPause: () => void;
+  onToggleFavorite: (phrase: Phrase) => void;
+  duration: number;
+  audioControlsProps: any;
+}) => (
+  <Card
+    className={`p-4 border-2 hover-lift animate-fade-in transition-colors ${isAutoPlaying ? "border-primary bg-primary/5" : ""}`}
+    style={{ animationDelay: `${index * 0.05}s` }}
+  >
+    <div className="flex items-start gap-3">
+      <PlayButton
+        isPlaying={isPlaying}
+        isLoading={isLoading}
+        onPlay={() => onPlay(phrase)}
+        onPause={onPause}
+        variant="secondary"
+        size="icon"
+        className="flex-shrink-0"
+      />
+
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-medium mb-1 break-words">
+          {getTextWithoutPauses(phrase.text)}
+        </p>
+
+        {isPlaying && isPaused && (
+          <div className="mt-2 flex items-center gap-2 text-xs text-primary animate-pulse">
+            <Timer className="w-4 h-4" />
+            <span>
+              {pauseTimeRemaining}s
+            </span>
+          </div>
+        )}
+      </div>
+
+      <Button size="icon" variant="ghost" className="flex-shrink-0" onClick={() => onToggleFavorite(phrase)}>
+        <Star className={cn("w-5 h-5", isFavorite && "fill-highlight text-highlight")} />
+      </Button>
+
+      <PhraseOptionsMenu phraseId={phrase.id} phraseText={phrase.text} phraseSource="library" />
+    </div>
+
+    {isPlaying && duration > 0 && (
+      <AudioControls
+        {...audioControlsProps}
+        className="mt-3"
+      />
+    )}
+  </Card>
+));
+
+PhraseItem.displayName = "PhraseItem";
 
 interface SubCategory {
   id: string;

@@ -38,7 +38,24 @@ export const useTextToSpeech = () => {
         throw new Error('Você precisa estar logado para gerar voz');
       }
 
-      const response = await fetch(
+      // Check preloader cache first
+      const { audioCache } = await import('./useAudioPreloader');
+      const cacheKey = `${text}_${language || 'pt'}_${voiceId || selectedVoice.voiceId}`;
+      const preloaded = audioCache.get(cacheKey);
+
+      if (preloaded) {
+        console.log('[TTS] Using preloader cache for:', text);
+        setState({
+          isGenerating: false,
+          error: null,
+          audioBlob: preloaded.blob,
+          audioUrl: preloaded.url,
+          cached: true,
+        });
+        if (!silent) toast.success('Áudio carregado do cache!');
+        return { blob: preloaded.blob, url: preloaded.url, cached: true };
+      }
+
         `https://vfhspeubasrdmwqxdcaw.supabase.co/functions/v1/text-to-speech`,
         {
           method: 'POST',
