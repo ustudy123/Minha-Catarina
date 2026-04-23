@@ -8,7 +8,7 @@ interface PlayButtonProps {
   isLoading: boolean;
   onPlay: () => void;
   onPause: () => void;
-  variant?: "default" | "secondary" | "outline" | "ghost";
+  variant?: "default" | "secondary" | "outline" | "ghost" | "accent" | "highlight" | "gradient" | "premium";
   size?: "default" | "sm" | "lg" | "icon";
   showWave?: boolean;
   className?: string;
@@ -38,16 +38,23 @@ export const PlayButton = ({
       size={size}
       onClick={handleClick}
       disabled={isLoading}
-      className={cn("rounded-xl", className)}
+      className={cn(
+        "rounded-xl transition-all duration-300",
+        isPlaying && "ring-2 ring-primary ring-offset-2",
+        className
+      )}
     >
       {isLoading ? (
-        <Loader2 className="w-4 h-4 animate-spin" />
+        <Loader2 className="w-5 h-5 animate-spin" />
       ) : showWave && isPlaying ? (
-        <AudioWaveAnimation isPlaying={isPlaying} className="w-4 h-4" />
+        <div className="flex items-center gap-1">
+          <Pause className="w-5 h-5 fill-current" />
+          <AudioWaveAnimation isPlaying={isPlaying} className="h-4" />
+        </div>
       ) : isPlaying ? (
-        <Pause className="w-4 h-4" />
+        <Pause className="w-5 h-5 fill-current" />
       ) : (
-        <Play className="w-4 h-4" />
+        <Play className="w-5 h-5 fill-current ml-0.5" />
       )}
     </Button>
   );

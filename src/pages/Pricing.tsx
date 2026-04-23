@@ -27,7 +27,7 @@ const Pricing = () => {
   const benefitIcons = [Crown, Zap, Heart];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-muted via-background to-accent/10">
+    <div className="min-h-screen bg-gradient-to-br from-muted via-background to-secondary/5">
       <header className="sticky top-0 z-50 glass border-b border-border/50 backdrop-blur-lg">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center gap-3">

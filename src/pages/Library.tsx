@@ -137,7 +137,6 @@ const Library = () => {
     { id: "myPhrases", name: t.library.categories.myPhrases || "Minhas Frases", icon: Sparkles, premium: true },
   ];
 
-  // Sub-category definitions per category (only for categories that still need drilling down)
   const subCategoryDefinitions: Record<string, SubCategory[]> = {
     education: [
       { id: "arco-iris", name: "Arco-Íris", icon: Rainbow },

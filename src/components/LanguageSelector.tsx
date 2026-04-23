@@ -28,7 +28,7 @@ export const LanguageSelector = () => {
           <Globe className="h-5 w-5" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-48 p-2 bg-background/95 backdrop-blur-sm" align="end">
+      <PopoverContent className="w-48 p-2 glass border-2" align="end">
         <div className="space-y-1">
           {languages.map((lang) => (
             <Button

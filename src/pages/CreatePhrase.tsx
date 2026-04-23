@@ -149,7 +149,7 @@ const CreatePhrase = () => {
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-6 max-w-2xl space-y-6">
+      <main className="container mx-auto px-4 py-8 max-w-2xl space-y-8 animate-fade-in">
         {/* Text Input */}
         <Card className="p-5 border-2 animate-fade-in" style={{ animationDelay: "0.1s" }}>
           <div className="space-y-3">
