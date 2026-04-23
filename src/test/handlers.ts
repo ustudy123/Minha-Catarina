@@ -32,6 +32,9 @@ export const handlers = [
 
   // Mock Audio fetching
   http.get('https://example.com/audio.mp3', () => {
-    return new HttpResponse(new Blob(['mock-audio'], { type: 'audio/mpeg' }));
+    // Return a simple Response instead of HttpResponse with Blob to avoid undici stream issue
+    return new Response(new Uint8Array([1, 2, 3]), {
+      headers: { 'Content-Type': 'audio/mpeg' }
+    });
   }),
 ];
