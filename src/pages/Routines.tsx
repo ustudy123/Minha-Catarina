@@ -333,7 +333,7 @@ const Routines = () => {
   // Routine detail view
   if (selectedRoutine) {
     return <PageTransition>
-      <div className="min-h-screen bg-gradient-to-br from-muted via-background to-secondary/10">
+      <div className="min-h-screen bg-gradient-to-br from-muted via-background to-secondary/5">
         <header className="sticky top-0 z-50 glass border-b border-border/50 backdrop-blur-lg">
           <div className="container mx-auto px-4 py-4">
             <div className="flex items-center justify-between">
@@ -414,7 +414,7 @@ const Routines = () => {
           </div>
         </header>
 
-        <main className="container mx-auto px-4 py-6 max-w-2xl space-y-6">
+        <main className="container mx-auto px-4 py-8 max-w-2xl space-y-8 animate-fade-in">
           {/* Settings Bar */}
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             {selectedRoutine.play_random && <Badge variant="secondary" className="gap-1">
@@ -539,7 +539,7 @@ const Routines = () => {
 
   // Routines list view
   return <PageTransition>
-    <div className="min-h-screen bg-gradient-to-br from-muted via-background to-secondary/10">
+    <div className="min-h-screen bg-gradient-to-br from-muted via-background to-secondary/5">
       <header className="sticky top-0 z-50 glass border-b border-border/50 backdrop-blur-lg">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
@@ -563,7 +563,7 @@ const Routines = () => {
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-6 max-w-2xl space-y-6">
+      <main className="container mx-auto px-4 py-8 max-w-2xl space-y-8 animate-fade-in">
         {/* Create Button */}
         <Button variant="gradient" size="lg" className="w-full gap-2" onClick={() => {
         if (canCreateMore) {
