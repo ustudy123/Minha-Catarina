@@ -9,7 +9,7 @@ const corsHeaders = {
 
 // Cache key — depends on lyrics + style so re-renders reuse audio
 function generateCacheKey(text: string, style: string): string {
-  const input = `song_v2_${style}_${text.toLowerCase().trim()}`;
+  const input = `song_v3_${style}_${text.toLowerCase().trim()}`;
   let hash = 0;
   for (let i = 0; i < input.length; i++) {
     const char = input.charCodeAt(i);
@@ -28,20 +28,16 @@ function buildMusicPrompt(lyrics: string, style: string, language: string): stri
   const lang = langName[language] || 'Brazilian Portuguese';
 
   const styleHints: Record<string, string> = {
-    lullaby: 'soft lullaby with gentle acoustic guitar, slow tempo, calm and soothing, emotional',
-    cheerful: 'cheerful upbeat children song with playful piano and light percussion, happy mood, rhythmic',
+    lullaby: 'soft lullaby with gentle acoustic guitar, slow tempo, calm and soothing',
+    cheerful: 'cheerful upbeat children song with playful piano and light percussion, happy mood',
     calm: 'calm children song with soft piano, peaceful and warm, steady pace',
-    nursery: 'classic nursery rhyme style with simple melody, ukulele and bells, very child-friendly, clear rhythm',
+    nursery: 'classic nursery rhyme with a simple melody, ukulele and bells, very child-friendly, and clear rhythm',
   };
   const styleDescription = styleHints[style] || styleHints.nursery;
 
-  // Refined prompt structure using structural tags for better word accuracy
-  return `[GENRE: children's music, ${styleDescription}]
-[VOCALS: sweet innocent little girl (4 years old), clear pronunciation, singing in ${lang}]
-[LYRICS:
-${lyrics}
-]
-Sing the lyrics exactly as written above. Every word must be sung clearly. No humming, just the lyrics.`;
+  // ToS-compliant prompt format aligned with ElevenLabs' own suggestion.
+  // Avoid trigger words like "little girl", "4 years old", "innocent".
+  return `A children's song in the style of a ${styleDescription}. The vocals should be a sweet, friendly female voice singing in ${lang} with clear pronunciation. Use simple and repetitive phrases suitable for young children. Sing the following lyrics exactly as written, every word must be sung clearly: "${lyrics}"`;
 }
 
 function preprocessLyrics(text: string): string {
