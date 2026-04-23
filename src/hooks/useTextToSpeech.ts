@@ -44,7 +44,7 @@ export const useTextToSpeech = () => {
       const preloaded = audioCache.get(cacheKey);
 
       if (preloaded) {
-        console.log('[TTS] Using preloader cache for:', text);
+        console.log('[TTS] Using preloader cache for:', text.substring(0, 30));
         setState({
           isGenerating: false,
           error: null,
@@ -56,6 +56,7 @@ export const useTextToSpeech = () => {
         return { blob: preloaded.blob, url: preloaded.url, cached: true };
       }
 
+      const response = await fetch(
         `https://vfhspeubasrdmwqxdcaw.supabase.co/functions/v1/text-to-speech`,
         {
           method: 'POST',
@@ -139,7 +140,7 @@ export const useTextToSpeech = () => {
       audioUrl: null,
       cached: false,
     });
-  }, [state.audioUrl]);
+  }, [state.audioUrl, state.cached]);
 
   return {
     ...state,
