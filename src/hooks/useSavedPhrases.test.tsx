@@ -38,7 +38,9 @@ describe('useSavedPhrases', () => {
 
     const { result } = renderHook(() => useSavedPhrases());
     await act(async () => {
-        await new Promise(r => setTimeout(r, 0));
+      await vi.waitFor(() => {
+        if (result.current.phrases.length === 0) throw new Error('Not ready');
+      });
     });
 
     expect(result.current.phrases).toHaveLength(1);

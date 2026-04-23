@@ -35,7 +35,9 @@ describe('useRoutines', () => {
 
     const { result } = renderHook(() => useRoutines());
     await act(async () => {
-        await new Promise(r => setTimeout(r, 0));
+      await vi.waitFor(() => {
+        if (result.current.routines.length === 0) throw new Error('Not ready');
+      });
     });
 
     expect(result.current.routines).toHaveLength(1);
