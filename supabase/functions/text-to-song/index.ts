@@ -9,7 +9,7 @@ const corsHeaders = {
 
 // Cache key — depends on lyrics + style so re-renders reuse audio
 function generateCacheKey(text: string, style: string): string {
-  const input = `song_${style}_${text.toLowerCase().trim()}`;
+  const input = `song_v2_${style}_${text.toLowerCase().trim()}`;
   let hash = 0;
   for (let i = 0; i < input.length; i++) {
     const char = input.charCodeAt(i);
