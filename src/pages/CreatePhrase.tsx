@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useTextToSpeech } from "@/hooks/useTextToSpeech";
+import { useTextToSong } from "@/hooks/useTextToSong";
 import { useSavedPhrases } from "@/hooks/useSavedPhrases";
 import { useLanguage, Language } from "@/contexts/LanguageContext";
 import { useSubscription } from "@/hooks/useSubscription";
@@ -15,11 +16,14 @@ import { toast } from "sonner";
 import { PlayButton } from "@/components/audio/PlayButton";
 import { AudioControls } from "@/components/audio/AudioControls";
 import { PremiumGate } from "@/components/PremiumGate";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import {
   ArrowLeft,
   Sparkles,
   Save,
   Volume2,
+  Music,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -27,9 +31,11 @@ const CreatePhrase = () => {
   const navigate = useNavigate();
   const [phraseText, setPhraseText] = useState("");
   const [generatingLang, setGeneratingLang] = useState<Language | null>(null);
+  const [songMode, setSongMode] = useState(false);
   const maxChars = 200;
 
   const { generate, isGenerating, audioUrl, audioBlob, reset } = useTextToSpeech();
+  const { generate: generateSong, isGenerating: isGeneratingSong, audioUrl: songUrl } = useTextToSong();
   const audioPlayer = useAudioPlayer();
   const { addPhrase } = useSavedPhrases();
   const { language } = useLanguage();
@@ -50,9 +56,16 @@ const CreatePhrase = () => {
 
     try {
       setGeneratingLang(targetLang);
-      const { url } = await generate({ text: phraseText, language: targetLang });
-      if (url) {
-        await audioPlayer.play(url);
+      if (songMode) {
+        const { url } = await generateSong({
+          text: phraseText,
+          style: 'nursery',
+          language: targetLang,
+        });
+        if (url) await audioPlayer.play(url);
+      } else {
+        const { url } = await generate({ text: phraseText, language: targetLang });
+        if (url) await audioPlayer.play(url);
       }
     } catch (error) {
       console.error('Error generating voice:', error);
