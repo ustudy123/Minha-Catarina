@@ -9,7 +9,7 @@ const corsHeaders = {
 
 // Cache key — depends on lyrics + style so re-renders reuse audio
 function generateCacheKey(text: string, style: string): string {
-  const input = `song_${style}_${text.toLowerCase().trim()}`;
+  const input = `song_v2_${style}_${text.toLowerCase().trim()}`;
   let hash = 0;
   for (let i = 0; i < input.length; i++) {
     const char = input.charCodeAt(i);
@@ -28,14 +28,32 @@ function buildMusicPrompt(lyrics: string, style: string, language: string): stri
   const lang = langName[language] || 'Brazilian Portuguese';
 
   const styleHints: Record<string, string> = {
-    lullaby: 'soft lullaby with gentle acoustic guitar, slow tempo, calm and soothing',
-    cheerful: 'cheerful upbeat children song with playful piano and light percussion, happy mood',
-    calm: 'calm children song with soft piano, peaceful and warm',
-    nursery: 'classic nursery rhyme style with simple melody, ukulele and bells, very child-friendly',
+    lullaby: 'soft lullaby with gentle acoustic guitar, slow tempo, calm and soothing, emotional',
+    cheerful: 'cheerful upbeat children song with playful piano and light percussion, happy mood, rhythmic',
+    calm: 'calm children song with soft piano, peaceful and warm, steady pace',
+    nursery: 'classic nursery rhyme style with simple melody, ukulele and bells, very child-friendly, clear rhythm',
   };
   const styleDescription = styleHints[style] || styleHints.nursery;
 
-  return `A sweet little girl (around 4 years old) singing a children's song in ${lang}. ${styleDescription}. The voice should be cute, warm and innocent. Lyrics to sing exactly: "${lyrics}"`;
+  // Refined prompt structure using structural tags for better word accuracy
+  return `[GENRE: children's music, ${styleDescription}]
+[VOCALS: sweet innocent little girl (4 years old), clear pronunciation, singing in ${lang}]
+[LYRICS:
+${lyrics}
+]
+Sing the lyrics exactly as written above. Every word must be sung clearly. No humming, just the lyrics.`;
+}
+
+function preprocessLyrics(text: string): string {
+  // Add commas after punctuation to encourage natural pauses and prevent skipping
+  return text
+    .replace(/([.!?])\s*/g, '$1, ')
+    .replace(/,\s*,/g, ',') // Avoid double commas
+    .split('\n')
+    .map(line => line.trim())
+    .filter(line => line.length > 0)
+    .join('\n')
+    .trim();
 }
 
 serve(async (req) => {
@@ -94,13 +112,24 @@ serve(async (req) => {
       );
     }
 
-    const prompt = buildMusicPrompt(text, style, language);
+    const cleanedText = preprocessLyrics(text);
+    const prompt = buildMusicPrompt(cleanedText, style, language);
     console.log('[text-to-song] generating with ElevenLabs Music API');
 
     // Music API request body
     const musicBody: Record<string, unknown> = { prompt };
-    if (typeof durationSeconds === 'number' && durationSeconds > 0) {
-      musicBody.music_length_ms = Math.round(durationSeconds * 1000);
+    
+    // Estimate a good duration if not provided to avoid skipping words
+    let finalDuration = durationSeconds;
+    if (!finalDuration || finalDuration <= 0) {
+      const wordCount = text.split(/\s+/).length;
+      // Children's songs are usually slower (~0.7s - 1s per word)
+      finalDuration = Math.max(15, Math.min(90, Math.ceil(wordCount * 0.75) + 5));
+    }
+    
+    if (finalDuration > 0) {
+      musicBody.music_length_ms = Math.round(finalDuration * 1000);
+      console.log(`[text-to-song] requested duration: ${finalDuration}s for ${text.split(/\s+/).length} words`);
     }
 
     const response = await fetch('https://api.elevenlabs.io/v1/music', {
