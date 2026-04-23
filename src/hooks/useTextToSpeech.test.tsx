@@ -30,9 +30,17 @@ vi.mock('@/contexts/AuthContext', () => ({
   AuthProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>
 }));
 
+// Mock sonner
+vi.mock('sonner', () => ({
+  toast: {
+    success: vi.fn(),
+    error: vi.fn(),
+  }
+}));
+
 describe('useTextToSpeech', () => {
   it('should initialize with default state', () => {
-    const { result } = renderHook(() => useTextToSpeech(), { wrapper });
+    const { result } = renderHook(() => useTextToSpeech());
     
     expect(result.current.isGenerating).toBe(false);
     expect(result.current.error).toBe(null);
@@ -40,7 +48,7 @@ describe('useTextToSpeech', () => {
   });
 
   it('should generate audio successfully from content', async () => {
-    const { result } = renderHook(() => useTextToSpeech(), { wrapper });
+    const { result } = renderHook(() => useTextToSpeech());
 
     await act(async () => {
       const output = await result.current.generate({ text: 'Hello world' });
@@ -54,7 +62,7 @@ describe('useTextToSpeech', () => {
   });
 
   it('should handle cached audio correctly', async () => {
-    const { result } = renderHook(() => useTextToSpeech(), { wrapper });
+    const { result } = renderHook(() => useTextToSpeech());
 
     await act(async () => {
       const output = await result.current.generate({ text: 'cached' });
@@ -66,7 +74,7 @@ describe('useTextToSpeech', () => {
   });
 
   it('should handle errors gracefully', async () => {
-    const { result } = renderHook(() => useTextToSpeech(), { wrapper });
+    const { result } = renderHook(() => useTextToSpeech());
 
     await act(async () => {
       try {
@@ -81,7 +89,7 @@ describe('useTextToSpeech', () => {
   });
 
   it('should reset state correctly', async () => {
-    const { result } = renderHook(() => useTextToSpeech(), { wrapper });
+    const { result } = renderHook(() => useTextToSpeech());
 
     await act(async () => {
       await result.current.generate({ text: 'Hello' });
