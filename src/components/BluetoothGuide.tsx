@@ -136,7 +136,7 @@ export const BluetoothGuide = ({
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className="max-h-[90vh]">
+      <DrawerContent className="max-h-[90vh] glass border-t-2">
         <DrawerHeader className="text-center pb-2">
           <div className="flex items-center justify-center gap-2 mb-2">
             <div className="p-2 rounded-full bg-primary/10">
