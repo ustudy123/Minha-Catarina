@@ -102,6 +102,9 @@ export function useSequentialPlayer() {
   }, []);
 
   const playNext = useCallback(async (index: number, phrases: PlayablePhrase[], random: boolean, intervalSeconds: number) => {
+    // Import preloader to use its cache
+    const { audioCache } = await import('./useAudioPreloader');
+    
     clearScheduledPlayback();
 
     if (!isPlayingRef.current || index >= phrases.length) {
