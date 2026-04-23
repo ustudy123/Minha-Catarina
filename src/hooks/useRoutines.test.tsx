@@ -35,7 +35,7 @@ describe('useRoutines', () => {
 
     const { result } = renderHook(() => useRoutines());
     await act(async () => {
-        await new Promise(resolve => setTimeout(resolve, 0));
+        await Promise.resolve();
     });
 
     expect(result.current.routines).toHaveLength(1);

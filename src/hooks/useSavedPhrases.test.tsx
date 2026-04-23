@@ -38,7 +38,7 @@ describe('useSavedPhrases', () => {
 
     const { result } = renderHook(() => useSavedPhrases());
     await act(async () => {
-        await new Promise(resolve => setTimeout(resolve, 0));
+        await Promise.resolve();
     });
 
     expect(result.current.phrases).toHaveLength(1);

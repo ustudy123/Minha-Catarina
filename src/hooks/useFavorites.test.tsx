@@ -39,9 +39,9 @@ describe('useFavorites', () => {
 
     const { result } = renderHook(() => useFavorites());
 
-    // Trigger effect by waiting
+    // Trigger effect by waiting and using act correctly
     await act(async () => {
-        await new Promise(resolve => setTimeout(resolve, 0));
+        await Promise.resolve();
     });
 
     expect(result.current.favorites).toHaveLength(1);
