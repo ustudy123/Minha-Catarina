@@ -137,7 +137,6 @@ const Library = () => {
     { id: "myPhrases", name: t.library.categories.myPhrases || "Minhas Frases", icon: Sparkles, premium: true },
   ];
 
-  const t = getTranslations(language);
   const isGenerating = isGeneratingTTS || isGeneratingSFX || isGeneratingSong || pausableAudio.isLoading;
 
   const handlePlayPhrase = async (phrase: Phrase) => {
