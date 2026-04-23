@@ -174,6 +174,18 @@ const CreatePhrase = () => {
               maxLength={maxChars}
             />
 
+            {/* 🎵 Modo Música toggle */}
+            <div className="flex items-center justify-between p-3 rounded-xl bg-muted/40 border border-border/50">
+              <Label htmlFor="song-mode" className="flex items-center gap-2 cursor-pointer text-sm font-medium">
+                <Music className="w-4 h-4 text-primary" />
+                <span>Modo Música 🎵</span>
+                <span className="text-xs text-muted-foreground hidden sm:inline">
+                  (a IA canta a frase)
+                </span>
+              </Label>
+              <Switch id="song-mode" checked={songMode} onCheckedChange={setSongMode} />
+            </div>
+
             {/* 3 Language Buttons */}
             <div className="grid grid-cols-3 gap-2">
               {languageButtons.map(({ lang, flag, label }) => (
@@ -182,11 +194,11 @@ const CreatePhrase = () => {
                   size="lg"
                   variant="outline"
                   className="flex-1 gap-2"
-                  disabled={!phraseText.trim() || isGenerating}
+                  disabled={!phraseText.trim() || isGenerating || isGeneratingSong}
                   onClick={() => handleGenerateAndPlay(lang)}
                 >
                   {generatingLang === lang ? (
-                    <span className="animate-pulse">...</span>
+                    <span className="animate-pulse">{songMode ? '🎵' : '...'}</span>
                   ) : (
                     <>
                       <span className="text-lg">{flag}</span>
