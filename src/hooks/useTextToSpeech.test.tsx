@@ -1,8 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useTextToSpeech } from './useTextToSpeech';
-import { VoiceProvider } from '@/contexts/VoiceContext';
-import { AuthProvider } from '@/contexts/AuthContext';
 import React from 'react';
 
 // Mock Supabase
@@ -13,26 +11,24 @@ vi.mock('@/integrations/supabase/client', () => ({
         data: {
           session: { access_token: 'mock-token' }
         }
+      })),
+      onAuthStateChange: vi.fn(() => ({
+        data: { subscription: { unsubscribe: vi.fn() } }
       }))
     }
   }
 }));
 
-// Mock sonner
-vi.mock('sonner', () => ({
-  toast: {
-    success: vi.fn(),
-    error: vi.fn(),
-  }
+// Mock Contexts
+vi.mock('@/contexts/VoiceContext', () => ({
+  useVoice: () => ({ selectedVoice: { voiceId: 'mock-voice-id' } }),
+  VoiceProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>
 }));
 
-const wrapper = ({ children }: { children: React.ReactNode }) => (
-  <AuthProvider>
-    <VoiceProvider>
-      {children}
-    </VoiceProvider>
-  </AuthProvider>
-);
+vi.mock('@/contexts/AuthContext', () => ({
+  useAuth: () => ({ user: { id: 'user-123' } }),
+  AuthProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>
+}));
 
 describe('useTextToSpeech', () => {
   it('should initialize with default state', () => {
