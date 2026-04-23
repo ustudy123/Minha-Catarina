@@ -305,10 +305,10 @@ const Library = () => {
     ],
   };
 
-  const hasSubCategories = (categoryId: string) => !!subCategoryDefinitions[categoryId];
+  const hasSubCategories = useCallback((categoryId: string) => !!subCategoryDefinitions[categoryId], [subCategoryDefinitions]);
 
   // Get prerecorded phrases from translations
-  const samplePhrases: Phrase[] = t.library.prerecordedPhrases.map((phrase, index) => {
+  const samplePhrases: Phrase[] = useMemo(() => t.library.prerecordedPhrases.map((phrase, index) => {
     const categoryMap: Record<string, string> = {
       routine: 'daily',
       bedtime: 'daily',
@@ -330,15 +330,15 @@ const Library = () => {
       soundPrompt: (phrase as { soundPrompt?: string }).soundPrompt,
       phraseKey,
     };
-  });
+  }), [language, t.library.prerecordedPhrases]);
 
-  const getSubCategoryPhraseCount = (categoryId: string, subId: string) => {
+  const getSubCategoryPhraseCount = useCallback((categoryId: string, subId: string) => {
     return samplePhrases.filter(p => p.category === categoryId && p.subCategory === subId).length;
-  };
+  }, [samplePhrases]);
 
   const isGenerating = isGeneratingTTS || isGeneratingSFX || isGeneratingSong || pausableAudio.isLoading;
 
-  const handlePlayPhrase = async (phrase: Phrase) => {
+  const handlePlayPhrase = useCallback(async (phrase: Phrase) => {
     if (playingId === phrase.id) {
       if (pausableAudio.isPlaying) {
         pausableAudio.stop();
@@ -374,7 +374,7 @@ const Library = () => {
           await audioPlayer.play(url);
         }
       } else if (phrase.category === 'songs') {
-        // 🎵 Sing the song using ElevenLabs Music API
+        // Sing the song using ElevenLabs Music API
         const { url } = await generateSong({
           text: phrase.text,
           style: 'nursery',
@@ -399,9 +399,9 @@ const Library = () => {
       console.error('Error playing phrase:', error);
       setPlayingId(null);
     }
-  };
+  }, [playingId, pausableAudio, audioPlayer, generateSFX, generateSong, generateTTS, language, getAudioUrl]);
 
-  const handleToggleFavorite = (phrase: Phrase) => {
+  const handleToggleFavorite = useCallback((phrase: Phrase) => {
     toggleFavorite({
       id: phrase.id,
       text: phrase.text,
@@ -409,10 +409,10 @@ const Library = () => {
       source: 'library',
       durationMinutes: 1,
     });
-  };
+  }, [toggleFavorite]);
 
   // Get phrase count for a top-level category
-  const getPhrasesForCategory = (cat: Category) => {
+  const getPhrasesForCategory = useCallback((cat: Category) => {
     if (cat.dataCategory && cat.dataSubCategory) {
       return samplePhrases.filter(p => p.category === cat.dataCategory && p.subCategory === cat.dataSubCategory);
     }
@@ -420,10 +420,10 @@ const Library = () => {
       return samplePhrases.filter(p => p.category === cat.dataCategory && p.timeOfDay === cat.dataTimeOfDay);
     }
     return samplePhrases.filter(p => p.category === cat.id);
-  };
+  }, [samplePhrases]);
 
   // Filtered phrases for selected category
-  const filteredPhrases = selectedCategory
+  const filteredPhrases = useMemo(() => selectedCategory
     ? samplePhrases.filter(phrase => {
         // Virtual category filtering
         if (selectedCategory.dataCategory) {
@@ -439,7 +439,7 @@ const Library = () => {
         const matchesSearch = searchQuery ? phrase.text.toLowerCase().includes(searchQuery.toLowerCase()) : true;
         return matchesCategory && matchesSub && matchesSearch;
       })
-    : [];
+    : [], [selectedCategory, samplePhrases, selectedSubCategory, searchQuery]);
 
   // Category detail view (like routine detail)
   if (selectedCategory && selectedCategory.id === "myPhrases") {
@@ -706,61 +706,34 @@ const Library = () => {
               {filteredPhrases.map((phrase, index) => {
                 const isAutoPlaying = sequentialPlayer.isPlaying && sequentialPlayer.currentPhraseId === phrase.id;
                 return (
-                <Card
-                  key={phrase.id}
-                  className={`p-4 border-2 hover-lift animate-fade-in transition-colors ${isAutoPlaying ? "border-primary bg-primary/5" : ""}`}
-                  style={{ animationDelay: `${index * 0.05}s` }}
-                >
-                  <div className="flex items-start gap-3">
-                    <PlayButton
-                      isPlaying={playingId === phrase.id && (audioPlayer.isPlaying || pausableAudio.isPlaying)}
-                      isLoading={isGenerating && playingId === phrase.id}
-                      onPlay={() => handlePlayPhrase(phrase)}
-                      onPause={() => {
-                        pausableAudio.stop();
-                        audioPlayer.pause();
-                        setPlayingId(null);
-                      }}
-                      variant="secondary"
-                      size="icon"
-                      className="flex-shrink-0"
-                    />
-
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium mb-1 break-words">
-                        {getTextWithoutPauses(phrase.text)}
-                      </p>
-
-                      {playingId === phrase.id && pausableAudio.isPaused && (
-                        <div className="mt-2 flex items-center gap-2 text-xs text-primary animate-pulse">
-                          <Timer className="w-4 h-4" />
-                          <span>
-                            {language === 'pt' ? 'Sua vez de falar!' : language === 'en' ? 'Your turn to speak!' : '¡Tu turno de hablar!'} ({pausableAudio.pauseTimeRemaining}s)
-                          </span>
-                        </div>
-                      )}
-                    </div>
-
-                    <Button size="icon" variant="ghost" className="flex-shrink-0" onClick={() => handleToggleFavorite(phrase)}>
-                      <Star className={cn("w-5 h-5", isFavorite(phrase.id) && "fill-highlight text-highlight")} />
-                    </Button>
-
-                    <PhraseOptionsMenu phraseId={phrase.id} phraseText={phrase.text} phraseSource="library" />
-                  </div>
-
-                  {playingId === phrase.id && audioPlayer.duration > 0 && (
-                    <AudioControls
-                      volume={audioPlayer.volume}
-                      playbackRate={audioPlayer.playbackRate}
-                      currentTime={audioPlayer.currentTime}
-                      duration={audioPlayer.duration}
-                      onVolumeChange={audioPlayer.setVolume}
-                      onPlaybackRateChange={audioPlayer.setPlaybackRate}
-                      onSeek={audioPlayer.seek}
-                      className="mt-3"
-                    />
-                  )}
-                </Card>
+                  <PhraseItem 
+                    key={phrase.id}
+                    phrase={phrase}
+                    index={index}
+                    isPlaying={playingId === phrase.id && (audioPlayer.isPlaying || pausableAudio.isPlaying)}
+                    isLoading={isGenerating && playingId === phrase.id}
+                    isAutoPlaying={isAutoPlaying}
+                    isPaused={pausableAudio.isPaused}
+                    pauseTimeRemaining={pausableAudio.pauseTimeRemaining}
+                    isFavorite={isFavorite(phrase.id)}
+                    onPlay={handlePlayPhrase}
+                    onPause={() => {
+                      pausableAudio.stop();
+                      audioPlayer.pause();
+                      setPlayingId(null);
+                    }}
+                    onToggleFavorite={handleToggleFavorite}
+                    duration={audioPlayer.duration}
+                    audioControlsProps={{
+                      volume: audioPlayer.volume,
+                      playbackRate: audioPlayer.playbackRate,
+                      currentTime: audioPlayer.currentTime,
+                      duration: audioPlayer.duration,
+                      onVolumeChange: audioPlayer.setVolume,
+                      onPlaybackRateChange: audioPlayer.setPlaybackRate,
+                      onSeek: audioPlayer.seek,
+                    }}
+                  />
                 );
               })}
             </div>
