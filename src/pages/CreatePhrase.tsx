@@ -227,8 +227,11 @@ const CreatePhrase = () => {
               <div className="flex gap-2">
                 <PlayButton
                   isPlaying={audioPlayer.isPlaying}
-                  isLoading={audioPlayer.isLoading || !audioUrl}
-                  onPlay={() => audioUrl && audioPlayer.play(audioUrl)}
+                  isLoading={audioPlayer.isLoading || (songMode ? !songUrl : !audioUrl)}
+                  onPlay={() => {
+                    const u = songMode ? songUrl : audioUrl;
+                    if (u) audioPlayer.play(u);
+                  }}
                   onPause={audioPlayer.pause}
                   variant="secondary"
                   size="lg"
