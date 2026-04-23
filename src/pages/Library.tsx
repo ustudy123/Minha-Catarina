@@ -137,6 +137,128 @@ const Library = () => {
     { id: "myPhrases", name: t.library.categories.myPhrases || "Minhas Frases", icon: Sparkles, premium: true },
   ];
 
+  const subCategoryDefinitions: Record<string, SubCategory[]> = {
+    education: [
+      { id: "arco-iris", name: "Arco-Íris", icon: Rainbow },
+      { id: "numeros", name: "Números", icon: Hash },
+      { id: "animais", name: "Animais", icon: PawPrint },
+      { id: "partes-do-corpo", name: "Partes do Corpo", icon: Brain },
+      { id: "cores", name: "Cores", icon: Palette },
+      { id: "formas-geometricas", name: "Formas Geométricas", icon: Shapes },
+      { id: "outros-temas", name: "Outros Temas", icon: Lightbulb },
+    ],
+    playtime: [
+      { id: "encontre", name: "Encontre", icon: SearchIcon },
+      { id: "imitacao", name: "Imitação", icon: Copy },
+      { id: "partes-do-corpo", name: "Partes do Corpo", icon: Brain },
+      { id: "caretas", name: "Caretas", icon: Smile },
+    ],
+    prayers: [
+      { id: "santo-anjo", name: "Santo Anjo", icon: HandHeart },
+      { id: "pai-nosso", name: "Pai Nosso", icon: HandHeart },
+      { id: "sao-longuinho", name: "São Longuinho", icon: Eye },
+    ],
+    stories: [
+      { id: "introducao-historias", name: "Introdução", icon: BookOpen },
+      { id: "tres-porquinhos", name: "Os Três Porquinhos", icon: BookHeart },
+      { id: "chapeuzinho-vermelho", name: "Chapeuzinho Vermelho", icon: BookHeart },
+      { id: "galinha-ruiva", name: "A Galinha Ruiva", icon: BookHeart },
+      { id: "coelhinho-pascoa", name: "O Coelhinho da Páscoa", icon: BookHeart },
+      { id: "leao-e-ratinho", name: "O Leão e o Ratinho", icon: BookHeart },
+      { id: "sapo-bocarrao", name: "O Sapo Bocarrão", icon: BookHeart },
+      { id: "nuvem-dividir", name: "A Nuvem que Aprendeu a Dividir", icon: BookHeart },
+      { id: "ursinho-esperar", name: "O Ursinho que Não Gostava de Esperar", icon: BookHeart },
+      { id: "coelhinha-verdade", name: "A Coelhinha que Falou a Verdade", icon: BookHeart },
+      { id: "leao-gentil", name: "O Leão que Aprendeu a Ser Gentil", icon: BookHeart },
+      { id: "dragao-raiva", name: "O Dragão que Aprendeu a Controlar a Raiva", icon: BookHeart },
+      { id: "macaquinho-brinquedos", name: "O Macaquinho que Não Guardava os Brinquedos", icon: BookHeart },
+      { id: "lebre-tartaruga", name: "A Lebre e a Tartaruga", icon: BookHeart },
+      { id: "branca-de-neve", name: "Branca de Neve", icon: BookHeart },
+      { id: "aladim", name: "Aladim", icon: BookHeart },
+      { id: "cinderela", name: "Cinderela", icon: BookHeart },
+      { id: "pinoquio", name: "Pinóquio", icon: BookHeart },
+      { id: "viloes-aprender", name: "Os Vilões Resolveram Aprender", icon: BookHeart },
+      { id: "grande-baile", name: "O Grande Baile da Floresta", icon: BookHeart },
+      { id: "jardim-eden", name: "O Jardim do Éden", icon: BookHeart },
+      { id: "sementinha-corajosa", name: "A Sementinha Corajosa", icon: BookHeart },
+      { id: "tartaruga-apressada", name: "A Tartaruga Apressada", icon: BookHeart },
+      { id: "princesa-escola", name: "A Princesa que Foi para a Escola", icon: BookHeart },
+      { id: "lapis-magico", name: "O Lápis Mágico da Escola", icon: BookHeart },
+      { id: "pirata-tesouros", name: "O Pirata que Procurava Tesouros", icon: BookHeart },
+      { id: "astronauta-estrelas", name: "O Astronauta que Conversava com Estrelas", icon: BookHeart },
+    ],
+    poems: [
+      { id: "introducao-poemas", name: "Introdução", icon: Feather },
+      { id: "dedinhos", name: "Dedinhos", icon: Feather },
+      { id: "batatinha", name: "Batatinha", icon: Feather },
+      { id: "uni-duni", name: "Uni Duni", icon: Feather },
+      { id: "1-2-3", name: "1, 2, 3...", icon: Feather },
+      { id: "sou-pequena", name: "Sou Pequena", icon: Feather },
+      { id: "mamae-papai", name: "Mamãe e Papai", icon: Feather },
+      { id: "rei-capitao", name: "Rei Capitão", icon: Feather },
+      { id: "casinha-vo", name: "Casinha da Vó", icon: Feather },
+      { id: "bruxinha", name: "Bruxinha", icon: Feather },
+      { id: "galinha", name: "Galinha", icon: Feather },
+      { id: "colo", name: "Colo", icon: Feather },
+    ],
+    songs: [
+      { id: "introducao-musicas", name: "Introdução", icon: Music },
+      { id: "ciranda", name: "Ciranda Cirandinha", icon: Music },
+      { id: "abraco", name: "Abraço", icon: Music },
+      { id: "barata", name: "Barata", icon: Music },
+      { id: "alecrim", name: "Alecrim", icon: Music },
+      { id: "pombinha-branca", name: "Pombinha Branca", icon: Music },
+      { id: "indiozinho", name: "Indiozinho", icon: Music },
+      { id: "numero-zero", name: "Número Zero", icon: Music },
+      { id: "mestre-andre", name: "Mestre André", icon: Music },
+      { id: "boi-cara-preta", name: "Boi da Cara Preta", icon: Music },
+      { id: "bota-aqui", name: "Bota Aqui", icon: Music },
+      { id: "requebradinha", name: "Requebradinha", icon: Music },
+      { id: "borboletas", name: "As Borboletas", icon: Music },
+      { id: "achou", name: "Achou", icon: Music },
+      { id: "dedinhos-musica", name: "Dedinhos", icon: Music },
+      { id: "parabens", name: "Parabéns", icon: Music },
+      { id: "casinha", name: "Casinha", icon: Music },
+      { id: "vira-virou", name: "Vira Virou", icon: Music },
+      { id: "estatua", name: "Estátua", icon: Music },
+      { id: "banho", name: "Banho", icon: Music },
+      { id: "parque", name: "Parque", icon: Music },
+      { id: "guarda", name: "Guarda", icon: Music },
+      { id: "lanchinho", name: "Meu Lanchinho", icon: Music },
+    ],
+  };
+
+  const hasSubCategories = (categoryId: string) => !!subCategoryDefinitions[categoryId];
+
+  // Get prerecorded phrases from translations
+  const samplePhrases: Phrase[] = t.library.prerecordedPhrases.map((phrase, index) => {
+    const categoryMap: Record<string, string> = {
+      routine: 'daily',
+      bedtime: 'daily',
+      meals: 'daily',
+      bath: 'daily',
+      languages: 'education',
+    };
+    const mappedCategory = categoryMap[phrase.category] || phrase.category;
+    const timeOfDayOptions: Array<'morning' | 'afternoon' | 'night'> = ['morning', 'afternoon', 'night'];
+    const timeOfDay = phrase.timeOfDay as 'morning' | 'afternoon' | 'night' || timeOfDayOptions[index % 3];
+    const phraseKey = `${language}_${mappedCategory}_${index}`;
+
+    return {
+      id: `phrase-${index}`,
+      text: phrase.text,
+      category: mappedCategory,
+      timeOfDay,
+      subCategory: (phrase as { subCategory?: string }).subCategory,
+      soundPrompt: (phrase as { soundPrompt?: string }).soundPrompt,
+      phraseKey,
+    };
+  });
+
+  const getSubCategoryPhraseCount = (categoryId: string, subId: string) => {
+    return samplePhrases.filter(p => p.category === categoryId && p.subCategory === subId).length;
+  };
+
   const isGenerating = isGeneratingTTS || isGeneratingSFX || isGeneratingSong || pausableAudio.isLoading;
 
   const handlePlayPhrase = async (phrase: Phrase) => {
