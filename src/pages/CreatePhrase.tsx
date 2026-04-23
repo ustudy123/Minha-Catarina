@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useTextToSpeech } from "@/hooks/useTextToSpeech";
+import { useTextToSong } from "@/hooks/useTextToSong";
 import { useSavedPhrases } from "@/hooks/useSavedPhrases";
 import { useLanguage, Language } from "@/contexts/LanguageContext";
 import { useSubscription } from "@/hooks/useSubscription";
@@ -15,11 +16,14 @@ import { toast } from "sonner";
 import { PlayButton } from "@/components/audio/PlayButton";
 import { AudioControls } from "@/components/audio/AudioControls";
 import { PremiumGate } from "@/components/PremiumGate";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import {
   ArrowLeft,
   Sparkles,
   Save,
   Volume2,
+  Music,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -27,9 +31,11 @@ const CreatePhrase = () => {
   const navigate = useNavigate();
   const [phraseText, setPhraseText] = useState("");
   const [generatingLang, setGeneratingLang] = useState<Language | null>(null);
+  const [songMode, setSongMode] = useState(false);
   const maxChars = 200;
 
   const { generate, isGenerating, audioUrl, audioBlob, reset } = useTextToSpeech();
+  const { generate: generateSong, isGenerating: isGeneratingSong, audioUrl: songUrl } = useTextToSong();
   const audioPlayer = useAudioPlayer();
   const { addPhrase } = useSavedPhrases();
   const { language } = useLanguage();
@@ -50,9 +56,16 @@ const CreatePhrase = () => {
 
     try {
       setGeneratingLang(targetLang);
-      const { url } = await generate({ text: phraseText, language: targetLang });
-      if (url) {
-        await audioPlayer.play(url);
+      if (songMode) {
+        const { url } = await generateSong({
+          text: phraseText,
+          style: 'nursery',
+          language: targetLang,
+        });
+        if (url) await audioPlayer.play(url);
+      } else {
+        const { url } = await generate({ text: phraseText, language: targetLang });
+        if (url) await audioPlayer.play(url);
       }
     } catch (error) {
       console.error('Error generating voice:', error);
@@ -161,6 +174,18 @@ const CreatePhrase = () => {
               maxLength={maxChars}
             />
 
+            {/* 🎵 Modo Música toggle */}
+            <div className="flex items-center justify-between p-3 rounded-xl bg-muted/40 border border-border/50">
+              <Label htmlFor="song-mode" className="flex items-center gap-2 cursor-pointer text-sm font-medium">
+                <Music className="w-4 h-4 text-primary" />
+                <span>Modo Música 🎵</span>
+                <span className="text-xs text-muted-foreground hidden sm:inline">
+                  (a IA canta a frase)
+                </span>
+              </Label>
+              <Switch id="song-mode" checked={songMode} onCheckedChange={setSongMode} />
+            </div>
+
             {/* 3 Language Buttons */}
             <div className="grid grid-cols-3 gap-2">
               {languageButtons.map(({ lang, flag, label }) => (
@@ -169,11 +194,11 @@ const CreatePhrase = () => {
                   size="lg"
                   variant="outline"
                   className="flex-1 gap-2"
-                  disabled={!phraseText.trim() || isGenerating}
+                  disabled={!phraseText.trim() || isGenerating || isGeneratingSong}
                   onClick={() => handleGenerateAndPlay(lang)}
                 >
                   {generatingLang === lang ? (
-                    <span className="animate-pulse">...</span>
+                    <span className="animate-pulse">{songMode ? '🎵' : '...'}</span>
                   ) : (
                     <>
                       <span className="text-lg">{flag}</span>
@@ -202,8 +227,11 @@ const CreatePhrase = () => {
               <div className="flex gap-2">
                 <PlayButton
                   isPlaying={audioPlayer.isPlaying}
-                  isLoading={audioPlayer.isLoading || !audioUrl}
-                  onPlay={() => audioUrl && audioPlayer.play(audioUrl)}
+                  isLoading={audioPlayer.isLoading || (songMode ? !songUrl : !audioUrl)}
+                  onPlay={() => {
+                    const u = songMode ? songUrl : audioUrl;
+                    if (u) audioPlayer.play(u);
+                  }}
                   onPause={audioPlayer.pause}
                   variant="secondary"
                   size="lg"

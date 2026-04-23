@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useTextToSpeech } from "@/hooks/useTextToSpeech";
+import { useTextToSong } from "@/hooks/useTextToSong";
 import { useSoundEffects } from "@/hooks/useSoundEffects";
 import { useLibraryAudio } from "@/hooks/useLibraryAudio";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -105,6 +106,7 @@ const Library = () => {
   const audioPlayer = useAudioPlayer();
   const pausableAudio = usePausableAudio();
   const { generate: generateTTS, isGenerating: isGeneratingTTS } = useTextToSpeech();
+  const { generate: generateSong, isGenerating: isGeneratingSong } = useTextToSong();
   const { generate: generateSFX, isGenerating: isGeneratingSFX } = useSoundEffects();
   const { getAudioUrl, hasPreloadedAudio } = useLibraryAudio();
   const { language } = useLanguage();
@@ -258,7 +260,7 @@ const Library = () => {
     return samplePhrases.filter(p => p.category === categoryId && p.subCategory === subId).length;
   };
 
-  const isGenerating = isGeneratingTTS || isGeneratingSFX || pausableAudio.isLoading;
+  const isGenerating = isGeneratingTTS || isGeneratingSFX || isGeneratingSong || pausableAudio.isLoading;
 
   const handlePlayPhrase = async (phrase: Phrase) => {
     if (playingId === phrase.id) {
@@ -292,6 +294,16 @@ const Library = () => {
 
       if (phrase.category === 'sounds' && phrase.soundPrompt) {
         const { url } = await generateSFX({ prompt: phrase.soundPrompt, duration: 10 });
+        if (url) {
+          await audioPlayer.play(url);
+        }
+      } else if (phrase.category === 'songs') {
+        // 🎵 Sing the song using ElevenLabs Music API
+        const { url } = await generateSong({
+          text: phrase.text,
+          style: 'nursery',
+          language: language as 'pt' | 'en' | 'es',
+        });
         if (url) {
           await audioPlayer.play(url);
         }
