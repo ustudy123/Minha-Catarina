@@ -29,15 +29,18 @@ vi.mock('@/contexts/AuthContext', () => ({
 describe('useFavorites', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockQueryBuilder.order.mockResolvedValue({ data: [], error: null });
   });
 
-  it('should initialize correctly', () => {
+  it('should initialize correctly', async () => {
     const { result } = renderHook(() => useFavorites());
     expect(result.current.isLoading).toBe(true);
+    await act(async () => {
+        await new Promise(resolve => setTimeout(resolve, 0));
+    });
   });
 
   it('should add a new favorite', async () => {
-    mockQueryBuilder.order.mockResolvedValue({ data: [], error: null });
     mockQueryBuilder.maybeSingle.mockResolvedValueOnce({ data: null, error: null });
     mockQueryBuilder.single.mockResolvedValueOnce({ data: { id: '2', text: 'New', category: 'cat' }, error: null });
 
