@@ -219,7 +219,7 @@ serve(async (req) => {
           }),
         }
       );
-... keep existing code
+
 
       if (response.status === 429 && attempt < maxRetries - 1) {
         const waitMs = Math.pow(2, attempt + 1) * 1000; // 2s, 4s
