@@ -69,6 +69,7 @@ export const useTextToSpeech = () => {
             text,
             voiceId: voiceId || selectedVoice.voiceId,
             ...(language ? { targetLanguage: language } : {}),
+            contentType,
           }),
         }
       );
