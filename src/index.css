@@ -75,6 +75,7 @@ All colors MUST be HSL.
     --sidebar-ring: 217.2 91.2% 59.8%;
 
   /* Gradients for magical touches */
+
     --gradient-primary: linear-gradient(135deg, hsl(355 100% 80%), hsl(273 100% 89%));
     --gradient-accent: linear-gradient(135deg, hsl(196 76% 75%), hsl(273 100% 89%));
     --gradient-highlight: linear-gradient(135deg, hsl(53 100% 85%), hsl(355 100% 80%));
