@@ -173,7 +173,12 @@ export function useSequentialPlayer() {
     };
 
     try {
-      const { url } = await generate({ text: currentPhrase.text, silent: true });
+      const isMusic = currentPhrase.category === 'música' || currentPhrase.category === 'music' || currentPhrase.category === 'Songs';
+      const { url } = await generate({ 
+        text: currentPhrase.text, 
+        silent: true,
+        contentType: isMusic ? 'música' : 'frase'
+      });
       if (!isPlayingRef.current) return;
 
       if (!url) {
