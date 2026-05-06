@@ -141,7 +141,7 @@ const Favorites = () => {
     }
   };
 
-  const handlePlay = async (phraseId: string, text: string) => {
+  const handlePlay = async (phraseId: string, text: string, category?: string) => {
     if (playingId === phraseId && audioPlayer.isPlaying) {
       audioPlayer.pause();
       setPlayingId(null);
