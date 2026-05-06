@@ -8,6 +8,7 @@ export interface TTSOptions {
   language?: 'pt' | 'en' | 'es';
   voiceId?: string;
   silent?: boolean; // suppress toast notifications (for auto-play)
+  contentType?: 'música' | 'história' | 'frase';
 }
 
 export interface TTSState {
