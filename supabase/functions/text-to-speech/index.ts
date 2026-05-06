@@ -8,8 +8,8 @@ const corsHeaders = {
 };
 
 // Generate a simple hash for cache key
-function generateCacheKey(text: string, voiceId: string): string {
-  const input = `${text.toLowerCase().trim()}_${voiceId}`;
+function generateCacheKey(text: string, voiceId: string, contentType?: string): string {
+  const input = `${text.toLowerCase().trim()}_${voiceId}_${contentType || 'standard'}`;
   let hash = 0;
   for (let i = 0; i < input.length; i++) {
     const char = input.charCodeAt(i);
@@ -17,6 +17,58 @@ function generateCacheKey(text: string, voiceId: string): string {
     hash = hash & hash;
   }
   return Math.abs(hash).toString(36);
+}
+
+function formatarTextoMusica(texto: string): string {
+  let formatado = texto
+    .replace(/Ah ra ra/g, "Ah... ra... ra...")
+    .replace(/iu ru ru/g, "iu... ru... ru...")
+    .replace(/rim rim rim/g, "rim... rim... rim...")
+    .replace(/iá ro ró/g, "i-á... ro... ró...")
+    .replace(/!/g, "!...")
+    .replace(/,/g, ",...");
+
+  // Adicionar quebra de pausa entre estrofes (linhas vazias viram "... ... ...")
+  formatado = formatado.replace(/\n\s*\n/g, "\n... ... ...\n");
+
+  // Onomatopéias em sequência (ra, ru, rim, ró, rá) separadas por hífen com espaço
+  formatado = formatado.replace(/\b(ra|ru|rim|ró|rá)\s+(ra|ru|rim|ró|rá)\b/gi, "$1 - $2");
+
+  // Refrões (linhas curtas < 40 chars) - separar palavras por " - "
+  const linhas = formatado.split("\n");
+  const processadas = linhas.map(linha => {
+    const limpa = linha.trim();
+    if (limpa.length > 0 && limpa.length < 40 && !limpa.includes("...")) {
+      // É provavelmente um refrão ou verso curto, mas evitamos estragar onde já tem pausa
+      return limpa.split(/\s+/).join(" - ");
+    }
+    // Final de cada estrofe (antes de uma linha de pausa ou fim do texto) com "..."
+    return linha;
+  });
+
+  return processadas.join("\n");
+}
+
+function wrapInSSML(text: string): string {
+  const lines = text.split("\n");
+  const ssmlLines = lines.map((line, index) => {
+    const trimmed = line.trim();
+    if (trimmed === "... ... ...") {
+      return '<break time="600ms"/>';
+    }
+    if (trimmed.length === 0) return "";
+    
+    let processedLine = trimmed;
+    // Adicionar <break time="150ms"/> após vírgulas em linhas curtas (refrões)
+    if (trimmed.length < 40 && trimmed.includes(",")) {
+      processedLine = processedLine.replace(/,/g, ',<break time="150ms"/>');
+    }
+    
+    // Adicionar <break time="300ms"/> ao final de cada verso
+    return `${processedLine}<break time="300ms"/>`;
+  });
+
+  return `<speak>\n${ssmlLines.filter(l => l).join("\n")}\n</speak>`;
 }
 
 // Translate text using Lovable AI Gateway
