@@ -8,6 +8,7 @@ export interface TTSOptions {
   language?: 'pt' | 'en' | 'es';
   voiceId?: string;
   silent?: boolean; // suppress toast notifications (for auto-play)
+  contentType?: 'música' | 'história' | 'frase';
 }
 
 export interface TTSState {
@@ -28,7 +29,7 @@ export const useTextToSpeech = () => {
     cached: false,
   });
 
-  const generate = useCallback(async ({ text, language, voiceId, silent }: TTSOptions) => {
+  const generate = useCallback(async ({ text, language, voiceId, silent, contentType }: TTSOptions) => {
     try {
       setState(prev => ({ ...prev, isGenerating: true, error: null }));
 
@@ -40,7 +41,7 @@ export const useTextToSpeech = () => {
 
       // Check preloader cache first
       const { audioCache } = await import('./useAudioPreloader');
-      const cacheKey = `${text}_${language || 'pt'}_${voiceId || selectedVoice.voiceId}`;
+      const cacheKey = `${text}_${language || 'pt'}_${voiceId || selectedVoice.voiceId}_${contentType || 'standard'}`;
       const preloaded = audioCache.get(cacheKey);
 
       if (preloaded) {
@@ -68,6 +69,7 @@ export const useTextToSpeech = () => {
             text,
             voiceId: voiceId || selectedVoice.voiceId,
             ...(language ? { targetLanguage: language } : {}),
+            contentType,
           }),
         }
       );

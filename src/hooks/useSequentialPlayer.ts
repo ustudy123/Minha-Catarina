@@ -5,6 +5,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 export interface PlayablePhrase {
   id: string;
   text: string;
+  category?: string;
 }
 
 interface SequentialPlayerState {
@@ -172,7 +173,12 @@ export function useSequentialPlayer() {
     };
 
     try {
-      const { url } = await generate({ text: currentPhrase.text, silent: true });
+      const isMusic = currentPhrase.category === 'música' || currentPhrase.category === 'music' || currentPhrase.category === 'Songs';
+      const { url } = await generate({ 
+        text: currentPhrase.text, 
+        silent: true,
+        contentType: isMusic ? 'música' : 'frase'
+      });
       if (!isPlayingRef.current) return;
 
       if (!url) {

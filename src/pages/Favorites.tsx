@@ -141,7 +141,7 @@ const Favorites = () => {
     }
   };
 
-  const handlePlay = async (phraseId: string, text: string) => {
+  const handlePlay = async (phraseId: string, text: string, category?: string) => {
     if (playingId === phraseId && audioPlayer.isPlaying) {
       audioPlayer.pause();
       setPlayingId(null);
@@ -150,7 +150,12 @@ const Favorites = () => {
 
     try {
       setPlayingId(phraseId);
-      const { url } = await generate({ text, language });
+      const isMusic = category === 'música' || category === 'music' || category === 'Songs';
+      const { url } = await generate({ 
+        text, 
+        language,
+        contentType: isMusic ? 'música' : 'frase'
+      });
       if (url) {
         await audioPlayer.play(url);
       }
@@ -337,7 +342,7 @@ const Favorites = () => {
                             sequentialPlayer.currentPhraseId === phrase.id
                           }
                           isLoading={isGenerating && playingId === phrase.id}
-                          onPlay={() => handlePlay(phrase.id, phrase.text)}
+                          onPlay={() => handlePlay(phrase.id, phrase.text, phrase.category)}
                           onPause={audioPlayer.pause}
                           variant="secondary"
                           size="icon"
