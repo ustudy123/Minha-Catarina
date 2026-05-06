@@ -41,7 +41,7 @@ export const useTextToSpeech = () => {
 
       // Check preloader cache first
       const { audioCache } = await import('./useAudioPreloader');
-      const cacheKey = `${text}_${language || 'pt'}_${voiceId || selectedVoice.voiceId}`;
+      const cacheKey = `${text}_${language || 'pt'}_${voiceId || selectedVoice.voiceId}_${contentType || 'standard'}`;
       const preloaded = audioCache.get(cacheKey);
 
       if (preloaded) {
