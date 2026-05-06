@@ -9,8 +9,10 @@ import { useAudioPreloader } from "@/hooks/useAudioPreloader";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { getTranslations } from "@/translations";
 import { PlayButton } from "@/components/audio/PlayButton";
+import { AutoPlayControls } from "@/components/AutoPlayControls";
+import { useSequentialPlayer } from "@/hooks/useSequentialPlayer";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { ArrowLeft, Timer, Loader2 } from "lucide-react";
+import { ArrowLeft, Timer, Loader2, Play, Square } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface LanguagePhrase {
@@ -30,6 +32,7 @@ const Languages = () => {
   const [playingId, setPlayingId] = useState<string | null>(null);
   
   const pausableAudio = usePausableAudio();
+  const sequentialPlayer = useSequentialPlayer();
   const { preloadMany, isPreloading, preloadedCount, preloadingCount } = useAudioPreloader();
   const { language } = useLanguage();
   const t = getTranslations(language);
@@ -65,16 +68,23 @@ const Languages = () => {
     if (phrasesToPreload.length > 0) {
       preloadMany(phrasesToPreload, { delayMs: 150, maxConcurrent: 2 });
     }
+
+    // Stop sequential player when switching tabs
+    if (sequentialPlayer.isPlaying) {
+      sequentialPlayer.stop();
+    }
   }, [selectedLanguage]);
 
   const handlePlayPhrase = async (phrase: LanguagePhrase) => {
-    if (playingId === phrase.id && pausableAudio.isPlaying) {
+    if ((playingId === phrase.id && pausableAudio.isPlaying) || (sequentialPlayer.isPlaying && sequentialPlayer.currentPhraseId === phrase.id)) {
       pausableAudio.stop();
+      sequentialPlayer.stop();
       setPlayingId(null);
       return;
     }
 
     try {
+      sequentialPlayer.stop();
       setPlayingId(phrase.id);
       // Play without translation - the phrases already contain mixed languages as-is
       // e.g., "How are you?" should be spoken in English, not translated
@@ -150,6 +160,16 @@ const Languages = () => {
         </header>
 
         <main className="container mx-auto px-4 py-6 max-w-2xl space-y-6">
+          {/* Auto Play Controls */}
+          {currentPhrases.length > 0 && (
+            <div className="animate-fade-in">
+              <AutoPlayControls 
+                phrases={currentPhrases} 
+                sequentialPlayer={sequentialPlayer} 
+              />
+            </div>
+          )}
+
           {/* Language Selection Tabs */}
           <Tabs value={selectedLanguage} onValueChange={(v) => !lockedLanguage && setSelectedLanguage(v as "english" | "spanish")}>
             {!lockedLanguage && (
@@ -194,17 +214,21 @@ const Languages = () => {
                         <Card 
                           key={phrase.id}
                           className={cn(
-                            "p-4 border-2 hover-lift animate-fade-in",
-                            playingId === phrase.id && pausableAudio.isPlaying && "border-primary bg-primary/5"
+                            "p-4 border-2 hover-lift animate-fade-in transition-colors",
+                            ((playingId === phrase.id && pausableAudio.isPlaying) || (sequentialPlayer.isPlaying && sequentialPlayer.currentPhraseId === phrase.id)) && "border-primary bg-primary/5"
                           )}
                           style={{ animationDelay: `${index * 0.05}s` }}
                         >
                           <div className="flex items-start gap-3">
                             <PlayButton
-                              isPlaying={playingId === phrase.id && pausableAudio.isPlaying}
-                              isLoading={pausableAudio.isLoading && playingId === phrase.id}
-                              onPlay={() => handlePlayPhrase(phrase)}
-                              onPause={() => { pausableAudio.stop(); setPlayingId(null); }}
+                               isPlaying={(playingId === phrase.id && pausableAudio.isPlaying) || (sequentialPlayer.isPlaying && sequentialPlayer.currentPhraseId === phrase.id)}
+                               isLoading={(pausableAudio.isLoading && playingId === phrase.id) || (sequentialPlayer.isPlaying && sequentialPlayer.currentPhraseId === phrase.id && !pausableAudio.isPlaying)}
+                               onPlay={() => handlePlayPhrase(phrase)}
+                               onPause={() => { 
+                                 pausableAudio.stop(); 
+                                 sequentialPlayer.stop();
+                                 setPlayingId(null); 
+                               }}
                               variant="secondary"
                               size="icon"
                               className="flex-shrink-0"
@@ -260,17 +284,21 @@ const Languages = () => {
                         <Card 
                           key={phrase.id}
                           className={cn(
-                            "p-4 border-2 hover-lift animate-fade-in",
-                            playingId === phrase.id && pausableAudio.isPlaying && "border-primary bg-primary/5"
+                            "p-4 border-2 hover-lift animate-fade-in transition-colors",
+                            ((playingId === phrase.id && pausableAudio.isPlaying) || (sequentialPlayer.isPlaying && sequentialPlayer.currentPhraseId === phrase.id)) && "border-primary bg-primary/5"
                           )}
                           style={{ animationDelay: `${index * 0.05}s` }}
                         >
                           <div className="flex items-start gap-3">
                             <PlayButton
-                              isPlaying={playingId === phrase.id && pausableAudio.isPlaying}
-                              isLoading={pausableAudio.isLoading && playingId === phrase.id}
-                              onPlay={() => handlePlayPhrase(phrase)}
-                              onPause={() => { pausableAudio.stop(); setPlayingId(null); }}
+                               isPlaying={(playingId === phrase.id && pausableAudio.isPlaying) || (sequentialPlayer.isPlaying && sequentialPlayer.currentPhraseId === phrase.id)}
+                               isLoading={(pausableAudio.isLoading && playingId === phrase.id) || (sequentialPlayer.isPlaying && sequentialPlayer.currentPhraseId === phrase.id && !pausableAudio.isPlaying)}
+                               onPlay={() => handlePlayPhrase(phrase)}
+                               onPause={() => { 
+                                 pausableAudio.stop(); 
+                                 sequentialPlayer.stop();
+                                 setPlayingId(null); 
+                               }}
                               variant="secondary"
                               size="icon"
                               className="flex-shrink-0"
