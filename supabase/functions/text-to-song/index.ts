@@ -40,7 +40,15 @@ function buildMusicPrompt(lyrics: string, style: string, language: string): stri
   return `A children's song in the style of a ${styleDescription}. The vocals should be a sweet, friendly female voice singing in ${lang} with clear pronunciation. Use simple and repetitive phrases suitable for young children. Sing the following lyrics exactly as written, every word must be sung clearly: "${lyrics}"`;
 }
 
-function buildSafeFallbackPrompt(style: string, language: string): string {
+function sanitizeLyricsForPrompt(lyrics: string): string {
+  // Remove quotes and characters that may confuse the prompt parser/ToS filter
+  return lyrics
+    .replace(/["""'']/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function buildSafeFallbackPrompt(lyrics: string, style: string, language: string): string {
   const langName: Record<string, string> = {
     pt: 'Brazilian Portuguese',
     en: 'English',
@@ -54,7 +62,9 @@ function buildSafeFallbackPrompt(style: string, language: string): string {
     nursery: 'classic nursery rhyme with a simple melody, ukulele and bells, very child-friendly, and clear rhythm',
   };
   const styleDescription = styleHints[style] || styleHints.nursery;
-  return `A children's song inspired by classic nursery rhymes, featuring a ${styleDescription}. The vocals should be a sweet, friendly female voice singing in ${lang} with clear pronunciation. Use simple and repetitive phrases suitable for young children, with original lyrics that evoke themes of friendship, love, and nature, maintaining a playful and gentle tone.`;
+  const safeLyrics = sanitizeLyricsForPrompt(lyrics);
+  // Keep ToS-friendly wording but always pin the lyrics so the model sings the requested song.
+  return `A children's song inspired by classic nursery rhymes, featuring a ${styleDescription}. The vocals should be a sweet, friendly female voice singing in ${lang} with clear pronunciation, using simple and repetitive phrases suitable for young children, with a playful and gentle tone. Sing exactly these lyrics, repeating as needed to fit the melody: ${safeLyrics}`;
 }
 
 function preprocessLyrics(text: string): string {
@@ -160,7 +170,7 @@ serve(async (req) => {
       const isBadPrompt = errText.includes('bad_prompt') || errText.includes('Terms of Service');
       if (isBadPrompt) {
         console.warn('[text-to-song] bad_prompt detected, retrying with safe fallback prompt');
-        const safePrompt = buildSafeFallbackPrompt(style, language);
+        const safePrompt = buildSafeFallbackPrompt(cleanedText, style, language);
         response = await fetch('https://api.elevenlabs.io/v1/music', {
           method: 'POST',
           headers: {
