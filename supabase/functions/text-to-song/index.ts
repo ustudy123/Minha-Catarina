@@ -40,6 +40,23 @@ function buildMusicPrompt(lyrics: string, style: string, language: string): stri
   return `A children's song in the style of a ${styleDescription}. The vocals should be a sweet, friendly female voice singing in ${lang} with clear pronunciation. Use simple and repetitive phrases suitable for young children. Sing the following lyrics exactly as written, every word must be sung clearly: "${lyrics}"`;
 }
 
+function buildSafeFallbackPrompt(style: string, language: string): string {
+  const langName: Record<string, string> = {
+    pt: 'Brazilian Portuguese',
+    en: 'English',
+    es: 'Spanish',
+  };
+  const lang = langName[language] || 'Brazilian Portuguese';
+  const styleHints: Record<string, string> = {
+    lullaby: 'soft lullaby with gentle acoustic guitar, slow tempo, calm and soothing',
+    cheerful: 'cheerful upbeat children song with playful piano and light percussion',
+    calm: 'calm children song with soft piano, peaceful and warm, steady pace',
+    nursery: 'classic nursery rhyme with a simple melody, ukulele and bells, very child-friendly, and clear rhythm',
+  };
+  const styleDescription = styleHints[style] || styleHints.nursery;
+  return `A children's song inspired by classic nursery rhymes, featuring a ${styleDescription}. The vocals should be a sweet, friendly female voice singing in ${lang} with clear pronunciation. Use simple and repetitive phrases suitable for young children, with original lyrics that evoke themes of friendship, love, and nature, maintaining a playful and gentle tone.`;
+}
+
 function preprocessLyrics(text: string): string {
   // Add commas after punctuation to encourage natural pauses and prevent skipping
   return text
@@ -128,7 +145,7 @@ serve(async (req) => {
       console.log(`[text-to-song] requested duration: ${finalDuration}s for ${text.split(/\s+/).length} words`);
     }
 
-    const response = await fetch('https://api.elevenlabs.io/v1/music', {
+    let response = await fetch('https://api.elevenlabs.io/v1/music', {
       method: 'POST',
       headers: {
         'xi-api-key': ELEVENLABS_API_KEY,
@@ -137,9 +154,33 @@ serve(async (req) => {
       body: JSON.stringify(musicBody),
     });
 
+    // If prompt was flagged as bad_prompt, retry with safe ToS-compliant prompt
+    if (!response.ok && response.status === 400) {
+      const errText = await response.text();
+      const isBadPrompt = errText.includes('bad_prompt') || errText.includes('Terms of Service');
+      if (isBadPrompt) {
+        console.warn('[text-to-song] bad_prompt detected, retrying with safe fallback prompt');
+        const safePrompt = buildSafeFallbackPrompt(style, language);
+        response = await fetch('https://api.elevenlabs.io/v1/music', {
+          method: 'POST',
+          headers: {
+            'xi-api-key': ELEVENLABS_API_KEY,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ ...musicBody, prompt: safePrompt }),
+        });
+      } else {
+        console.error('[text-to-song] ElevenLabs error', response.status, errText);
+        return new Response(
+          JSON.stringify({ error: `Music generation failed: ${response.status}`, details: errText }),
+          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+    }
+
     if (!response.ok) {
       const errText = await response.text();
-      console.error('[text-to-song] ElevenLabs error', response.status, errText);
+      console.error('[text-to-song] ElevenLabs error (after retry)', response.status, errText);
       return new Response(
         JSON.stringify({ error: `Music generation failed: ${response.status}`, details: errText }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
