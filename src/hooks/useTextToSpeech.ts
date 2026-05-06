@@ -29,7 +29,7 @@ export const useTextToSpeech = () => {
     cached: false,
   });
 
-  const generate = useCallback(async ({ text, language, voiceId, silent }: TTSOptions) => {
+  const generate = useCallback(async ({ text, language, voiceId, silent, contentType }: TTSOptions) => {
     try {
       setState(prev => ({ ...prev, isGenerating: true, error: null }));
 
