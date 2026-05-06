@@ -170,7 +170,7 @@ serve(async (req) => {
       const isBadPrompt = errText.includes('bad_prompt') || errText.includes('Terms of Service');
       if (isBadPrompt) {
         console.warn('[text-to-song] bad_prompt detected, retrying with safe fallback prompt');
-        const safePrompt = buildSafeFallbackPrompt(style, language);
+        const safePrompt = buildSafeFallbackPrompt(cleanedText, style, language);
         response = await fetch('https://api.elevenlabs.io/v1/music', {
           method: 'POST',
           headers: {
