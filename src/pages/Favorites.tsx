@@ -342,7 +342,7 @@ const Favorites = () => {
                             sequentialPlayer.currentPhraseId === phrase.id
                           }
                           isLoading={isGenerating && playingId === phrase.id}
-                          onPlay={() => handlePlay(phrase.id, phrase.text)}
+                          onPlay={() => handlePlay(phrase.id, phrase.text, phrase.category)}
                           onPause={audioPlayer.pause}
                           variant="secondary"
                           size="icon"
