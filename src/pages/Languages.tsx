@@ -68,6 +68,11 @@ const Languages = () => {
     if (phrasesToPreload.length > 0) {
       preloadMany(phrasesToPreload, { delayMs: 150, maxConcurrent: 2 });
     }
+
+    // Stop sequential player when switching tabs
+    if (sequentialPlayer.isPlaying) {
+      sequentialPlayer.stop();
+    }
   }, [selectedLanguage]);
 
   const handlePlayPhrase = async (phrase: LanguagePhrase) => {
