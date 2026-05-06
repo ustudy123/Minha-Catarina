@@ -150,7 +150,12 @@ const Favorites = () => {
 
     try {
       setPlayingId(phraseId);
-      const { url } = await generate({ text, language });
+      const isMusic = category === 'música' || category === 'music' || category === 'Songs';
+      const { url } = await generate({ 
+        text, 
+        language,
+        contentType: isMusic ? 'música' : 'frase'
+      });
       if (url) {
         await audioPlayer.play(url);
       }
