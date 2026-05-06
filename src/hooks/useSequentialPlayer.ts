@@ -5,6 +5,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 export interface PlayablePhrase {
   id: string;
   text: string;
+  category?: string;
 }
 
 interface SequentialPlayerState {
