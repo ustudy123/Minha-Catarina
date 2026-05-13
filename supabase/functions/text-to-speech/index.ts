@@ -188,7 +188,7 @@ serve(async (req) => {
 
     // Voice settings based on content type
     const voiceSettings = isMusic ? {
-      stability: 0.30,
+      stability: 0.45, // Aumentado de 0.30 para 0.45 para melhorar a clareza das palavras
       similarity_boost: 0.75,
       style: 0.55,
       use_speaker_boost: true
