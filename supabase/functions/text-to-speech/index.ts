@@ -24,25 +24,23 @@ function formatarTextoMusica(texto: string): string {
     .replace(/Ah ra ra/g, "Ah... ra... ra...")
     .replace(/iu ru ru/g, "iu... ru... ru...")
     .replace(/rim rim rim/g, "rim... rim... rim...")
-    .replace(/iá ro ró/g, "i-á... ro... ró...")
-    .replace(/!/g, "!...")
-    .replace(/,/g, ",...");
+    .replace(/iá ro ró/g, "iá... ro... ró..."); // Sem hífen e reticências excessivas em pontuação
+
 
   // Adicionar quebra de pausa entre estrofes (linhas vazias viram "... ... ...")
   formatado = formatado.replace(/\n\s*\n/g, "\n... ... ...\n");
 
-  // Onomatopéias em sequência (ra, ru, rim, ró, rá) separadas por hífen com espaço
-  formatado = formatado.replace(/\b(ra|ru|rim|ró|rá)\s+(ra|ru|rim|ró|rá)\b/gi, "$1 - $2");
+  // Onomatopéias em sequência - usamos reticências suaves em vez de hífen
+  formatado = formatado.replace(/\b(ra|ru|rim|ró|rá)\s+(ra|ru|rim|ró|rá)\b/gi, "$1... $2");
 
-  // Refrões (linhas curtas < 40 chars) - separar palavras por " - "
+  // Refrões (linhas curtas < 40 chars) - usar vírgula e espaço para ritmo sem quebrar a palavra
   const linhas = formatado.split("\n");
   const processadas = linhas.map(linha => {
     const limpa = linha.trim();
-    if (limpa.length > 0 && limpa.length < 40 && !limpa.includes("...")) {
-      // É provavelmente um refrão ou verso curto, mas evitamos estragar onde já tem pausa
-      return limpa.split(/\s+/).join(" - ");
+    if (limpa.length > 5 && limpa.length < 40 && !limpa.includes("...")) {
+      // Usamos vírgula para uma pausa rítmica que não interfere na leitura da palavra
+      return limpa.split(/\s+/).join(", ");
     }
-    // Final de cada estrofe (antes de uma linha de pausa ou fim do texto) com "..."
     return linha;
   });
 
@@ -189,7 +187,7 @@ serve(async (req) => {
 
     // Voice settings based on content type
     const voiceSettings = isMusic ? {
-      stability: 0.30,
+      stability: 0.45, // Aumentado de 0.30 para 0.45 para melhorar a clareza das palavras
       similarity_boost: 0.75,
       style: 0.55,
       use_speaker_boost: true
