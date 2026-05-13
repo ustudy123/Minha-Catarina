@@ -24,9 +24,8 @@ function formatarTextoMusica(texto: string): string {
     .replace(/Ah ra ra/g, "Ah... ra... ra...")
     .replace(/iu ru ru/g, "iu... ru... ru...")
     .replace(/rim rim rim/g, "rim... rim... rim...")
-    .replace(/iá ro ró/g, "iá... ro... ró...") // Removido o hífen que causava má pronúncia
-    .replace(/!/g, "!...")
-    .replace(/,/g, ",...");
+    .replace(/iá ro ró/g, "iá... ro... ró..."); // Sem hífen e reticências excessivas em pontuação
+
 
   // Adicionar quebra de pausa entre estrofes (linhas vazias viram "... ... ...")
   formatado = formatado.replace(/\n\s*\n/g, "\n... ... ...\n");
