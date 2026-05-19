@@ -46,29 +46,33 @@ const presentationPhrases: Record<string, string[]> = {
 const Presentation = () => {
   const { language } = useLanguage();
   const navigate = useNavigate();
-  const { generate, isGenerating } = useTextToSpeech();
+  const { generate } = useTextToSpeech();
   const audioPlayer = useAudioPlayer();
   const sequentialPlayer = useSequentialPlayer();
   const t = getTranslations(language);
   const phrases = presentationPhrases[language] || presentationPhrases.pt;
+  const [loadingId, setLoadingId] = useState<string | null>(null);
 
   const playablePhrases: PlayablePhrase[] = phrases.map((text, i) => ({
     id: `presentation-${i}`,
     text,
   }));
 
-  const handlePlay = async (text: string) => {
+  const handlePlay = async (text: string, id: string) => {
     if (audioPlayer.isPlaying) {
       audioPlayer.pause();
       return;
     }
     try {
+      setLoadingId(id);
       const { url } = await generate({ text, language });
       if (url) {
         await audioPlayer.play(url);
       }
     } catch (error) {
       console.error("Error playing phrase:", error);
+    } finally {
+      setLoadingId(null);
     }
   };
 
