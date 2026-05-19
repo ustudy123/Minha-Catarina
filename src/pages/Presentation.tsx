@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { PageTransition } from "@/components/PageTransition";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -46,29 +47,33 @@ const presentationPhrases: Record<string, string[]> = {
 const Presentation = () => {
   const { language } = useLanguage();
   const navigate = useNavigate();
-  const { generate, isGenerating } = useTextToSpeech();
+  const { generate } = useTextToSpeech();
   const audioPlayer = useAudioPlayer();
   const sequentialPlayer = useSequentialPlayer();
   const t = getTranslations(language);
   const phrases = presentationPhrases[language] || presentationPhrases.pt;
+  const [loadingId, setLoadingId] = useState<string | null>(null);
 
   const playablePhrases: PlayablePhrase[] = phrases.map((text, i) => ({
     id: `presentation-${i}`,
     text,
   }));
 
-  const handlePlay = async (text: string) => {
+  const handlePlay = async (text: string, id: string) => {
     if (audioPlayer.isPlaying) {
       audioPlayer.pause();
       return;
     }
     try {
+      setLoadingId(id);
       const { url } = await generate({ text, language });
       if (url) {
         await audioPlayer.play(url);
       }
     } catch (error) {
       console.error("Error playing phrase:", error);
+    } finally {
+      setLoadingId(null);
     }
   };
 
@@ -132,8 +137,8 @@ const Presentation = () => {
                   <p className="flex-1 text-sm">{phrase}</p>
                   <PlayButton
                     isPlaying={isCurrentPlaying}
-                    isLoading={isGenerating || audioPlayer.isLoading}
-                    onPlay={() => handlePlay(phrase)}
+                    isLoading={loadingId === `presentation-${index}` || (isCurrentPlaying && audioPlayer.isLoading)}
+                    onPlay={() => handlePlay(phrase, `presentation-${index}`)}
                     onPause={audioPlayer.pause}
                     size="sm"
                   />
