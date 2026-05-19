@@ -137,8 +137,8 @@ const Presentation = () => {
                   <p className="flex-1 text-sm">{phrase}</p>
                   <PlayButton
                     isPlaying={isCurrentPlaying}
-                    isLoading={isGenerating || audioPlayer.isLoading}
-                    onPlay={() => handlePlay(phrase)}
+                    isLoading={loadingId === `presentation-${index}` || (isCurrentPlaying && audioPlayer.isLoading)}
+                    onPlay={() => handlePlay(phrase, `presentation-${index}`)}
                     onPause={audioPlayer.pause}
                     size="sm"
                   />
