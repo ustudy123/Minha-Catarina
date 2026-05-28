@@ -52,6 +52,7 @@ export default function DailyPhrases() {
   const t = getTranslations(language);
   const { isFavorite, toggleFavorite: toggleFav } = useFavorites();
   const sequentialPlayer = useSequentialPlayer();
+  const { preloadMany } = useAudioPreloader();
 
   // Get phrases from translations and add isFavorite state
   const phrases = useMemo(() => {
