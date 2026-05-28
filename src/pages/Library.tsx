@@ -187,8 +187,8 @@ const Library = () => {
   const { generate: generateSong, isGenerating: isGeneratingSong } = useTextToSong();
   const { generate: generateSFX, isGenerating: isGeneratingSFX } = useSoundEffects();
   const { getAudioUrl, hasPreloadedAudio } = useLibraryAudio();
-  const { getAudioUrl, hasPreloadedAudio } = useLibraryAudio();
   const { preloadMany } = useAudioPreloader();
+  const { language } = useLanguage();
   const { isFavorite, toggleFavorite } = useFavorites();
   const { isPremium, canAccessMyPhrases } = useSubscription();
   const { phrases: savedPhrases, isLoading: loadingSaved, removePhrase, toggleFavorite: toggleSavedFavorite } = useSavedPhrases();
