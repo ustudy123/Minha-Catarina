@@ -70,7 +70,6 @@ const Favorites = () => {
   const audioPlayer = useAudioPlayer();
   const { generate, isGenerating } = useTextToSpeech();
   const sequentialPlayer = useSequentialPlayer();
-  const sequentialPlayer = useSequentialPlayer();
   const { preloadMany } = useAudioPreloader();
   const [playingId, setPlayingId] = useState<string | null>(null);
 
