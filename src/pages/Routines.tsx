@@ -18,6 +18,7 @@ import { useRoutines, Routine, RoutinePhrase } from '@/hooks/useRoutines';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useAudioPlayer } from '@/hooks/useAudioPlayer';
 import { useTextToSpeech } from '@/hooks/useTextToSpeech';
+import { useAudioPreloader } from '@/hooks/useAudioPreloader';
 import { useSequentialPlayer, PlayablePhrase } from '@/hooks/useSequentialPlayer';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { toast } from 'sonner';
@@ -50,6 +51,7 @@ const Routines = () => {
     isGenerating
   } = useTextToSpeech();
   const sequentialPlayer = useSequentialPlayer();
+  const { preloadMany } = useAudioPreloader();
   const [selectedRoutine, setSelectedRoutine] = useState<Routine | null>(null);
   const [routinePhrases, setRoutinePhrases] = useState<RoutinePhrase[]>([]);
   const [showNewRoutineDialog, setShowNewRoutineDialog] = useState(false);
@@ -190,6 +192,18 @@ const Routines = () => {
       loadRoutinePhrases(selectedRoutine.id);
     }
   }, [selectedRoutine]);
+
+  // Preload audio for routine phrases for instant playback
+  useEffect(() => {
+    if (routinePhrases.length > 0) {
+      preloadMany(
+        routinePhrases.slice(0, 20).map(p => ({ text: p.phrase_text, language })),
+        { delayMs: 200, maxConcurrent: 2 }
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [routinePhrases, language]);
+
   const loadRoutinePhrases = async (routineId: string) => {
     const phrases = await getRoutinePhrases(routineId);
     setRoutinePhrases(phrases);

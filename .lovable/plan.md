@@ -1,77 +1,56 @@
+## Objetivo
+Tornar o play das frases instantâneo em todas as páginas, fazendo preload em background dos áudios assim que a página carrega.
 
-## Plano: Canto Automático com IA (Sem Gravação Manual)
+## Páginas afetadas
+1. `src/pages/Library.tsx` — biblioteca principal
+2. `src/pages/Presentation.tsx` — apresentação da Catarina
+3. `src/pages/DailyPhrases.tsx` — frases do dia
+4. `src/pages/Routines.tsx` — rotinas
+5. `src/pages/Favorites.tsx` — favoritos (bônus, mesma lógica)
+6. `src/pages/Languages.tsx` — lições de idioma
 
-Sim, é totalmente possível fazer a IA cantar de forma **100% automática**, sem que o usuário precise gravar nada. A solução combina três tecnologias da ElevenLabs e da Lovable AI Gateway que já temos disponíveis no projeto.
+## Como vai funcionar
 
-### 🎯 Estratégia Geral
-Em vez de pedir para o usuário gravar a melodia, **a própria IA gera a música cantada** usando uma combinação de APIs especializadas. O sistema detecta automaticamente quando uma frase é uma música e aplica o tratamento adequado.
+```text
+Página monta
+   ↓
+useEffect dispara preloadMany() das frases visíveis
+   ↓
+áudios baixam em background (2 por vez, sem toast)
+   ↓
+ficam salvos em audioCache (Map em memória)
+   ↓
+Usuário clica Play → useTextToSpeech.generate() encontra no cache → toca instantâneo
+```
 
----
+## Estratégia de preload (para não estourar quota ElevenLabs)
 
-### 1. Detecção Automática de Músicas
-*   O sistema já sabe quais frases são músicas (categoria `songs` na biblioteca).
-*   Para frases personalizadas criadas pelo usuário, adicionaremos um botão **"Modo Música 🎵"** ao lado do botão de gerar voz.
-*   Quando ativado, o backend trata o texto como letra de música em vez de fala normal.
+- **Library**: preload só das frases da categoria/subcategoria selecionada (máx 20 por vez). Re-dispara quando o usuário muda de categoria.
+- **Presentation**: preload de todas (são só 6-8 frases).
+- **DailyPhrases**: preload das frases filtradas visíveis (máx 15).
+- **Routines**: preload das frases da rotina aberta quando o usuário expande uma.
+- **Favorites**: preload dos primeiros 15 favoritos.
+- **Languages**: preload da lição visível.
 
----
+## Feedback visual instantâneo
 
-### 2. Três Abordagens Técnicas (em ordem de qualidade)
+No `PlayButton`, quando `isLoading=true` mas o áudio **já está no cache**, pular o spinner — clicar deve ir direto pra animação de onda (`AudioWaveAnimation`). Vou adicionar uma prop `isCached` opcional ao botão pra ele saber que não precisa mostrar loader.
 
-#### **Opção A — ElevenLabs Music API (RECOMENDADA - Canto Real) 🎤**
-*   A ElevenLabs possui uma API chamada **Music Generation** (`/v1/music`) que gera música cantada de verdade a partir de um prompt.
-*   **Como funciona automaticamente:**
-    1.  O usuário clica em "Cantar Ciranda Cirandinha" (ou qualquer música).
-    2.  Backend monta o prompt: `"Children's song with a sweet little girl's voice singing in Portuguese: [letra completa]. Soft acoustic melody, lullaby style, warm and gentle."`
-    3.  A API retorna um áudio MP3 com a música cantada de verdade — voz, melodia, ritmo e instrumentos.
-    4.  O áudio é cacheado no Supabase Storage para uso futuro (custo zero nas próximas vezes).
-*   **Vantagem:** Resultado é uma música cantada de verdade, sem necessidade de gravação humana.
-*   **Limitação:** A voz cantada pode não ser idêntica à voz "Moranguinho 2" escolhida nas configurações (a Music API usa vozes próprias).
+## Detalhes técnicos
 
-#### **Opção B — TTS com Parâmetros Musicais (Mantém a voz da boneca) 🗣️**
-*   Usa a mesma voz da boneca, mas processa o texto para **soar mais melódico**:
-    *   **Pré-processamento via IA Gateway:** O Gemini reescreve o texto adicionando alongamentos de vogais, pausas rítmicas e quebras musicais. Exemplo: `"Ciranda cirandinha"` vira `"Ciraaaanda... cirandiiiinha... vamos toooodos cirandaaaar..."`.
-    *   **Voice settings ajustados:** `stability: 0.1` (muito expressivo), `style: 1.0` (máxima entonação), `speed: 0.85` (mais lento, como canto).
-*   **Vantagem:** Mantém a voz Moranguinho 2 que o usuário escolheu.
-*   **Limitação:** Não é canto real — é uma fala muito entoada e ritmada (parece quem está "cantarolando" a melodia).
+- `useAudioPreloader` já existe e funciona — só precisa ser chamado nas páginas.
+- `audioCache` é Map global em memória, persiste entre navegações enquanto a aba estiver aberta.
+- Cache key = `${text}_${language}_${voiceId}` — se o usuário trocar voz/idioma, refaz preload automaticamente (via dependência no `useEffect`).
+- Sem toasts durante preload (silencioso).
+- Logs no console pra debugar (`[Preloader] ...`).
+- Respeita limite de 2 requests concorrentes com 200ms entre batches.
 
-#### **Opção C — Híbrido: TTS + Trilha Musical de Fundo 🎶**
-*   Combina a voz cantada (Opção B) com uma trilha instrumental gerada pela API de **Sound Effects** (`/v1/sound-generation`).
-*   Backend mistura os dois áudios sobrepostos antes de enviar ao app.
-*   **Vantagem:** Cria atmosfera musical completa.
-*   **Limitação:** Mais lento e custoso (duas chamadas de API por música).
+## Custo de API (estimativa)
 
----
+Cada preload gera 1 chamada ElevenLabs por frase nova. Uma vez em cache, **zero chamadas adicionais** mesmo navegando entre páginas. Pior caso na primeira visita: ~60-80 frases pré-carregadas no total. Depois disso, navegação é gratuita.
 
-### 3. Implementação Sugerida (em fases)
+## Risco / mitigação
 
-**Fase 1 — Implementar Opção A (Music API):**
-1.  Criar nova edge function `text-to-song` em `supabase/functions/text-to-song/index.ts`.
-2.  Aceita parâmetros: `text` (letra), `style` (ex: "lullaby", "cheerful", "calm").
-3.  Chama `https://api.elevenlabs.io/v1/music` com prompt otimizado para infantil.
-4.  Cacheia o resultado em `library-audio` Storage e na tabela `audio_cache`.
-
-**Fase 2 — Integrar à Biblioteca:**
-1.  Em `src/pages/Library.tsx`, no método `handlePlayPhrase`, detectar se `phrase.category === 'songs'`.
-2.  Se for música → chamar `text-to-song` em vez de `text-to-speech`.
-3.  Pré-gerar todas as ~22 músicas da biblioteca uma única vez (script administrativo) e salvar em `library_audio`.
-
-**Fase 3 — Adicionar Modo Música em Frases Personalizadas:**
-1.  Em `src/pages/CreatePhrase.tsx`, adicionar um Toggle "🎵 Modo Música".
-2.  Quando ativado, usar a edge function `text-to-song` em vez de `text-to-speech`.
-
-**Fase 4 (Opcional) — Fallback Inteligente:**
-1.  Se o usuário não gostar da voz da Music API, oferecer botão "Usar voz da boneca" → cai na Opção B.
-
----
-
-### 💰 Custos e Considerações
-*   **ElevenLabs Music API:** Consome créditos por segundo de áudio gerado (aprox. 1000 caracteres = 1 minuto de música).
-*   **Cache agressivo:** Toda música gerada é salva permanentemente, então uma música popular como "Ciranda" só é gerada **1 vez na vida** — todos os usuários reutilizam.
-*   Para 22 músicas pré-gravadas da biblioteca, custo estimado único: ~$2-5 USD.
-
----
-
-### 🎯 Recomendação Final
-Implementar **Opção A (Music API)** para a categoria de Músicas da biblioteca. É a única que entrega "canto real automático" sem gravação humana, e o cache mata o custo recorrente.
-
-**Aguardando aprovação para implementar.**
+- **Quota**: limitar preload a frases visíveis evita gerar áudio pras 500+ frases da biblioteca.
+- **Memória**: blobs MP3 são pequenos (~20-50KB cada), 100 frases = ~5MB, OK.
+- **Race conditions**: se usuário clicar Play antes do preload terminar daquela frase, fluxo atual de `generate()` ainda funciona (cai no caminho normal).

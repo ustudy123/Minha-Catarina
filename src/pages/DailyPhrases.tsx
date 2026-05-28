@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Play, Heart, Clock, Sun, Sunset, Moon, BookOpen, Sparkles, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useTextToSpeech } from "@/hooks/useTextToSpeech";
+import { useAudioPreloader } from "@/hooks/useAudioPreloader";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { getTranslations } from "@/translations";
 import { useFavorites } from "@/hooks/useFavorites";
@@ -51,6 +52,7 @@ export default function DailyPhrases() {
   const t = getTranslations(language);
   const { isFavorite, toggleFavorite: toggleFav } = useFavorites();
   const sequentialPlayer = useSequentialPlayer();
+  const { preloadMany } = useAudioPreloader();
 
   // Get phrases from translations and add isFavorite state
   const phrases = useMemo(() => {
@@ -100,6 +102,15 @@ export default function DailyPhrases() {
     const matchesTime = selectedTime === "all" || phrase.timeOfDay === selectedTime;
     return matchesSearch && matchesCategory && matchesTime;
   });
+
+  // Preload audio for visible filtered phrases (max 15) for instant playback
+  useEffect(() => {
+    const toPreload = filteredPhrases.slice(0, 15).map(p => ({ text: p.text, language }));
+    if (toPreload.length > 0) {
+      preloadMany(toPreload, { delayMs: 200, maxConcurrent: 2 });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedCategory, selectedTime, searchQuery, language]);
 
   const getCategoryLabel = (category: string) => {
     const parts = t.dailyPhrases.categories as any;
