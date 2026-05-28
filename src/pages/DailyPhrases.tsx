@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Play, Heart, Clock, Sun, Sunset, Moon, BookOpen, Sparkles, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useTextToSpeech } from "@/hooks/useTextToSpeech";
+import { useAudioPreloader } from "@/hooks/useAudioPreloader";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { getTranslations } from "@/translations";
 import { useFavorites } from "@/hooks/useFavorites";

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PageTransition } from "@/components/PageTransition";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,6 +8,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useTextToSpeech } from "@/hooks/useTextToSpeech";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useSequentialPlayer, PlayablePhrase } from "@/hooks/useSequentialPlayer";
+import { useAudioPreloader } from "@/hooks/useAudioPreloader";
 import { getTranslations } from "@/translations";
 import { ArrowLeft, Heart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -50,9 +51,18 @@ const Presentation = () => {
   const { generate } = useTextToSpeech();
   const audioPlayer = useAudioPlayer();
   const sequentialPlayer = useSequentialPlayer();
+  const { preloadMany } = useAudioPreloader();
   const t = getTranslations(language);
   const phrases = presentationPhrases[language] || presentationPhrases.pt;
   const [loadingId, setLoadingId] = useState<string | null>(null);
+
+  // Preload all presentation phrases in background for instant playback
+  useEffect(() => {
+    preloadMany(
+      phrases.map((text) => ({ text, language })),
+      { delayMs: 150, maxConcurrent: 2 }
+    );
+  }, [phrases, language, preloadMany]);
 
   const playablePhrases: PlayablePhrase[] = phrases.map((text, i) => ({
     id: `presentation-${i}`,
