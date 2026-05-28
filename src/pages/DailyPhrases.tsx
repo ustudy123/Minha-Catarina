@@ -103,6 +103,15 @@ export default function DailyPhrases() {
     return matchesSearch && matchesCategory && matchesTime;
   });
 
+  // Preload audio for visible filtered phrases (max 15) for instant playback
+  useEffect(() => {
+    const toPreload = filteredPhrases.slice(0, 15).map(p => ({ text: p.text, language }));
+    if (toPreload.length > 0) {
+      preloadMany(toPreload, { delayMs: 200, maxConcurrent: 2 });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedCategory, selectedTime, searchQuery, language]);
+
   const getCategoryLabel = (category: string) => {
     const parts = t.dailyPhrases.categories as any;
     return parts[category] || category;
