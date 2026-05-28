@@ -188,7 +188,6 @@ const Routines = () => {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
   useEffect(() => {
-  useEffect(() => {
     if (selectedRoutine) {
       loadRoutinePhrases(selectedRoutine.id);
     }
@@ -204,6 +203,8 @@ const Routines = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [routinePhrases, language]);
+
+  const loadRoutinePhrases = async (routineId: string) => {
     const phrases = await getRoutinePhrases(routineId);
     setRoutinePhrases(phrases);
   };
