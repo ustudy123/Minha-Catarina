@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { PageTransition } from "@/components/PageTransition";
 import {
@@ -37,6 +37,7 @@ import { AudioControls } from '@/components/audio/AudioControls';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useAudioPlayer } from '@/hooks/useAudioPlayer';
 import { useTextToSpeech } from '@/hooks/useTextToSpeech';
+import { useAudioPreloader } from '@/hooks/useAudioPreloader';
 import { useSequentialPlayer } from '@/hooks/useSequentialPlayer';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { toast } from 'sonner';
@@ -69,8 +70,21 @@ const Favorites = () => {
   const audioPlayer = useAudioPlayer();
   const { generate, isGenerating } = useTextToSpeech();
   const sequentialPlayer = useSequentialPlayer();
+  const sequentialPlayer = useSequentialPlayer();
+  const { preloadMany } = useAudioPreloader();
   const [playingId, setPlayingId] = useState<string | null>(null);
 
+  // Preload audio for visible favorites (skip music — uses different API)
+  useEffect(() => {
+    const toPreload = favorites
+      .filter(f => f.category !== 'música' && f.category !== 'music' && f.category !== 'Songs')
+      .slice(0, 15)
+      .map(f => ({ text: f.text, language }));
+    if (toPreload.length > 0) {
+      preloadMany(toPreload, { delayMs: 200, maxConcurrent: 2 });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [favorites, language]);
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
