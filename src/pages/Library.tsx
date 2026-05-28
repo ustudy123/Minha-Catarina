@@ -1,4 +1,4 @@
-import { useState, useMemo, memo, useCallback } from "react";
+import { useState, useMemo, memo, useCallback, useEffect } from "react";
 import { PageTransition } from "@/components/PageTransition";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -9,6 +9,7 @@ import { useTextToSpeech } from "@/hooks/useTextToSpeech";
 import { useTextToSong } from "@/hooks/useTextToSong";
 import { useSoundEffects } from "@/hooks/useSoundEffects";
 import { useLibraryAudio } from "@/hooks/useLibraryAudio";
+import { useAudioPreloader } from "@/hooks/useAudioPreloader";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useFavorites } from "@/hooks/useFavorites";
 import { useSubscription } from "@/hooks/useSubscription";
@@ -186,7 +187,8 @@ const Library = () => {
   const { generate: generateSong, isGenerating: isGeneratingSong } = useTextToSong();
   const { generate: generateSFX, isGenerating: isGeneratingSFX } = useSoundEffects();
   const { getAudioUrl, hasPreloadedAudio } = useLibraryAudio();
-  const { language } = useLanguage();
+  const { getAudioUrl, hasPreloadedAudio } = useLibraryAudio();
+  const { preloadMany } = useAudioPreloader();
   const { isFavorite, toggleFavorite } = useFavorites();
   const { isPremium, canAccessMyPhrases } = useSubscription();
   const { phrases: savedPhrases, isLoading: loadingSaved, removePhrase, toggleFavorite: toggleSavedFavorite } = useSavedPhrases();
@@ -440,7 +442,26 @@ const Library = () => {
         return matchesCategory && matchesSub && matchesSearch;
       })
     : [], [selectedCategory, samplePhrases, selectedSubCategory, searchQuery]);
+    : [], [selectedCategory, samplePhrases, selectedSubCategory, searchQuery]);
 
+  // Preload audio for visible phrases in selected category for instant playback
+  // Skip categories that use different APIs (songs, sounds, sfx)
+  useEffect(() => {
+    if (!selectedCategory) return;
+    const skipCategories = ['songs', 'sounds'];
+    const catId = selectedCategory.dataCategory || selectedCategory.id;
+    if (skipCategories.includes(catId)) return;
+
+    const toPreload = filteredPhrases
+      .filter(p => !hasPauseMarkers(p.text) && !p.phraseKey)
+      .slice(0, 20)
+      .map(p => ({ text: p.text, language }));
+
+    if (toPreload.length > 0) {
+      preloadMany(toPreload, { delayMs: 200, maxConcurrent: 2 });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedCategory, selectedSubCategory, language]);
   // Category detail view (like routine detail)
   if (selectedCategory && selectedCategory.id === "myPhrases") {
     return (
