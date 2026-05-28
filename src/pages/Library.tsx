@@ -442,7 +442,6 @@ const Library = () => {
         return matchesCategory && matchesSub && matchesSearch;
       })
     : [], [selectedCategory, samplePhrases, selectedSubCategory, searchQuery]);
-    : [], [selectedCategory, samplePhrases, selectedSubCategory, searchQuery]);
 
   // Preload audio for visible phrases in selected category for instant playback
   // Skip categories that use different APIs (songs, sounds, sfx)
