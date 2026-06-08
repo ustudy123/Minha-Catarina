@@ -257,7 +257,7 @@ const Index = () => {
               <PlayButton isPlaying={audioPlayer.isPlaying} isLoading={isGenerating || audioPlayer.isLoading} onPlay={handlePlayPhraseOfDay} onPause={audioPlayer.pause} variant="secondary" size="sm" showWave className="flex-shrink-0" />
             </div>
 
-            {audioPlayer.duration > 0 && <AudioControls volume={audioPlayer.volume} playbackRate={audioPlayer.playbackRate} currentTime={audioPlayer.currentTime} duration={audioPlayer.duration} onVolumeChange={audioPlayer.setVolume} onPlaybackRateChange={audioPlayer.setPlaybackRate} onSeek={audioPlayer.seek} className="mt-4" />}
+            {audioPlayer.duration > 0 && <AudioControls volume={audioPlayer.volume} playbackRate={audioPlayer.playbackRate} currentTime={audioPlayer.currentTime} duration={audioPlayer.duration} onVolumeChange={audioPlayer.setVolume} onPlaybackRateChange={() => {}} onSeek={audioPlayer.seek} className="mt-4" />}
           </Card>}
 
         {/* Quick Actions */}
