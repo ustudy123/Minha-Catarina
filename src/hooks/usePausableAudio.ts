@@ -150,7 +150,13 @@ export function usePausableAudio() {
         setState(prev => ({ ...prev, isLoading: true }));
         
         // Check if audio is in local cache
-        const cacheKey = `${segment.content}_${targetLanguage}_${selectedVoice.voiceId}`;
+        const { getAudioCacheKey } = await import('./useAudioPreloader');
+        const cacheKey = getAudioCacheKey(
+          segment.content, 
+          targetLanguage || 'pt', 
+          selectedVoice.voiceId, 
+          playbackSpeed
+        );
         const cachedAudio = audioCache.get(cacheKey);
         
         let audioUrl: string;
