@@ -464,6 +464,18 @@ const Library = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCategory, selectedSubCategory, language]);
+  
+  // Separate preloader for "My Phrases"
+  useEffect(() => {
+    if (selectedCategory?.id !== 'myPhrases' || savedPhrases.length === 0) return;
+    
+    const toPreload = savedPhrases.slice(0, 30).map(p => ({ 
+      text: p.text, 
+      language: (p.language || language) as 'pt' | 'en' | 'es' 
+    }));
+    
+    preloadMany(toPreload, { delayMs: 150, maxConcurrent: 3 });
+  }, [selectedCategory, savedPhrases, language]);
   // Category detail view (like routine detail)
   if (selectedCategory && selectedCategory.id === "myPhrases") {
     return (
