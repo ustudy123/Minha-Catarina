@@ -20,6 +20,8 @@ export const useAudioPlayer = () => {
     volume: 1,
     playbackRate: 1,
   });
+  
+  const isPlayingRef = useRef(false);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const currentSourceRef = useRef<string | null>(null);
@@ -31,8 +33,11 @@ export const useAudioPlayer = () => {
       // Stop current audio if playing
       if (audioRef.current) {
         audioRef.current.pause();
+        audioRef.current.src = ""; // Clear src to stop loading
         audioRef.current = null;
       }
+
+      isPlayingRef.current = true;
 
       // Create new audio element
       const audio = new Audio();
@@ -100,7 +105,18 @@ export const useAudioPlayer = () => {
       audio.addEventListener('ended', handleEnded);
       audio.addEventListener('error', handleError);
 
+      if (!isPlayingRef.current) {
+        if (currentSourceRef.current && typeof audioSource === 'object') {
+          URL.revokeObjectURL(currentSourceRef.current);
+        }
+        return;
+      }
+
       await audio.play();
+      if (!isPlayingRef.current) {
+        audio.pause();
+        return;
+      }
       setState(prev => ({ ...prev, isPlaying: true, isLoading: false }));
     } catch (error) {
       setState(prev => ({ 
@@ -122,8 +138,10 @@ export const useAudioPlayer = () => {
 
   const stop = useCallback(() => {
     if (audioRef.current) {
+      isPlayingRef.current = false;
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
+      audioRef.current.src = ""; // Important to stop loading/buffering
       setState(prev => ({ ...prev, isPlaying: false, currentTime: 0 }));
       
       if (currentSourceRef.current) {

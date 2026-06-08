@@ -100,6 +100,8 @@ interface VoiceContextType {
   voices: ChildVoice[]; // Para compatibilidade com código existente
   hasCompletedOnboarding: boolean;
   completeOnboarding: (doll: DollType) => void;
+  playbackSpeed: number;
+  setPlaybackSpeed: (speed: number) => void;
 }
 
 const VoiceContext = createContext<VoiceContextType | undefined>(undefined);
@@ -111,6 +113,10 @@ export const VoiceProvider = ({ children }: { children: ReactNode }) => {
   });
 
   const [hasCompletedOnboarding] = useState<boolean>(true);
+  const [playbackSpeed, setPlaybackSpeedState] = useState<number>(() => {
+    const savedSpeed = localStorage.getItem('playback-speed');
+    return savedSpeed ? parseFloat(savedSpeed) : 1.0;
+  });
 
   const availableVoices = selectedDoll === 'catarina' ? FEMALE_VOICES : MALE_VOICES;
 
@@ -145,6 +151,11 @@ export const VoiceProvider = ({ children }: { children: ReactNode }) => {
     localStorage.setItem('selected-doll-type', selectedDoll);
   }, [selectedDoll]);
 
+  const setPlaybackSpeed = (speed: number) => {
+    setPlaybackSpeedState(speed);
+    localStorage.setItem('playback-speed', speed.toString());
+  };
+
   const setSelectedVoice = (voice: ChildVoice) => {
     setSelectedVoiceState(voice);
   };
@@ -171,6 +182,8 @@ export const VoiceProvider = ({ children }: { children: ReactNode }) => {
         voices: availableVoices,
         hasCompletedOnboarding,
         completeOnboarding,
+        playbackSpeed,
+        setPlaybackSpeed,
       }}
     >
       {children}
