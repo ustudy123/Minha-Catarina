@@ -716,13 +716,16 @@ const Library = () => {
                   <p className="text-xs text-muted-foreground">
                     {filteredPhrases.length} {t.library.phrasesFound}
                   </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <SpeedSelector />
+                  <LanguageSelector />
+                  <UserMenu />
                 </div>
               </div>
-              <div className="flex items-center gap-2">
-                <SpeedSelector />
-                <LanguageSelector />
-                <UserMenu />
-              </div>
+            </div>
+          </header>
             </div>
           </header>
 
