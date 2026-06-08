@@ -726,8 +726,6 @@ const Library = () => {
               </div>
             </div>
           </header>
-            </div>
-          </header>
 
           <main className="container mx-auto px-4 py-6 max-w-2xl space-y-6">
             {/* Search */}
