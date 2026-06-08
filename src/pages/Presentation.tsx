@@ -9,6 +9,9 @@ import { useTextToSpeech } from "@/hooks/useTextToSpeech";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useSequentialPlayer, PlayablePhrase } from "@/hooks/useSequentialPlayer";
 import { useAudioPreloader } from "@/hooks/useAudioPreloader";
+import { UserMenu } from "@/components/UserMenu";
+import { SpeedSelector } from "@/components/audio/SpeedSelector";
+import { LanguageSelector } from "@/components/LanguageSelector";
 import { getTranslations } from "@/translations";
 import { ArrowLeft, Heart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -103,11 +106,18 @@ const Presentation = () => {
     <PageTransition>
       <div className="min-h-screen bg-gradient-to-br from-muted via-background to-secondary/20">
         <header className="sticky top-0 z-50 glass border-b border-border/50 backdrop-blur-lg">
-          <div className="container mx-auto px-4 py-4 flex items-center gap-3">
-            <Button variant="ghost" size="icon" onClick={() => navigate("/")}>
-              <ArrowLeft className="w-5 h-5" />
-            </Button>
-            <h1 className="text-lg font-bold">{pageTitle}</h1>
+          <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Button variant="ghost" size="icon" onClick={() => navigate("/")}>
+                <ArrowLeft className="w-5 h-5" />
+              </Button>
+              <h1 className="text-lg font-bold">{pageTitle}</h1>
+            </div>
+            <div className="flex items-center gap-2">
+              <SpeedSelector />
+              <LanguageSelector />
+              <UserMenu />
+            </div>
           </div>
         </header>
 
