@@ -449,14 +449,14 @@ const Library = () => {
   // Preload audio for visible phrases in selected category for instant playback
   // Skip categories that use different APIs (songs, sounds, sfx)
   useEffect(() => {
-    if (!selectedCategory) return;
+    if (!selectedCategory || selectedCategory.id === 'myPhrases') return;
     const skipCategories = ['songs', 'sounds'];
     const catId = selectedCategory.dataCategory || selectedCategory.id;
     if (skipCategories.includes(catId)) return;
 
     const toPreload = filteredPhrases
       .filter(p => !hasPauseMarkers(p.text) && !p.phraseKey)
-      .slice(0, 20)
+      .slice(0, 30)
       .map(p => ({ text: p.text, language }));
 
     if (toPreload.length > 0) {
