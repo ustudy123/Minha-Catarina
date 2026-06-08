@@ -80,7 +80,7 @@ const Favorites = () => {
   useEffect(() => {
     const toPreload = favorites
       .filter(f => f.category !== 'música' && f.category !== 'music' && f.category !== 'Songs')
-      .slice(0, 15)
+      .slice(0, 30)
       .map(f => ({ text: f.text, language }));
     if (toPreload.length > 0) {
       preloadMany(toPreload, { delayMs: 200, maxConcurrent: 2 });

@@ -389,7 +389,7 @@ const Library = () => {
           await audioPlayer.play(url);
         }
       } else {
-        const { url } = await generateTTS({ text: phrase.text });
+        const { url } = await generateTTS({ text: phrase.text, language: language as 'pt' | 'en' | 'es' });
         if (url) {
           await audioPlayer.play(url);
         }
