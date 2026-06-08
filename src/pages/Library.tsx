@@ -389,11 +389,16 @@ const Library = () => {
           await audioPlayer.play(url);
         }
       } else {
-        const { url } = await generateTTS({ text: phrase.text, language: language as 'pt' | 'en' | 'es' });
+        const isStory = phrase.category === 'stories';
+        const { url } = await generateTTS({ 
+          text: phrase.text, 
+          language: language as 'pt' | 'en' | 'es',
+          contentType: isStory ? 'história' : 'frase'
+        });
         if (url) {
           await audioPlayer.play(url);
         }
-        if (phrase.soundPrompt && phrase.category !== 'sounds') {
+        if (phrase.soundPrompt && phrase.category !== 'sounds' && !isStory) {
           const { url: sfxUrl } = await generateSFX({ prompt: phrase.soundPrompt, duration: 10 });
           if (sfxUrl) {
             await audioPlayer.play(sfxUrl);
