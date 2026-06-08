@@ -354,6 +354,7 @@ const Routines = () => {
         <header className="sticky top-0 z-50 glass border-b border-border/50 backdrop-blur-lg">
           <div className="container mx-auto px-4 py-4">
             <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <Button variant="ghost" size="icon" onClick={() => setSelectedRoutine(null)}>
                   <ArrowLeft className="w-5 h-5" />
@@ -366,12 +367,16 @@ const Routines = () => {
                 </div>
               </div>
 
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="icon">
-                    <MoreVertical className="w-5 h-5" />
-                  </Button>
-                </DropdownMenuTrigger>
+              <div className="flex items-center gap-2">
+                <SpeedSelector />
+                <LanguageSelector />
+                <UserMenu />
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="icon">
+                      <MoreVertical className="w-5 h-5" />
+                    </Button>
+                  </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="bg-popover">
                   <DropdownMenuItem onClick={() => {
                     setEditingRoutine(selectedRoutine);
