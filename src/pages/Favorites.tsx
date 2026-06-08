@@ -228,6 +228,12 @@ const Favorites = () => {
                 <p className="text-xs text-muted-foreground">{t.subtitle}</p>
               </div>
             </div>
+            <div className="flex items-center gap-2">
+              <SpeedSelector />
+              <LanguageSelector />
+              <UserMenu />
+            </div>
+          </div>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

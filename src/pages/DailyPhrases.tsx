@@ -138,7 +138,11 @@ export default function DailyPhrases() {
           <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
             {t.dailyPhrases.title}
           </h1>
-          <div className="w-10" />
+          <div className="flex items-center gap-2">
+            <SpeedSelector />
+            <LanguageSelector />
+            <UserMenu />
+          </div>
         </div>
       </header>
 
