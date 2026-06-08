@@ -1,5 +1,8 @@
 import { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { UserMenu } from "@/components/UserMenu";
+import { SpeedSelector } from "@/components/audio/SpeedSelector";
+import { LanguageSelector } from "@/components/LanguageSelector";
 import { ArrowLeft, Play, Heart, Clock, Sun, Sunset, Moon, BookOpen, Sparkles, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";

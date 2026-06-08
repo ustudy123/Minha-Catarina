@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { PageTransition } from "@/components/PageTransition";
+import { UserMenu } from "@/components/UserMenu";
+import { SpeedSelector } from "@/components/audio/SpeedSelector";
+import { LanguageSelector } from "@/components/LanguageSelector";
 import {
   DndContext,
   closestCenter,
