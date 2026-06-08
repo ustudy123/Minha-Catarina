@@ -194,6 +194,7 @@ export function useSequentialPlayer() {
       const { url } = await generate({ 
         text: currentPhrase.text, 
         silent: true,
+        language: language as 'pt' | 'en' | 'es',
         contentType: isMusic ? 'música' : 'frase'
       });
       
