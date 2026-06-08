@@ -454,7 +454,6 @@ const Routines = () => {
               "p-4 transition-colors",
               sequentialPlayer.isPlaying && "bg-primary/10 border-primary"
             )}>
-              <div className="flex items-center justify-between">
                 <Button 
                   variant={sequentialPlayer.isPlaying ? "destructive" : "gradient"}
                   onClick={handlePlayAll}
