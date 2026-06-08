@@ -9,14 +9,16 @@ const corsHeaders = {
 
 // Generate a simple hash for cache key
 function generateCacheKey(text: string, voiceId: string, contentType?: string): string {
+  // Use a more robust hashing approach for longer texts
   const input = `${text.toLowerCase().trim()}_${voiceId}_${contentType || 'standard'}`;
   let hash = 0;
   for (let i = 0; i < input.length; i++) {
     const char = input.charCodeAt(i);
     hash = ((hash << 5) - hash) + char;
-    hash = hash & hash;
+    hash = hash & hash; // Convert to 32bit integer
   }
-  return Math.abs(hash).toString(36);
+  // Use a combination of length and hash to reduce collisions
+  return `${text.length}_${Math.abs(hash).toString(36)}`;
 }
 
 function formatarTextoMusica(texto: string): string {

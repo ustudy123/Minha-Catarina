@@ -17,7 +17,15 @@ export const getAudioCacheKey = (
   voiceId: string, 
   contentType: string = 'standard'
 ): string => {
-  return `${text}_${language}_${voiceId}_${contentType}`;
+  // Simple hash for consistency with edge function
+  let hash = 0;
+  const input = `${text.toLowerCase().trim()}_${voiceId}_${contentType}`;
+  for (let i = 0; i < input.length; i++) {
+    const char = input.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash;
+  }
+  return `${text.length}_${Math.abs(hash).toString(36)}`;
 };
 
 export function useAudioPreloader() {
