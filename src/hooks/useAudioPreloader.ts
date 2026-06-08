@@ -11,15 +11,15 @@ interface CachedAudio {
 const audioCache = new Map<string, CachedAudio>();
 
 export function useAudioPreloader() {
-  const { selectedVoice } = useVoice();
+  const { selectedVoice, playbackSpeed } = useVoice();
   const [preloadingCount, setPreloadingCount] = useState(0);
   const [preloadedCount, setPreloadedCount] = useState(0);
   const abortControllerRef = useRef<AbortController | null>(null);
 
   // Generate a cache key for a phrase (must match useTextToSpeech key format)
   const getCacheKey = useCallback((text: string, language: string, voiceId?: string): string => {
-    return `${text}_${language}_${voiceId || selectedVoice.voiceId}_standard`;
-  }, [selectedVoice.voiceId]);
+    return `${text}_${language}_${voiceId || selectedVoice.voiceId}_standard_speed_${playbackSpeed}`;
+  }, [selectedVoice.voiceId, playbackSpeed]);
 
   // Check if audio is already cached
   const isCached = useCallback((text: string, language: string, voiceId?: string): boolean => {
@@ -62,6 +62,7 @@ export function useAudioPreloader() {
             text,
             voiceId: voiceId || selectedVoice.voiceId,
             targetLanguage: language,
+            speed: playbackSpeed,
           }),
         }
       );
