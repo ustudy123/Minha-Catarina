@@ -478,11 +478,17 @@ const Library = () => {
                   </Button>
                   <div>
                     <h1 className="text-xl font-bold">{selectedCategory.name}</h1>
-                  <p className="text-xs text-muted-foreground">
-                    {savedPhrases.length} {savedPhrases.length === 1
-                      ? (language === 'pt' ? 'frase' : language === 'en' ? 'phrase' : 'frase')
-                      : (language === 'pt' ? 'frases' : language === 'en' ? 'phrases' : 'frases')}
-                  </p>
+                    <p className="text-xs text-muted-foreground">
+                      {savedPhrases.length} {savedPhrases.length === 1
+                        ? (language === 'pt' ? 'frase' : language === 'en' ? 'phrase' : 'frase')
+                        : (language === 'pt' ? 'frases' : language === 'en' ? 'phrases' : 'frases')}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <SpeedSelector />
+                  <LanguageSelector />
+                  <UserMenu />
                 </div>
               </div>
             </div>
