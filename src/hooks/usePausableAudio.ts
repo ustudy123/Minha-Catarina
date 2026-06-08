@@ -25,7 +25,7 @@ interface PausableAudioState {
 
 export function usePausableAudio() {
   const { language } = useLanguage();
-  const { selectedVoice } = useVoice();
+  const { selectedVoice, playbackSpeed } = useVoice();
   const { generate, isGenerating } = useTextToSpeech();
   const audioPlayer = useAudioPlayer();
 
