@@ -430,11 +430,11 @@ const Routines = () => {
                     <Trash2 className="w-4 h-4 mr-2" />
                     {t.deleteRoutine}
                   </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             </div>
-          </div>
-        </header>
+          </header>
 
         <main className="container mx-auto px-4 py-8 max-w-2xl space-y-8 animate-fade-in">
           {/* Settings Bar */}
