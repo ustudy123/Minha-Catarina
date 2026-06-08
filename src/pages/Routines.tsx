@@ -764,7 +764,7 @@ const Routines = () => {
       </Dialog>
     </div>
   </PageTransition>
-  );
+);
 };
 
 export default Routines;
