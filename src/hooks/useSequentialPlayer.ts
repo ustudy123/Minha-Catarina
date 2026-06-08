@@ -33,6 +33,7 @@ export function useSequentialPlayer() {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isPlayingRef = useRef(false);
+  const currentIntervalRef = useRef<number | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const resetPlayerState = useCallback(() => {
@@ -61,6 +62,7 @@ export function useSequentialPlayer() {
   }, [clearScheduledPlayback]);
 
   const finishPlayback = useCallback(() => {
+    if (!isPlayingRef.current) return;
     isPlayingRef.current = false;
     cleanup();
     resetPlayerState();
@@ -73,6 +75,8 @@ export function useSequentialPlayer() {
   const playAudioUrl = useCallback(async (url: string): Promise<boolean> => {
     const audio = audioRef.current ?? new Audio();
     audioRef.current = audio;
+
+    if (!isPlayingRef.current) return false;
 
     return new Promise<boolean>((resolve) => {
       let settled = false;
@@ -90,6 +94,7 @@ export function useSequentialPlayer() {
 
       audio.pause();
       audio.currentTime = 0;
+      audio.src = ""; // Important to stop any previous loading
       audio.addEventListener('ended', handleEnded);
       audio.addEventListener('error', handleError);
       audio.src = url;
@@ -109,7 +114,7 @@ export function useSequentialPlayer() {
     clearScheduledPlayback();
 
     if (!isPlayingRef.current || index >= phrases.length) {
-      finishPlayback();
+      if (isPlayingRef.current) finishPlayback();
       return;
     }
 
@@ -179,7 +184,11 @@ export function useSequentialPlayer() {
         silent: true,
         contentType: isMusic ? 'música' : 'frase'
       });
-      if (!isPlayingRef.current) return;
+      
+      if (!isPlayingRef.current) {
+        if (url && url.startsWith('blob:')) URL.revokeObjectURL(url);
+        return;
+      }
 
       if (!url) {
         // Skip to next phrase instead of stopping
