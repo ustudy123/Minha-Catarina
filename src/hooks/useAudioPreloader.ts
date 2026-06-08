@@ -15,14 +15,13 @@ export const getAudioCacheKey = (
   text: string, 
   language: string = 'pt', 
   voiceId: string, 
-  playbackSpeed: number, 
   contentType: string = 'standard'
 ): string => {
-  return `${text}_${language}_${voiceId}_${contentType}_speed_${playbackSpeed}`;
+  return `${text}_${language}_${voiceId}_${contentType}`;
 };
 
 export function useAudioPreloader() {
-  const { selectedVoice, playbackSpeed } = useVoice();
+  const { selectedVoice } = useVoice();
   const [preloadingCount, setPreloadingCount] = useState(0);
   const [preloadedCount, setPreloadedCount] = useState(0);
   const abortControllerRef = useRef<AbortController | null>(null);
@@ -74,7 +73,6 @@ export function useAudioPreloader() {
             text,
             voiceId: voiceId || selectedVoice.voiceId,
             targetLanguage: language,
-            speed: playbackSpeed,
             contentType,
           }),
         }
@@ -108,7 +106,7 @@ export function useAudioPreloader() {
       console.error('Preload error:', error);
       return false;
     }
-  }, [getLocalCacheKey, selectedVoice.voiceId, playbackSpeed]);
+  }, [getLocalCacheKey, selectedVoice.voiceId]);
 
   // Preload multiple phrases in sequence (to avoid overwhelming the API)
   const preloadMany = useCallback(async (
