@@ -33,7 +33,7 @@ export function useSequentialPlayer() {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isPlayingRef = useRef(false);
-  const currentIntervalRef = useRef<number | null>(null);
+  const currentPhraseIndexRef = useRef<number | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const resetPlayerState = useCallback(() => {
@@ -64,6 +64,7 @@ export function useSequentialPlayer() {
   const finishPlayback = useCallback(() => {
     if (!isPlayingRef.current) return;
     isPlayingRef.current = false;
+    currentPhraseIndexRef.current = null;
     cleanup();
     resetPlayerState();
   }, [cleanup, resetPlayerState]);
@@ -111,12 +112,20 @@ export function useSequentialPlayer() {
     // Import preloader to use its cache
     const { audioCache } = await import('./useAudioPreloader');
     
-    clearScheduledPlayback();
-
+    // Safety check: if the index being called is not what we expect, or we are not playing, abort.
     if (!isPlayingRef.current || index >= phrases.length) {
       if (isPlayingRef.current) finishPlayback();
       return;
     }
+
+    // Important: Prevent concurrent playNext calls or calls with outdated indices
+    if (currentPhraseIndexRef.current === index && state.isPlaying) {
+      console.warn('[SequentialPlayer] Ignoring duplicate playNext call for index:', index);
+      return;
+    }
+    
+    currentPhraseIndexRef.current = index;
+    clearScheduledPlayback();
 
     const currentPhrase = phrases[index];
 
@@ -154,6 +163,9 @@ export function useSequentialPlayer() {
 
     // Helper to schedule the next phrase after interval
     const scheduleNext = (nextIdx: number) => {
+      // Ensure we don't schedule if we've stopped
+      if (!isPlayingRef.current) return;
+
       if (!random && nextIdx >= phrases.length) {
         finishPlayback();
         return;
@@ -230,6 +242,7 @@ export function useSequentialPlayer() {
 
     cleanup();
     isPlayingRef.current = true;
+    currentPhraseIndexRef.current = null;
 
     const intervalSeconds = useSeconds ? intervalMinutes : intervalMinutes * 60;
 
