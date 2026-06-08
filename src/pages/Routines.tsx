@@ -377,8 +377,8 @@ const Routines = () => {
                       <MoreVertical className="w-5 h-5" />
                     </Button>
                   </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="bg-popover">
-                  <DropdownMenuItem onClick={() => {
+                  <DropdownMenuContent align="end" className="bg-popover">
+                    <DropdownMenuItem onClick={() => {
                     setEditingRoutine(selectedRoutine);
                     setNewRoutineName(selectedRoutine.name);
                     setShowEditDialog(true);
