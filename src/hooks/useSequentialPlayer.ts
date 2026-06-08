@@ -193,12 +193,14 @@ export function useSequentialPlayer() {
     };
 
     try {
-      const isMusic = currentPhrase.category === 'música' || currentPhrase.category === 'music' || currentPhrase.category === 'Songs';
+      const isMusic = currentPhrase.category === 'música' || currentPhrase.category === 'music' || currentPhrase.category === 'Songs' || currentPhrase.category === 'songs';
+      const isStory = currentPhrase.category === 'história' || currentPhrase.category === 'stories' || currentPhrase.category === 'Histórias';
+      
       const { url } = await generate({ 
         text: currentPhrase.text, 
         silent: true,
         language: language as 'pt' | 'en' | 'es',
-        contentType: isMusic ? 'música' : 'frase'
+        contentType: isMusic ? 'música' : isStory ? 'história' : 'frase'
       });
       
       if (!isPlayingRef.current) {
