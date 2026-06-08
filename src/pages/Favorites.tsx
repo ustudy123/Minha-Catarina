@@ -282,10 +282,7 @@ const Favorites = () => {
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-        </div>
-      </header>
 
-      <main className="container mx-auto px-4 py-8 max-w-2xl space-y-8 animate-fade-in">
         {favorites.length === 0 ? (
           <Card className="p-8 text-center border-2 border-dashed">
             <Star className="w-16 h-16 mx-auto mb-4 text-muted-foreground/50" />
