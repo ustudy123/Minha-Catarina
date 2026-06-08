@@ -559,7 +559,6 @@ const Routines = () => {
     );
   }
 
-  // Routines list view
   return (
     <PageTransition>
       <div className="min-h-screen bg-gradient-to-br from-muted via-background to-secondary/5">
@@ -765,7 +764,7 @@ const Routines = () => {
       </Dialog>
     </div>
   </PageTransition>
-);
+  );
 };
 
 export default Routines;
