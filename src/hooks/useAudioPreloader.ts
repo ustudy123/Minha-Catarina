@@ -16,10 +16,18 @@ export function useAudioPreloader() {
   const [preloadedCount, setPreloadedCount] = useState(0);
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  // Generate a cache key for a phrase (must match useTextToSpeech key format)
-  const getCacheKey = useCallback((text: string, language: string, voiceId?: string): string => {
-    return `${text}_${language}_${voiceId || selectedVoice.voiceId}_standard_speed_${playbackSpeed}`;
-  }, [selectedVoice.voiceId, playbackSpeed]);
+// Generate a cache key for a phrase (must match useTextToSpeech key format)
+export const getAudioCacheKey = (
+  text: string, 
+  language: string = 'pt', 
+  voiceId: string, 
+  playbackSpeed: number, 
+  contentType: string = 'standard'
+): string => {
+  return `${text}_${language}_${voiceId}_${contentType}_speed_${playbackSpeed}`;
+};
+
+export function useAudioPreloader() {
 
   // Check if audio is already cached
   const isCached = useCallback((text: string, language: string, voiceId?: string): boolean => {
