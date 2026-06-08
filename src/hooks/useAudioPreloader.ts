@@ -10,36 +10,48 @@ interface CachedAudio {
 // Global in-memory cache to persist across component re-renders
 const audioCache = new Map<string, CachedAudio>();
 
+// Shared utility to generate consistent cache keys
+export const getAudioCacheKey = (
+  text: string, 
+  language: string = 'pt', 
+  voiceId: string, 
+  playbackSpeed: number, 
+  contentType: string = 'standard'
+): string => {
+  return `${text}_${language}_${voiceId}_${contentType}_speed_${playbackSpeed}`;
+};
+
 export function useAudioPreloader() {
   const { selectedVoice, playbackSpeed } = useVoice();
   const [preloadingCount, setPreloadingCount] = useState(0);
   const [preloadedCount, setPreloadedCount] = useState(0);
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  // Generate a cache key for a phrase (must match useTextToSpeech key format)
-  const getCacheKey = useCallback((text: string, language: string, voiceId?: string): string => {
-    return `${text}_${language}_${voiceId || selectedVoice.voiceId}_standard_speed_${playbackSpeed}`;
+  // Wrapper for consistency
+  const getLocalCacheKey = useCallback((text: string, language: string = 'pt', voiceId?: string, contentType: string = 'standard'): string => {
+    return getAudioCacheKey(text, language, voiceId || selectedVoice.voiceId, playbackSpeed, contentType);
   }, [selectedVoice.voiceId, playbackSpeed]);
 
   // Check if audio is already cached
-  const isCached = useCallback((text: string, language: string, voiceId?: string): boolean => {
-    const key = getCacheKey(text, language, voiceId);
+  const isCached = useCallback((text: string, language: string = 'pt', voiceId?: string, contentType: string = 'standard'): boolean => {
+    const key = getLocalCacheKey(text, language, voiceId, contentType);
     return audioCache.has(key);
-  }, [getCacheKey]);
+  }, [getLocalCacheKey]);
 
   // Get cached audio
-  const getCachedAudio = useCallback((text: string, language: string, voiceId?: string): CachedAudio | null => {
-    const key = getCacheKey(text, language, voiceId);
+  const getCachedAudio = useCallback((text: string, language: string = 'pt', voiceId?: string, contentType: string = 'standard'): CachedAudio | null => {
+    const key = getLocalCacheKey(text, language, voiceId, contentType);
     return audioCache.get(key) || null;
-  }, [getCacheKey]);
+  }, [getLocalCacheKey]);
 
   // Preload a single phrase (silent, no toast)
   const preloadOne = useCallback(async (
     text: string, 
     language: 'pt' | 'en' | 'es' = 'pt',
-    voiceId?: string
+    voiceId?: string,
+    contentType: string = 'standard'
   ): Promise<boolean> => {
-    const key = getCacheKey(text, language, voiceId);
+    const key = getLocalCacheKey(text, language, voiceId, contentType);
     
     // Skip if already cached
     if (audioCache.has(key)) {
@@ -63,6 +75,7 @@ export function useAudioPreloader() {
             voiceId: voiceId || selectedVoice.voiceId,
             targetLanguage: language,
             speed: playbackSpeed,
+            contentType,
           }),
         }
       );
@@ -95,24 +108,22 @@ export function useAudioPreloader() {
       console.error('Preload error:', error);
       return false;
     }
-  }, [getCacheKey, selectedVoice.voiceId]);
+  }, [getLocalCacheKey, selectedVoice.voiceId, playbackSpeed]);
 
   // Preload multiple phrases in sequence (to avoid overwhelming the API)
   const preloadMany = useCallback(async (
-    phrases: Array<{ text: string; language?: 'pt' | 'en' | 'es' }>,
+    phrases: Array<{ text: string; language?: 'pt' | 'en' | 'es'; category?: string }>,
     options?: { delayMs?: number; maxConcurrent?: number }
   ) => {
-    const { delayMs = 200, maxConcurrent = 2 } = options || {};
+    const { delayMs = 150, maxConcurrent = 3 } = options || {};
     
     // Filter out already cached phrases
-    const toPreload = phrases.filter(p => !isCached(p.text, p.language || 'pt'));
+    const toPreload = phrases.filter(p => !isCached(p.text, p.language || 'pt', undefined, p.category));
     
     if (toPreload.length === 0) {
-      console.log('[Preloader] All phrases already cached');
       return;
     }
 
-    console.log(`[Preloader] Starting preload of ${toPreload.length} phrases`);
     setPreloadingCount(toPreload.length);
     setPreloadedCount(0);
 
@@ -122,20 +133,19 @@ export function useAudioPreloader() {
       
       await Promise.all(
         batch.map(async (phrase) => {
-          const success = await preloadOne(phrase.text, phrase.language || 'pt');
+          const contentType = phrase.category === 'música' || phrase.category === 'Songs' ? 'música' : 'standard';
+          const success = await preloadOne(phrase.text, phrase.language || 'pt', undefined, contentType);
           if (success) {
             setPreloadedCount(prev => prev + 1);
           }
         })
       );
 
-      // Small delay between batches to be gentle on the API
       if (i + maxConcurrent < toPreload.length && delayMs > 0) {
         await new Promise(resolve => setTimeout(resolve, delayMs));
       }
     }
 
-    console.log('[Preloader] Preload complete');
     setPreloadingCount(0);
   }, [isCached, preloadOne]);
 

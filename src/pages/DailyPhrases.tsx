@@ -108,7 +108,7 @@ export default function DailyPhrases() {
 
   // Preload audio for visible filtered phrases (max 15) for instant playback
   useEffect(() => {
-    const toPreload = filteredPhrases.slice(0, 15).map(p => ({ text: p.text, language }));
+    const toPreload = filteredPhrases.slice(0, 30).map(p => ({ text: p.text, language }));
     if (toPreload.length > 0) {
       preloadMany(toPreload, { delayMs: 200, maxConcurrent: 2 });
     }
