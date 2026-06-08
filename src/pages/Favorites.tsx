@@ -233,6 +233,7 @@ const Favorites = () => {
                 <LanguageSelector />
                 <UserMenu />
               </div>
+            </div>
           </div>
         </header>
 
