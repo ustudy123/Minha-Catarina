@@ -1,4 +1,5 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
+import { useVoice } from '@/contexts/VoiceContext';
 
 export interface AudioPlayerState {
   isPlaying: boolean;
@@ -11,6 +12,7 @@ export interface AudioPlayerState {
 }
 
 export const useAudioPlayer = () => {
+  const { playbackSpeed } = useVoice();
   const [state, setState] = useState<AudioPlayerState>({
     isPlaying: false,
     isLoading: false,
@@ -18,7 +20,7 @@ export const useAudioPlayer = () => {
     currentTime: 0,
     duration: 0,
     volume: 1,
-    playbackRate: 1,
+    playbackRate: playbackSpeed,
   });
   
   const isPlayingRef = useRef(false);
@@ -173,6 +175,11 @@ export const useAudioPlayer = () => {
     }
     setState(prev => ({ ...prev, playbackRate: clampedRate }));
   }, []);
+
+  // Update playback rate when global speed changes
+  useEffect(() => {
+    setPlaybackRate(playbackSpeed);
+  }, [playbackSpeed, setPlaybackRate]);
 
   return {
     ...state,

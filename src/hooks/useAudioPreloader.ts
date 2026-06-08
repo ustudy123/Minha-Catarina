@@ -29,8 +29,8 @@ export function useAudioPreloader() {
 
   // Wrapper for consistency
   const getLocalCacheKey = useCallback((text: string, language: string = 'pt', voiceId?: string, contentType: string = 'standard'): string => {
-    return getAudioCacheKey(text, language, voiceId || selectedVoice.voiceId, playbackSpeed, contentType);
-  }, [selectedVoice.voiceId, playbackSpeed]);
+    return getAudioCacheKey(text, language, voiceId || selectedVoice.voiceId, contentType);
+  }, [selectedVoice.voiceId]);
 
   // Check if audio is already cached
   const isCached = useCallback((text: string, language: string = 'pt', voiceId?: string, contentType: string = 'standard'): boolean => {

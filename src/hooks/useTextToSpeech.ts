@@ -45,7 +45,6 @@ export const useTextToSpeech = () => {
         text, 
         language || 'pt', 
         voiceId || selectedVoice.voiceId, 
-        playbackSpeed, 
         contentType || 'standard'
       );
       const preloaded = audioCache.get(cacheKey);
@@ -76,7 +75,6 @@ export const useTextToSpeech = () => {
             voiceId: voiceId || selectedVoice.voiceId,
             ...(language ? { targetLanguage: language } : {}),
             contentType,
-            speed: playbackSpeed,
           }),
         }
       );
