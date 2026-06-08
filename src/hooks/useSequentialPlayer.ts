@@ -64,6 +64,7 @@ export function useSequentialPlayer() {
   const finishPlayback = useCallback(() => {
     if (!isPlayingRef.current) return;
     isPlayingRef.current = false;
+    currentPhraseIndexRef.current = null;
     cleanup();
     resetPlayerState();
   }, [cleanup, resetPlayerState]);
@@ -241,6 +242,7 @@ export function useSequentialPlayer() {
 
     cleanup();
     isPlayingRef.current = true;
+    currentPhraseIndexRef.current = null;
 
     const intervalSeconds = useSeconds ? intervalMinutes : intervalMinutes * 60;
 
