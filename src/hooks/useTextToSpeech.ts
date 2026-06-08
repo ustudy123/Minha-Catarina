@@ -41,10 +41,11 @@ export const useTextToSpeech = () => {
 
       // Check preloader cache first
       const { audioCache, getAudioCacheKey } = await import('./useAudioPreloader');
+      const currentVoiceId = voiceId || selectedVoice.voiceId;
       const cacheKey = getAudioCacheKey(
         text, 
         language || 'pt', 
-        voiceId || selectedVoice.voiceId, 
+        currentVoiceId, 
         contentType || 'standard'
       );
       const preloaded = audioCache.get(cacheKey);
@@ -62,6 +63,8 @@ export const useTextToSpeech = () => {
         return { blob: preloaded.blob, url: preloaded.url, cached: true };
       }
 
+      console.log('[TTS] Requesting voice for:', text.substring(0, 30), 'with voice:', currentVoiceId);
+
       const response = await fetch(
         `https://vfhspeubasrdmwqxdcaw.supabase.co/functions/v1/text-to-speech`,
         {
@@ -72,7 +75,7 @@ export const useTextToSpeech = () => {
           },
           body: JSON.stringify({
             text,
-            voiceId: voiceId || selectedVoice.voiceId,
+            voiceId: currentVoiceId,
             ...(language ? { targetLanguage: language } : {}),
             contentType,
           }),
@@ -83,6 +86,7 @@ export const useTextToSpeech = () => {
         let errorMessage = 'Erro ao gerar voz';
         try {
           const error = await response.json();
+          console.error('[TTS] Server error response:', error);
           errorMessage = error.error || errorMessage;
         } catch (e) {
           errorMessage = `Erro ${response.status}: ${response.statusText}`;
@@ -91,6 +95,7 @@ export const useTextToSpeech = () => {
       }
 
       const data = await response.json();
+      console.log('[TTS] Received response, cached:', data.cached);
       const isCached = data.cached === true;
       
       let blob: Blob;
@@ -129,6 +134,7 @@ export const useTextToSpeech = () => {
       if (!silent) toast.success(isCached ? 'Áudio carregado do cache!' : 'Voz gerada com sucesso!');
       return { blob, url, cached: isCached };
     } catch (error) {
+      console.error('[TTS] Error generating voice:', error);
       const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
       setState(prev => ({
         ...prev,
