@@ -20,7 +20,7 @@ export interface TTSState {
 }
 
 export const useTextToSpeech = () => {
-  const { selectedVoice } = useVoice();
+  const { selectedVoice, playbackSpeed } = useVoice();
   const [state, setState] = useState<TTSState>({
     isGenerating: false,
     error: null,
@@ -41,7 +41,7 @@ export const useTextToSpeech = () => {
 
       // Check preloader cache first
       const { audioCache } = await import('./useAudioPreloader');
-      const cacheKey = `${text}_${language || 'pt'}_${voiceId || selectedVoice.voiceId}_${contentType || 'standard'}`;
+      const cacheKey = `${text}_${language || 'pt'}_${voiceId || selectedVoice.voiceId}_${contentType || 'standard'}_speed_${playbackSpeed}`;
       const preloaded = audioCache.get(cacheKey);
 
       if (preloaded) {
@@ -70,6 +70,7 @@ export const useTextToSpeech = () => {
             voiceId: voiceId || selectedVoice.voiceId,
             ...(language ? { targetLanguage: language } : {}),
             contentType,
+            speed: playbackSpeed,
           }),
         }
       );

@@ -1,4 +1,7 @@
 import { useState, useMemo, memo, useCallback, useEffect } from "react";
+import { UserMenu } from "@/components/UserMenu";
+import { SpeedSelector } from "@/components/audio/SpeedSelector";
+import { LanguageSelector } from "@/components/LanguageSelector";
 import { PageTransition } from "@/components/PageTransition";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -468,17 +471,24 @@ const Library = () => {
         <div className="min-h-screen bg-gradient-to-br from-muted via-background to-accent/10">
           <header className="sticky top-0 z-50 glass border-b border-border/50 backdrop-blur-lg">
             <div className="container mx-auto px-4 py-4">
-              <div className="flex items-center gap-3">
-                <Button variant="ghost" size="icon" onClick={() => setSelectedCategory(null)}>
-                  <ArrowLeft className="w-5 h-5" />
-                </Button>
-                <div>
-                  <h1 className="text-xl font-bold">{selectedCategory.name}</h1>
-                  <p className="text-xs text-muted-foreground">
-                    {savedPhrases.length} {savedPhrases.length === 1
-                      ? (language === 'pt' ? 'frase' : language === 'en' ? 'phrase' : 'frase')
-                      : (language === 'pt' ? 'frases' : language === 'en' ? 'phrases' : 'frases')}
-                  </p>
+              <div className="flex items-center justify-between w-full">
+                <div className="flex items-center gap-3">
+                  <Button variant="ghost" size="icon" onClick={() => setSelectedCategory(null)}>
+                    <ArrowLeft className="w-5 h-5" />
+                  </Button>
+                  <div>
+                    <h1 className="text-xl font-bold">{selectedCategory.name}</h1>
+                    <p className="text-xs text-muted-foreground">
+                      {savedPhrases.length} {savedPhrases.length === 1
+                        ? (language === 'pt' ? 'frase' : language === 'en' ? 'phrase' : 'frase')
+                        : (language === 'pt' ? 'frases' : language === 'en' ? 'phrases' : 'frases')}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <SpeedSelector />
+                  <LanguageSelector />
+                  <UserMenu />
                 </div>
               </div>
             </div>
@@ -616,18 +626,25 @@ const Library = () => {
         <div className="min-h-screen bg-gradient-to-br from-muted via-background to-accent/10">
           <header className="sticky top-0 z-50 glass border-b border-border/50 backdrop-blur-lg">
             <div className="container mx-auto px-4 py-4">
-              <div className="flex items-center gap-3">
-                <Button variant="ghost" size="icon" onClick={() => { setSelectedCategory(null); }}>
-                  <ArrowLeft className="w-5 h-5" />
-                </Button>
-                <div>
-                  <h1 className="text-xl font-bold flex items-center gap-2">
-                    {CatIcon && <CatIcon className="w-5 h-5" />}
-                    {selectedCategory.name}
-                  </h1>
-                  <p className="text-xs text-muted-foreground">
-                    {language === 'pt' ? 'Escolha uma subcategoria' : language === 'en' ? 'Choose a subcategory' : 'Elige una subcategoría'}
-                  </p>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Button variant="ghost" size="icon" onClick={() => { setSelectedCategory(null); }}>
+                    <ArrowLeft className="w-5 h-5" />
+                  </Button>
+                  <div>
+                    <h1 className="text-xl font-bold flex items-center gap-2">
+                      {CatIcon && <CatIcon className="w-5 h-5" />}
+                      {selectedCategory.name}
+                    </h1>
+                    <p className="text-xs text-muted-foreground">
+                      {language === 'pt' ? 'Escolha uma subcategoria' : language === 'en' ? 'Choose a subcategory' : 'Elige una subcategoría'}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <SpeedSelector />
+                  <LanguageSelector />
+                  <UserMenu />
                 </div>
               </div>
             </div>
@@ -686,18 +703,25 @@ const Library = () => {
         <div className="min-h-screen bg-gradient-to-br from-muted via-background to-accent/10">
           <header className="sticky top-0 z-50 glass border-b border-border/50 backdrop-blur-lg">
             <div className="container mx-auto px-4 py-4">
-              <div className="flex items-center gap-3">
-                <Button variant="ghost" size="icon" onClick={backAction}>
-                  <ArrowLeft className="w-5 h-5" />
-                </Button>
-                <div>
-                  <h1 className="text-xl font-bold flex items-center gap-2">
-                    {selectedCategory.icon && <selectedCategory.icon className="w-5 h-5" />}
-                    {headerTitle}
-                  </h1>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Button variant="ghost" size="icon" onClick={backAction}>
+                    <ArrowLeft className="w-5 h-5" />
+                  </Button>
+                  <div>
+                    <h1 className="text-xl font-bold flex items-center gap-2">
+                      {selectedCategory.icon && <selectedCategory.icon className="w-5 h-5" />}
+                      {headerTitle}
+                    </h1>
                   <p className="text-xs text-muted-foreground">
                     {filteredPhrases.length} {t.library.phrasesFound}
                   </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <SpeedSelector />
+                  <LanguageSelector />
+                  <UserMenu />
                 </div>
               </div>
             </div>
@@ -771,16 +795,23 @@ const Library = () => {
       <div className="min-h-screen bg-gradient-to-br from-muted via-background to-accent/10">
         <header className="sticky top-0 z-50 glass border-b border-border/50 backdrop-blur-lg">
           <div className="container mx-auto px-4 py-4">
-            <div className="flex items-center gap-3">
-              <Button variant="ghost" size="icon" onClick={() => navigate('/')}>
-                <ArrowLeft className="w-5 h-5" />
-              </Button>
-              <div>
-                <h1 className="text-xl font-bold flex items-center gap-2">
-                  <BookOpenText className="w-5 h-5" />
-                  {t.library.title}
-                </h1>
-                <p className="text-xs text-muted-foreground">{t.library.subtitle}</p>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Button variant="ghost" size="icon" onClick={() => navigate('/')}>
+                  <ArrowLeft className="w-5 h-5" />
+                </Button>
+                <div>
+                  <h1 className="text-xl font-bold flex items-center gap-2">
+                    <BookOpenText className="w-5 h-5" />
+                    {t.library.title}
+                  </h1>
+                  <p className="text-xs text-muted-foreground">{t.library.subtitle}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <SpeedSelector />
+                <LanguageSelector />
+                <UserMenu />
               </div>
             </div>
           </div>

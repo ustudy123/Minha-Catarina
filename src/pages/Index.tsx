@@ -7,6 +7,7 @@ import { PlayButton } from "@/components/audio/PlayButton";
 import { AudioControls } from "@/components/audio/AudioControls";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { UserMenu } from "@/components/UserMenu";
+import { SpeedSelector } from "@/components/audio/SpeedSelector";
 import { BluetoothGuide } from "@/components/BluetoothGuide";
 import { BookOpen, Sparkles, Star, ListMusic, Bluetooth, Battery, Volume2, Crown, WifiOff, Info } from "lucide-react";
 import { useState } from "react";
@@ -161,6 +162,7 @@ const Index = () => {
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           
           <div className="flex items-center gap-2 ml-auto">
+            <SpeedSelector />
             <LanguageSelector />
             <UserMenu />
           </div>

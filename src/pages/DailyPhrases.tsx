@@ -1,5 +1,8 @@
 import { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { UserMenu } from "@/components/UserMenu";
+import { SpeedSelector } from "@/components/audio/SpeedSelector";
+import { LanguageSelector } from "@/components/LanguageSelector";
 import { ArrowLeft, Play, Heart, Clock, Sun, Sunset, Moon, BookOpen, Sparkles, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -135,7 +138,11 @@ export default function DailyPhrases() {
           <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
             {t.dailyPhrases.title}
           </h1>
-          <div className="w-10" />
+          <div className="flex items-center gap-2">
+            <SpeedSelector />
+            <LanguageSelector />
+            <UserMenu />
+          </div>
         </div>
       </header>
 

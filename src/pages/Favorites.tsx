@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { PageTransition } from "@/components/PageTransition";
+import { UserMenu } from "@/components/UserMenu";
+import { SpeedSelector } from "@/components/audio/SpeedSelector";
+import { LanguageSelector } from "@/components/LanguageSelector";
 import {
   DndContext,
   closestCenter,
@@ -211,21 +214,31 @@ const Favorites = () => {
       <div className="min-h-screen bg-gradient-to-br from-muted via-background to-primary/5">
         {/* Header */}
         <header className="sticky top-0 z-50 glass border-b border-border/50 backdrop-blur-lg">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Button variant="ghost" size="icon" onClick={() => navigate('/')}>
-                <ArrowLeft className="w-5 h-5" />
-              </Button>
-              <div>
-                <h1 className="text-xl font-bold flex items-center gap-2">
-                  <Star className="w-5 h-5 fill-highlight text-highlight" />
-                  {t.title}
-                </h1>
-                <p className="text-xs text-muted-foreground">{t.subtitle}</p>
+          <div className="container mx-auto px-4 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Button variant="ghost" size="icon" onClick={() => navigate('/')}>
+                  <ArrowLeft className="w-5 h-5" />
+                </Button>
+                <div>
+                  <h1 className="text-xl font-bold flex items-center gap-2">
+                    <Star className="w-5 h-5 fill-highlight text-highlight" />
+                    {t.title}
+                  </h1>
+                  <p className="text-xs text-muted-foreground">{t.subtitle}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <SpeedSelector />
+                <LanguageSelector />
+                <UserMenu />
               </div>
             </div>
+          </div>
+        </header>
 
+        <main className="container mx-auto px-4 py-6 max-w-2xl space-y-6">
+          <div className="flex items-center justify-between">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="icon">
@@ -269,10 +282,7 @@ const Favorites = () => {
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-        </div>
-      </header>
 
-      <main className="container mx-auto px-4 py-8 max-w-2xl space-y-8 animate-fade-in">
         {favorites.length === 0 ? (
           <Card className="p-8 text-center border-2 border-dashed">
             <Star className="w-16 h-16 mx-auto mb-4 text-muted-foreground/50" />
