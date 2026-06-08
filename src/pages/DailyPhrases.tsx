@@ -259,7 +259,7 @@ export default function DailyPhrases() {
               currentTime={audioPlayer.currentTime}
               duration={audioPlayer.duration}
               onVolumeChange={audioPlayer.setVolume}
-              onPlaybackRateChange={audioPlayer.setPlaybackRate}
+              onPlaybackRateChange={() => {}}
               onSeek={audioPlayer.seek}
             />
           </div>

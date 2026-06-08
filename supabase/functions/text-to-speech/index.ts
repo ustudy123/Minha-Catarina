@@ -8,8 +8,8 @@ const corsHeaders = {
 };
 
 // Generate a simple hash for cache key
-function generateCacheKey(text: string, voiceId: string, contentType?: string, speed: number = 1.0): string {
-  const input = `${text.toLowerCase().trim()}_${voiceId}_${contentType || 'standard'}_speed_${speed}`;
+function generateCacheKey(text: string, voiceId: string, contentType?: string): string {
+  const input = `${text.toLowerCase().trim()}_${voiceId}_${contentType || 'standard'}`;
   let hash = 0;
   for (let i = 0; i < input.length; i++) {
     const char = input.charCodeAt(i);
@@ -143,7 +143,7 @@ serve(async (req) => {
       );
     }
 
-    const { text, voiceId = 'pFZP5JQG7iQjIQuC4Bku', targetLanguage, contentType, speed = 1.0 } = await req.json();
+    const { text, voiceId = 'pFZP5JQG7iQjIQuC4Bku', targetLanguage, contentType } = await req.json();
 
     // Translate text if target language is specified
     let finalText = text;
@@ -165,7 +165,7 @@ serve(async (req) => {
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     // Generate cache key using processed text and voiceId
-    const cacheKey = generateCacheKey(processedText, voiceId, contentType, speed);
+    const cacheKey = generateCacheKey(processedText, voiceId, contentType);
     console.log('Cache lookup', { cacheKey, textLength: processedText.length, isMusic });
 
     // Check cache first

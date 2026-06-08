@@ -412,6 +412,7 @@ const Library = () => {
       text: phrase.text,
       category: phrase.category,
       source: 'library',
+
       durationMinutes: 1,
     });
   }, [toggleFavorite]);
@@ -786,7 +787,7 @@ const Library = () => {
                       currentTime: audioPlayer.currentTime,
                       duration: audioPlayer.duration,
                       onVolumeChange: audioPlayer.setVolume,
-                      onPlaybackRateChange: audioPlayer.setPlaybackRate,
+                      onPlaybackRateChange: () => {}, // Controlled globally now
                       onSeek: audioPlayer.seek,
                     }}
                   />

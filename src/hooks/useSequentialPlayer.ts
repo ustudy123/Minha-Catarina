@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { useTextToSpeech } from './useTextToSpeech';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useVoice } from '@/contexts/VoiceContext';
 
 export interface PlayablePhrase {
   id: string;
@@ -27,6 +28,7 @@ const INITIAL_STATE: SequentialPlayerState = {
 export function useSequentialPlayer() {
   const { language } = useLanguage();
   const { generate } = useTextToSpeech();
+  const { playbackSpeed } = useVoice();
 
   const [state, setState] = useState<SequentialPlayerState>(INITIAL_STATE);
 
@@ -99,6 +101,7 @@ export function useSequentialPlayer() {
       audio.addEventListener('ended', handleEnded);
       audio.addEventListener('error', handleError);
       audio.src = url;
+      audio.playbackRate = playbackSpeed;
       audio.load();
 
       audio.play().catch((error) => {

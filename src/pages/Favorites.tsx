@@ -427,7 +427,7 @@ const Favorites = () => {
                           currentTime={audioPlayer.currentTime}
                           duration={audioPlayer.duration}
                           onVolumeChange={audioPlayer.setVolume}
-                          onPlaybackRateChange={audioPlayer.setPlaybackRate}
+                          onPlaybackRateChange={() => {}} // Controlled globally now
                           onSeek={audioPlayer.seek}
                           className="mt-3"
                         />

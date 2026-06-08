@@ -80,23 +80,7 @@ export const AudioControls = ({
             </span>
           </div>
 
-          {/* Playback Speed */}
-          <div className="flex items-center gap-2">
-            <Gauge className="h-4 w-4 text-muted-foreground" />
-            <div className="flex gap-1">
-              {playbackRates.map((rate) => (
-                <Button
-                  key={rate}
-                  variant={playbackRate === rate ? "secondary" : "ghost"}
-                  size="sm"
-                  onClick={() => onPlaybackRateChange(rate)}
-                  className="h-7 px-2 text-xs"
-                >
-                  {rate}x
-                </Button>
-              ))}
-            </div>
-          </div>
+          {/* Playback speed is now global in the header */}
         </div>
       )}
     </div>

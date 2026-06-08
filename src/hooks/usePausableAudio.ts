@@ -154,8 +154,7 @@ export function usePausableAudio() {
         const cacheKey = getAudioCacheKey(
           segment.content, 
           targetLanguage || 'pt', 
-          selectedVoice.voiceId, 
-          playbackSpeed
+          selectedVoice.voiceId
         );
         const cachedAudio = audioCache.get(cacheKey);
         
@@ -178,6 +177,7 @@ export function usePausableAudio() {
         if (audioUrl && isPlayingRef.current) {
           // Create a promise that resolves when audio ends
           const audio = new Audio(audioUrl);
+          audio.playbackRate = playbackSpeed;
           
           await new Promise<void>((resolve) => {
             audio.onended = () => resolve();
