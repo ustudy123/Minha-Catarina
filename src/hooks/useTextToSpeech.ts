@@ -102,7 +102,7 @@ export const useTextToSpeech = () => {
         // Cached audio - fetch from URL
         const audioResponse = await fetch(data.audioUrl);
         blob = await audioResponse.blob();
-        url = data.audioUrl;
+        url = URL.createObjectURL(blob); // Create local blob URL for consistent behavior
       } else if (data.audioContent) {
         // New audio - convert base64
         const binaryString = atob(data.audioContent);
@@ -115,6 +115,10 @@ export const useTextToSpeech = () => {
       } else {
         throw new Error('Invalid response from TTS service');
       }
+
+      // Store in preloader cache for next time
+      const { audioCache: currentCache } = await import('./useAudioPreloader');
+      currentCache.set(cacheKey, { url, blob });
 
       setState({
         isGenerating: false,
