@@ -392,7 +392,6 @@ const Library = () => {
         const isStory = phrase.category === 'stories';
         const { url } = await generateTTS({ 
           text: phrase.text, 
-          language: language as 'pt' | 'en' | 'es',
           contentType: isStory ? 'história' : 'frase'
         });
         if (url) {
@@ -463,7 +462,7 @@ const Library = () => {
     const toPreload = filteredPhrases
       .filter(p => !hasPauseMarkers(p.text) && !p.phraseKey)
       .slice(0, 30)
-      .map(p => ({ text: p.text, language }));
+      .map(p => ({ text: p.text, category: p.category === 'stories' ? 'história' : 'frase' }));
 
     if (toPreload.length > 0) {
       preloadMany(toPreload, { delayMs: 200, maxConcurrent: 2 });
@@ -476,8 +475,7 @@ const Library = () => {
     if (selectedCategory?.id !== 'myPhrases' || savedPhrases.length === 0) return;
     
     const toPreload = savedPhrases.slice(0, 30).map(p => ({ 
-      text: p.text, 
-      language: (p.language || language) as 'pt' | 'en' | 'es' 
+      text: p.text 
     }));
     
     preloadMany(toPreload, { delayMs: 150, maxConcurrent: 3 });
@@ -564,7 +562,7 @@ const Library = () => {
                             if (phrase.audioUrl) {
                               await audioPlayer.play(phrase.audioUrl);
                             } else {
-                              const { url } = await generateTTS({ text: phrase.text, language: phrase.language as 'pt' | 'en' | 'es' });
+                              const { url } = await generateTTS({ text: phrase.text });
                               if (url) {
                                 await audioPlayer.play(url);
                               }

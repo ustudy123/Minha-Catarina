@@ -139,7 +139,9 @@ export function useAudioPreloader() {
       
       await Promise.all(
         batch.map(async (phrase) => {
-          const contentType = phrase.category === 'música' || phrase.category === 'Songs' ? 'música' : 'standard';
+          const contentType = phrase.category === 'música' || phrase.category === 'Songs' ? 'música'
+            : phrase.category === 'frase' || phrase.category === 'história' ? phrase.category
+            : 'standard';
           const success = await preloadOne(phrase.text, phrase.language || 'pt', undefined, contentType);
           if (success) {
             setPreloadedCount(prev => prev + 1);

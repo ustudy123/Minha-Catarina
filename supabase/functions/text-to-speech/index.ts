@@ -239,9 +239,20 @@ serve(async (req) => {
     }
 
     if (!response || !response.ok) {
-      const error = response ? await response.text() : 'No response';
-      console.error('ElevenLabs API error:', response?.status, error);
-      throw new Error(`ElevenLabs API error: ${response?.status}`);
+      const status = response?.status;
+      const errorBody = response ? await response.text() : 'No response';
+      console.error('ElevenLabs API error:', status, errorBody);
+
+      let friendlyMessage = `Erro na ElevenLabs (${status ?? 'sem resposta'})`;
+      if (status === 401) {
+        const isQuota = errorBody.includes('quota_exceeded');
+        friendlyMessage = isQuota
+          ? 'Créditos da ElevenLabs esgotados. Verifique o plano/créditos da conta ElevenLabs.'
+          : 'Chave da API ElevenLabs inválida ou expirada. Atualize o secret ELEVENLABS_API_KEY no Supabase.';
+      } else if (status === 429) {
+        friendlyMessage = 'Limite de requisições da ElevenLabs atingido. Tente novamente em alguns segundos.';
+      }
+      throw new Error(friendlyMessage);
     }
 
     const arrayBuffer = await response.arrayBuffer();

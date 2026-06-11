@@ -81,7 +81,7 @@ const Favorites = () => {
     const toPreload = favorites
       .filter(f => f.category !== 'música' && f.category !== 'music' && f.category !== 'Songs')
       .slice(0, 30)
-      .map(f => ({ text: f.text, language }));
+      .map(f => ({ text: f.text, category: 'frase' }));
     if (toPreload.length > 0) {
       preloadMany(toPreload, { delayMs: 200, maxConcurrent: 2 });
     }
@@ -169,7 +169,6 @@ const Favorites = () => {
       const isMusic = category === 'música' || category === 'music' || category === 'Songs';
       const { url } = await generate({ 
         text, 
-        language,
         contentType: isMusic ? 'música' : 'frase'
       });
       if (url) {
