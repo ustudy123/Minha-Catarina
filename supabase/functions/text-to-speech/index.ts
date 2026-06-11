@@ -243,14 +243,38 @@ serve(async (req) => {
       const errorBody = response ? await response.text() : 'No response';
       console.error('ElevenLabs API error:', status, errorBody);
 
-      let friendlyMessage = `Erro na ElevenLabs (${status ?? 'sem resposta'})`;
-      if (status === 401) {
-        const isQuota = errorBody.includes('quota_exceeded');
-        friendlyMessage = isQuota
-          ? 'Créditos da ElevenLabs esgotados. Verifique o plano/créditos da conta ElevenLabs.'
-          : 'Chave da API ElevenLabs inválida ou expirada. Atualize o secret ELEVENLABS_API_KEY no Supabase.';
+      // Tentar extrair detalhe estruturado da ElevenLabs: { detail: { status, message } } ou { detail: "..." }
+      let elevenStatus = '';
+      let elevenMessage = '';
+      try {
+        const parsed = JSON.parse(errorBody);
+        if (parsed?.detail) {
+          if (typeof parsed.detail === 'string') {
+            elevenMessage = parsed.detail;
+          } else {
+            elevenStatus = parsed.detail.status || '';
+            elevenMessage = parsed.detail.message || '';
+          }
+        }
+      } catch {
+        // body não era JSON; segue com texto cru
+        elevenMessage = errorBody.slice(0, 200);
+      }
+
+      // Diagnóstico do workspace: quanto da chave (mascarada) está sendo usada
+      const keyHint = `${ELEVENLABS_API_KEY.slice(0, 4)}...${ELEVENLABS_API_KEY.slice(-4)}`;
+
+      let friendlyMessage = `Erro ElevenLabs ${status}`;
+      if (elevenStatus === 'quota_exceeded') {
+        friendlyMessage = `ElevenLabs reportou créditos esgotados para a chave em uso (${keyHint}). Pode ser que a chave seja de outra conta/workspace. Detalhe: ${elevenMessage}`;
+      } else if (elevenStatus === 'invalid_api_key' || (status === 401 && !elevenStatus)) {
+        friendlyMessage = `Chave da API ElevenLabs inválida ou expirada (${keyHint}). Atualize o secret ELEVENLABS_API_KEY. Detalhe: ${elevenMessage}`;
+      } else if (elevenStatus === 'voice_not_found') {
+        friendlyMessage = `Voz não disponível para essa chave/plano. Detalhe: ${elevenMessage}`;
       } else if (status === 429) {
         friendlyMessage = 'Limite de requisições da ElevenLabs atingido. Tente novamente em alguns segundos.';
+      } else if (elevenMessage) {
+        friendlyMessage = `Erro ElevenLabs ${status} [${elevenStatus}]: ${elevenMessage}`;
       }
       throw new Error(friendlyMessage);
     }
