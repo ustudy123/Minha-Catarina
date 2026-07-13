@@ -191,7 +191,7 @@ const Routines = () => {
   useEffect(() => {
     if (routinePhrases.length > 0) {
       preloadMany(
-        routinePhrases.slice(0, 30).map(p => ({ text: p.phrase_text, language: language as 'pt' | 'en' | 'es' })),
+        routinePhrases.slice(0, 10).map(p => ({ text: p.phrase_text, language: language as 'pt' | 'en' | 'es' })),
         { delayMs: 150, maxConcurrent: 3 }
       );
     }

@@ -461,7 +461,7 @@ const Library = () => {
 
     const toPreload = filteredPhrases
       .filter(p => !hasPauseMarkers(p.text) && !p.phraseKey)
-      .slice(0, 30)
+      .slice(0, 10)
       .map(p => ({ text: p.text, category: p.category === 'stories' ? 'história' : 'frase' }));
 
     if (toPreload.length > 0) {
@@ -474,7 +474,7 @@ const Library = () => {
   useEffect(() => {
     if (selectedCategory?.id !== 'myPhrases' || savedPhrases.length === 0) return;
     
-    const toPreload = savedPhrases.slice(0, 30).map(p => ({ 
+    const toPreload = savedPhrases.slice(0, 10).map(p => ({ 
       text: p.text 
     }));
     

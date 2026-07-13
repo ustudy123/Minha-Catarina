@@ -221,7 +221,9 @@ serve(async (req) => {
           },
           body: JSON.stringify({
             text: processedText,
-            model_id: 'eleven_multilingual_v2',
+            // Turbo v2.5: 0.5 crédito/char (vs 1.0 do multilingual_v2), latência menor,
+            // suporta 32 idiomas incluindo PT-BR. Qualidade ótima pra frases curtas.
+            model_id: 'eleven_turbo_v2_5',
             voice_settings: voiceSettings,
           }),
         }
