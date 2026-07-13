@@ -59,7 +59,6 @@ export const useTextToSpeech = () => {
           audioUrl: preloaded.url,
           cached: true,
         });
-        if (!silent) toast.success('Áudio carregado do cache!');
         return { blob: preloaded.blob, url: preloaded.url, cached: true };
       }
 
@@ -131,7 +130,6 @@ export const useTextToSpeech = () => {
         cached: isCached,
       });
 
-      if (!silent) toast.success(isCached ? 'Áudio carregado do cache!' : 'Voz gerada com sucesso!');
       return { blob, url, cached: isCached };
     } catch (error) {
       console.error('[TTS] Error generating voice:', error);
