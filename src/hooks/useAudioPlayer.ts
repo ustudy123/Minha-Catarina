@@ -27,6 +27,9 @@ export const useAudioPlayer = () => {
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const currentSourceRef = useRef<string | null>(null);
+  // true = URL foi criada pelo player (a partir de Blob) e ele deve revogá-la
+  // false = URL veio de fora (ex: cache do preloader) e não pode ser revogada aqui
+  const ownsCurrentSourceRef = useRef<boolean>(false);
 
   const play = useCallback(async (audioSource: string | Blob) => {
     try {
@@ -49,10 +52,12 @@ export const useAudioPlayer = () => {
       if (typeof audioSource === 'string') {
         audio.src = audioSource;
         currentSourceRef.current = audioSource;
+        ownsCurrentSourceRef.current = false;
       } else {
         const url = URL.createObjectURL(audioSource);
         audio.src = url;
         currentSourceRef.current = url;
+        ownsCurrentSourceRef.current = true;
       }
 
       audioRef.current.volume = state.volume;
@@ -77,7 +82,7 @@ export const useAudioPlayer = () => {
           isPlaying: false, 
           currentTime: 0 
         }));
-        if (currentSourceRef.current && typeof audioSource === 'object') {
+        if (currentSourceRef.current && ownsCurrentSourceRef.current) {
           URL.revokeObjectURL(currentSourceRef.current);
         }
         // Clean up listeners
@@ -108,7 +113,7 @@ export const useAudioPlayer = () => {
       audio.addEventListener('error', handleError);
 
       if (!isPlayingRef.current) {
-        if (currentSourceRef.current && typeof audioSource === 'object') {
+        if (currentSourceRef.current && ownsCurrentSourceRef.current) {
           URL.revokeObjectURL(currentSourceRef.current);
         }
         return;
@@ -147,8 +152,11 @@ export const useAudioPlayer = () => {
       setState(prev => ({ ...prev, isPlaying: false, currentTime: 0 }));
       
       if (currentSourceRef.current) {
-        URL.revokeObjectURL(currentSourceRef.current);
+        if (ownsCurrentSourceRef.current) {
+          URL.revokeObjectURL(currentSourceRef.current);
+        }
         currentSourceRef.current = null;
+        ownsCurrentSourceRef.current = false;
       }
     }
   }, []);
