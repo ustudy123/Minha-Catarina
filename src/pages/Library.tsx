@@ -462,6 +462,15 @@ const Library = () => {
       })
     : [], [selectedCategory, samplePhrases, selectedSubCategory, searchQuery]);
 
+  // Dispara reprodução sequencial a partir de uma frase específica.
+  const handlePlayFromIndex = useCallback((startIndex: number) => {
+    if (filteredPhrases.length === 0) return;
+    const playable = filteredPhrases.map(p => ({ id: p.id, text: getTextWithoutPauses(p.text) }));
+    sequentialPlayer.startPlayAll(playable, false, autoPlayInterval, true, startIndex);
+  }, [filteredPhrases, sequentialPlayer, autoPlayInterval]);
+
+
+
   // Preload audio for visible phrases in selected category for instant playback
   // Skip categories that use different APIs (songs, sounds, sfx)
   useEffect(() => {
