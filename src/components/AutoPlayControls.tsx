@@ -15,11 +15,15 @@ const intervalOptions = [
 interface AutoPlayControlsProps {
   phrases: PlayablePhrase[];
   sequentialPlayer: ReturnType<typeof useSequentialPlayer>;
+  intervalSeconds?: number;
+  onIntervalChange?: (value: number) => void;
 }
 
-export const AutoPlayControls = ({ phrases, sequentialPlayer }: AutoPlayControlsProps) => {
+export const AutoPlayControls = ({ phrases, sequentialPlayer, intervalSeconds: controlledInterval, onIntervalChange }: AutoPlayControlsProps) => {
   const { language } = useLanguage();
-  const [intervalSeconds, setIntervalSeconds] = useState(5);
+  const [uncontrolledInterval, setUncontrolledInterval] = useState(5);
+  const intervalSeconds = controlledInterval ?? uncontrolledInterval;
+  const setIntervalSeconds = onIntervalChange ?? setUncontrolledInterval;
 
   const handlePlayAll = () => {
     if (sequentialPlayer.isPlaying) {

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { MoreVertical, Plus, ListPlus, Trash2 } from 'lucide-react';
+import { MoreVertical, Plus, ListPlus, Trash2, PlayCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -29,6 +29,7 @@ interface PhraseOptionsMenuProps {
   phraseSource: 'library' | 'saved' | 'favorites';
   onRemoveFromRoutine?: (routineId: string) => void;
   currentRoutineId?: string;
+  onPlayFromHere?: () => void;
 }
 
 export function PhraseOptionsMenu({
@@ -37,6 +38,7 @@ export function PhraseOptionsMenu({
   phraseSource,
   onRemoveFromRoutine,
   currentRoutineId,
+  onPlayFromHere,
 }: PhraseOptionsMenuProps) {
   const { routines, createRoutine, addPhraseToRoutine } = useRoutines();
   const { language } = useLanguage();
@@ -55,6 +57,7 @@ export function PhraseOptionsMenu({
       create: 'Criar',
       addedToRoutine: 'Adicionado à rotina!',
       routineCreated: 'Rotina criada!',
+      playFromHere: 'Tocar a partir daqui',
     },
     en: {
       addToRoutine: 'Add to routine...',
@@ -67,6 +70,7 @@ export function PhraseOptionsMenu({
       create: 'Create',
       addedToRoutine: 'Added to routine!',
       routineCreated: 'Routine created!',
+      playFromHere: 'Play from here',
     },
     es: {
       addToRoutine: 'Agregar a rutina...',
@@ -79,6 +83,7 @@ export function PhraseOptionsMenu({
       create: 'Crear',
       addedToRoutine: '¡Agregado a la rutina!',
       routineCreated: '¡Rutina creada!',
+      playFromHere: 'Reproducir desde aquí',
     },
   };
 
@@ -110,6 +115,15 @@ export function PhraseOptionsMenu({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-56">
+          {onPlayFromHere && (
+            <>
+              <DropdownMenuItem onClick={onPlayFromHere}>
+                <PlayCircle className="w-4 h-4 mr-2" />
+                {t.playFromHere}
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </>
+          )}
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>
               <ListPlus className="w-4 h-4 mr-2" />

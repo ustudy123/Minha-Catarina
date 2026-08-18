@@ -243,7 +243,7 @@ export function useSequentialPlayer() {
     }
   }, [clearScheduledPlayback, finishPlayback, generate, playAudioUrl]);
 
-  const startPlayAll = useCallback((phrases: PlayablePhrase[], random: boolean = false, intervalMinutes: number = 1, useSeconds: boolean = false) => {
+  const startPlayAll = useCallback((phrases: PlayablePhrase[], random: boolean = false, intervalMinutes: number = 1, useSeconds: boolean = false, startFromIndex: number = 0) => {
     if (phrases.length === 0) return;
 
     cleanup();
@@ -258,7 +258,10 @@ export function useSequentialPlayer() {
       totalPhrases: phrases.length,
     });
 
-    const startIndex = random ? Math.floor(Math.random() * phrases.length) : 0;
+    // Se random, ignora startFromIndex e sorteia. Senão, respeita o índice pedido
+    // (com clamp defensivo para não estourar o array).
+    const safeStart = Math.max(0, Math.min(startFromIndex, phrases.length - 1));
+    const startIndex = random ? Math.floor(Math.random() * phrases.length) : safeStart;
     playNext(startIndex, phrases, random, intervalSeconds);
   }, [playNext, cleanup]);
 

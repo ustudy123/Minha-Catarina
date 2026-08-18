@@ -92,6 +92,7 @@ const PhraseItem = memo(({
   onPlay,
   onPause,
   onToggleFavorite,
+  onPlayFromHere,
   duration,
   audioControlsProps
 }: {
@@ -106,6 +107,7 @@ const PhraseItem = memo(({
   onPlay: (phrase: Phrase) => void;
   onPause: () => void;
   onToggleFavorite: (phrase: Phrase) => void;
+  onPlayFromHere?: (index: number) => void;
   duration: number;
   audioControlsProps: any;
 }) => (
@@ -143,7 +145,12 @@ const PhraseItem = memo(({
         <Star className={cn("w-5 h-5", isFavorite && "fill-highlight text-highlight")} />
       </Button>
 
-      <PhraseOptionsMenu phraseId={phrase.id} phraseText={phrase.text} phraseSource="library" />
+      <PhraseOptionsMenu 
+        phraseId={phrase.id} 
+        phraseText={phrase.text} 
+        phraseSource="library"
+        onPlayFromHere={onPlayFromHere ? () => onPlayFromHere(index) : undefined}
+      />
     </div>
 
     {isPlaying && duration > 0 && (
@@ -197,6 +204,17 @@ const Library = () => {
   const { phrases: savedPhrases, isLoading: loadingSaved, removePhrase, toggleFavorite: toggleSavedFavorite } = useSavedPhrases();
   const t = getTranslations(language);
   const sequentialPlayer = useSequentialPlayer();
+  const [autoPlayInterval, setAutoPlayInterval] = useState(5);
+
+  // Dispara reprodução sequencial a partir de uma frase específica, usando o
+  // intervalo atualmente selecionado no controle de reprodução automática.
+  // As frases passam por getTextWithoutPauses para ficar consistente com o
+  // que o "Tocar Todas" já usa (evita ler os marcadores como texto).
+  const handlePlayFromIndex = useCallback((startIndex: number) => {
+    if (filteredPhrases.length === 0) return;
+    const playable = filteredPhrases.map(p => ({ id: p.id, text: getTextWithoutPauses(p.text) }));
+    sequentialPlayer.startPlayAll(playable, false, autoPlayInterval, true, startIndex);
+  }, [filteredPhrases, sequentialPlayer, autoPlayInterval]);
 
   const categories: Category[] = [
     { id: "daily-morning", name: language === 'pt' ? "Rotina Manhã" : language === 'en' ? "Morning Routine" : "Rutina Mañana", icon: Sun, dataCategory: "daily", dataTimeOfDay: "morning" },
@@ -759,6 +777,8 @@ const Library = () => {
             <AutoPlayControls
               phrases={filteredPhrases.map(p => ({ id: p.id, text: getTextWithoutPauses(p.text) }))}
               sequentialPlayer={sequentialPlayer}
+              intervalSeconds={autoPlayInterval}
+              onIntervalChange={setAutoPlayInterval}
             />
 
             {/* Phrases */}
@@ -783,6 +803,7 @@ const Library = () => {
                       setPlayingId(null);
                     }}
                     onToggleFavorite={handleToggleFavorite}
+                    onPlayFromHere={handlePlayFromIndex}
                     duration={audioPlayer.duration}
                     audioControlsProps={{
                       volume: audioPlayer.volume,
