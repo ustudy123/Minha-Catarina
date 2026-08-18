@@ -8,17 +8,17 @@ const corsHeaders = {
 };
 
 // Generate a simple hash for cache key
-function generateCacheKey(text: string, voiceId: string, contentType?: string): string {
-  // Use a more robust hashing approach for longer texts
-  const input = `${text.toLowerCase().trim()}_${voiceId}_${contentType || 'standard'}`;
+function generateCacheKey(text: string, voiceId: string, contentType?: string, language?: string): string {
+  // Inclui language para evitar colisão caso a tradução tenha falhado
+  // silenciosamente e o texto ficar igual entre idiomas.
+  const input = `${text.toLowerCase().trim()}_${language || 'pt'}_${voiceId}_${contentType || 'standard'}`;
   let hash = 0;
   for (let i = 0; i < input.length; i++) {
     const char = input.charCodeAt(i);
     hash = ((hash << 5) - hash) + char;
-    hash = hash & hash; // Convert to 32bit integer
+    hash = hash & hash;
   }
-  // Use a combination of length and hash to reduce collisions
-  return `${text.length}_${Math.abs(hash).toString(36)}`;
+  return `${text.length}_${language || 'pt'}_${Math.abs(hash).toString(36)}`;
 }
 
 function formatarTextoMusica(texto: string): string {
@@ -167,7 +167,7 @@ serve(async (req) => {
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     // Generate cache key using processed text and voiceId
-    const cacheKey = generateCacheKey(processedText, voiceId, contentType);
+    const cacheKey = generateCacheKey(processedText, voiceId, contentType, targetLanguage);
     console.log('Cache lookup', { cacheKey, textLength: processedText.length, isMusic });
 
     // Check cache first

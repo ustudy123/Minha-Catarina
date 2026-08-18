@@ -17,15 +17,17 @@ export const getAudioCacheKey = (
   voiceId: string, 
   contentType: string = 'standard'
 ): string => {
-  // Simple hash for consistency with edge function
+  // Hash inclui language para não confundir áudio traduzido de idiomas diferentes.
+  // Antes, clicar em EN após ter tocado em PT retornava o cache PT porque
+  // a chave era idêntica (o language era ignorado).
   let hash = 0;
-  const input = `${text.toLowerCase().trim()}_${voiceId}_${contentType}`;
+  const input = `${text.toLowerCase().trim()}_${language}_${voiceId}_${contentType}`;
   for (let i = 0; i < input.length; i++) {
     const char = input.charCodeAt(i);
     hash = ((hash << 5) - hash) + char;
     hash = hash & hash;
   }
-  return `${text.length}_${Math.abs(hash).toString(36)}`;
+  return `${text.length}_${language}_${Math.abs(hash).toString(36)}`;
 };
 
 export function useAudioPreloader() {
