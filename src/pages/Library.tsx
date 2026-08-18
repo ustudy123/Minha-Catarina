@@ -206,15 +206,8 @@ const Library = () => {
   const sequentialPlayer = useSequentialPlayer();
   const [autoPlayInterval, setAutoPlayInterval] = useState(5);
 
-  // Dispara reprodução sequencial a partir de uma frase específica, usando o
-  // intervalo atualmente selecionado no controle de reprodução automática.
-  // As frases passam por getTextWithoutPauses para ficar consistente com o
-  // que o "Tocar Todas" já usa (evita ler os marcadores como texto).
-  const handlePlayFromIndex = useCallback((startIndex: number) => {
-    if (filteredPhrases.length === 0) return;
-    const playable = filteredPhrases.map(p => ({ id: p.id, text: getTextWithoutPauses(p.text) }));
-    sequentialPlayer.startPlayAll(playable, false, autoPlayInterval, true, startIndex);
-  }, [filteredPhrases, sequentialPlayer, autoPlayInterval]);
+
+
 
   const categories: Category[] = [
     { id: "daily-morning", name: language === 'pt' ? "Rotina Manhã" : language === 'en' ? "Morning Routine" : "Rutina Mañana", icon: Sun, dataCategory: "daily", dataTimeOfDay: "morning" },
@@ -468,6 +461,15 @@ const Library = () => {
         return matchesCategory && matchesSub && matchesSearch;
       })
     : [], [selectedCategory, samplePhrases, selectedSubCategory, searchQuery]);
+
+  // Dispara reprodução sequencial a partir de uma frase específica.
+  const handlePlayFromIndex = useCallback((startIndex: number) => {
+    if (filteredPhrases.length === 0) return;
+    const playable = filteredPhrases.map(p => ({ id: p.id, text: getTextWithoutPauses(p.text) }));
+    sequentialPlayer.startPlayAll(playable, false, autoPlayInterval, true, startIndex);
+  }, [filteredPhrases, sequentialPlayer, autoPlayInterval]);
+
+
 
   // Preload audio for visible phrases in selected category for instant playback
   // Skip categories that use different APIs (songs, sounds, sfx)
