@@ -56,15 +56,23 @@ const CreatePhrase = () => {
 
     try {
       setGeneratingLang(targetLang);
+      // Só pede tradução se o idioma-alvo for diferente do idioma atual do app.
+      // Assumimos que o usuário digitou o texto no idioma em que está o app —
+      // se ele clicou no mesmo idioma, não há nada a traduzir e podemos pular
+      // a chamada LLM (economiza 1-3s por geração).
+      const needsTranslation = targetLang !== language;
       if (songMode) {
         const { url } = await generateSong({
           text: phraseText,
           style: 'nursery',
-          language: targetLang,
+          ...(needsTranslation ? { language: targetLang } : {}),
         });
         if (url) await audioPlayer.play(url);
       } else {
-        const { url } = await generate({ text: phraseText, language: targetLang });
+        const { url } = await generate({
+          text: phraseText,
+          ...(needsTranslation ? { language: targetLang } : {}),
+        });
         if (url) await audioPlayer.play(url);
       }
     } catch (error) {

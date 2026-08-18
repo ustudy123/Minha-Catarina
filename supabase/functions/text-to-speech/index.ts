@@ -283,51 +283,59 @@ serve(async (req) => {
 
     const arrayBuffer = await response.arrayBuffer();
     const audioBytes = new Uint8Array(arrayBuffer);
-
-    // Upload to Supabase Storage
+    const base64Audio = base64Encode(arrayBuffer);
     const fileName = `cache/${cacheKey}.mp3`;
-    const { error: uploadError } = await supabase.storage
-      .from('library-audio')
-      .upload(fileName, audioBytes, {
-        contentType: 'audio/mpeg',
-        upsert: true,
-      });
 
-    if (uploadError) {
-      console.error('Storage upload error:', uploadError);
-      // Still return the audio even if caching fails
-      const base64Audio = base64Encode(arrayBuffer);
-      return new Response(
-        JSON.stringify({ audioContent: base64Audio, cached: false }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
+    // Persistência em background: NÃO bloqueia a resposta para o usuário.
+    // O áudio já vai pelo base64; o upload no Storage e o insert no
+    // audio_cache acontecem em paralelo e ficam prontos para servir o
+    // próximo pedido da mesma frase via cache.
+    const persistCache = async () => {
+      try {
+        const { error: uploadError } = await supabase.storage
+          .from('library-audio')
+          .upload(fileName, audioBytes, {
+            contentType: 'audio/mpeg',
+            upsert: true,
+          });
+        if (uploadError) {
+          console.error('Background storage upload error:', uploadError);
+          return;
+        }
+        const { data: publicUrlData } = supabase.storage
+          .from('library-audio')
+          .getPublicUrl(fileName);
+        const { error: insertError } = await supabase
+          .from('audio_cache')
+          .insert({
+            cache_key: cacheKey,
+            text_content: finalText,
+            voice_id: voiceId,
+            audio_url: publicUrlData.publicUrl,
+          });
+        if (insertError) {
+          console.error('Background cache insert error:', insertError);
+        } else {
+          console.log('Audio cached in background:', publicUrlData.publicUrl);
+        }
+      } catch (err) {
+        console.error('Background persistence error:', err);
+      }
+    };
 
-    // Get public URL
-    const { data: publicUrlData } = supabase.storage
-      .from('library-audio')
-      .getPublicUrl(fileName);
-
-    const audioUrl = publicUrlData.publicUrl;
-
-    // Save to cache table
-    const { error: insertError } = await supabase
-      .from('audio_cache')
-      .insert({
-        cache_key: cacheKey,
-        text_content: finalText,
-        voice_id: voiceId,
-        audio_url: audioUrl,
-      });
-
-    if (insertError) {
-      console.error('Cache insert error:', insertError);
+    // EdgeRuntime.waitUntil mantém o worker vivo até a Promise resolver,
+    // sem segurar a resposta HTTP.
+    // @ts-ignore Deno.EdgeRuntime é fornecido pelo runtime das Edge Functions
+    if (typeof EdgeRuntime !== 'undefined' && EdgeRuntime?.waitUntil) {
+      // @ts-ignore
+      EdgeRuntime.waitUntil(persistCache());
     } else {
-      console.log('Audio cached successfully:', audioUrl);
+      // Fallback local (dev): dispara sem await
+      persistCache();
     }
 
     return new Response(
-      JSON.stringify({ audioUrl, cached: false }),
+      JSON.stringify({ audioContent: base64Audio, cached: false }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error) {
