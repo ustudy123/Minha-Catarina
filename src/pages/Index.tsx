@@ -14,7 +14,7 @@ import { useState } from "react";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useTextToSpeech } from "@/hooks/useTextToSpeech";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useVoice } from "@/contexts/VoiceContext";
+
 import { useSubscription } from "@/hooks/useSubscription";
 import { useBluetooth } from "@/hooks/useBluetooth";
 import { cn } from "@/lib/utils";
@@ -33,15 +33,12 @@ const Index = () => {
     language
   } = useLanguage();
   const {
-    selectedDoll
-  } = useVoice();
-  const {
     isPremium
   } = useSubscription();
   const t = getTranslations(language);
-  const dollName = selectedDoll === 'catarina' ? 'Catarina' : 'Antônio';
+  const dollName = 'Catarina';
   const phraseOfTheDay = t.home.phraseOfTheDayText;
-  const readyToTalk = selectedDoll === 'catarina' ? t.home.readyToTalk : language === 'pt' ? '🧢 Pronto para conversar com você!' : language === 'en' ? '🧢 Ready to talk with you!' : '🧢 ¡Listo para hablar contigo!';
+  const readyToTalk = t.home.readyToTalk;
   const handlePlayPhraseOfDay = async () => {
     if (audioPlayer.isPlaying) {
       audioPlayer.pause();
@@ -176,9 +173,7 @@ const Index = () => {
           <div className="relative p-4 sm:p-6">
             <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 text-center sm:text-left">
               <div className="relative flex-shrink-0">
-                {selectedDoll === 'catarina' ? <img src={catarinaMascot} alt="Catarina" className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover shadow-lg" /> : <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center shadow-lg">
-                    <span className="text-4xl sm:text-5xl">👦🏻</span>
-                  </div>}
+                <img src={catarinaMascot} alt="Catarina" className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover shadow-lg" />
                 <div className={cn("absolute -bottom-1 -right-1 w-5 h-5 sm:w-6 sm:h-6 rounded-full border-4 border-card", isConnected ? "bg-success animate-pulse-glow" : "bg-muted-foreground")} />
               </div>
               

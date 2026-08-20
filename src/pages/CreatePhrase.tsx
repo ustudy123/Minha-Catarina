@@ -10,7 +10,7 @@ import { useTextToSong } from "@/hooks/useTextToSong";
 import { useSavedPhrases } from "@/hooks/useSavedPhrases";
 import { useLanguage, Language } from "@/contexts/LanguageContext";
 import { useSubscription } from "@/hooks/useSubscription";
-import { useVoice } from "@/contexts/VoiceContext";
+
 import { getTranslations } from "@/translations";
 import { toast } from "sonner";
 import { PlayButton } from "@/components/audio/PlayButton";
@@ -40,13 +40,9 @@ const CreatePhrase = () => {
   const { addPhrase } = useSavedPhrases();
   const { language } = useLanguage();
   const { canCreatePhrases } = useSubscription();
-  const { selectedDoll } = useVoice();
   const t = getTranslations(language);
 
-  // Get doll name based on selection
-  const dollName = selectedDoll === 'catarina' 
-    ? (language === 'pt' ? 'a Catarina' : language === 'es' ? 'Catarina' : 'Catarina')
-    : (language === 'pt' ? 'o Antônio' : language === 'es' ? 'Antônio' : 'Antônio');
+  const dollName = language === 'pt' ? 'a Catarina' : 'Catarina';
 
   const handleGenerateAndPlay = async (targetLang: Language) => {
     if (!phraseText.trim()) {

@@ -14,6 +14,10 @@ export interface ChildVoice {
   gender: 'female' | 'male';
 }
 
+// Modo Antônio (boneco menino) foi removido do produto. O tipo DollType e
+// os hooks selectedDoll/setSelectedDoll são mantidos apenas por
+// retrocompatibilidade: o valor sempre será 'catarina'.
+
 // Vozes femininas para Catarina
 export const FEMALE_VOICES: ChildVoice[] = [
   {
@@ -62,34 +66,11 @@ export const FEMALE_VOICES: ChildVoice[] = [
   },
 ];
 
-// Vozes para Antônio (usando vozes neutras que soam infantis)
-export const MALE_VOICES: ChildVoice[] = [
-  {
-    id: 'leo',
-    name: 'Leo',
-    description: {
-      pt: 'Voz suave e neutra',
-      en: 'Soft and neutral voice',
-      es: 'Voz suave y neutra',
-    },
-    voiceId: 'pFZP5JQG7iQjIQuC4Bku',
-    gender: 'male',
-  },
-  {
-    id: 'bento',
-    name: 'Bento',
-    description: {
-      pt: 'Voz doce e suave',
-      en: 'Sweet and soft voice',
-      es: 'Voz dulce y suave',
-    },
-    voiceId: 'zrHiDhphv9ZnVXBqCLjz',
-    gender: 'male',
-  },
-];
+// Vozes masculinas removidas. Mantido export vazio para não quebrar imports.
+export const MALE_VOICES: ChildVoice[] = [];
 
 // Todas as vozes combinadas (para compatibilidade)
-export const CHILD_VOICES: ChildVoice[] = [...FEMALE_VOICES, ...MALE_VOICES];
+export const CHILD_VOICES: ChildVoice[] = [...FEMALE_VOICES];
 
 interface VoiceContextType {
   selectedVoice: ChildVoice;
@@ -107,10 +88,9 @@ interface VoiceContextType {
 const VoiceContext = createContext<VoiceContextType | undefined>(undefined);
 
 export const VoiceProvider = ({ children }: { children: ReactNode }) => {
-  const [selectedDoll, setSelectedDollState] = useState<DollType>(() => {
-    const savedDoll = localStorage.getItem('selected-doll-type');
-    return (savedDoll as DollType) || 'catarina';
-  });
+  // selectedDoll travado em 'catarina' (modo Antônio removido).
+  // Ainda expomos o hook para não quebrar componentes que consomem.
+  const [selectedDoll, setSelectedDollState] = useState<DollType>('catarina');
 
   const [hasCompletedOnboarding] = useState<boolean>(true);
   const [playbackSpeed, setPlaybackSpeedState] = useState<number>(() => {
@@ -118,20 +98,19 @@ export const VoiceProvider = ({ children }: { children: ReactNode }) => {
     return savedSpeed ? parseFloat(savedSpeed) : 1.0;
   });
 
-  const availableVoices = selectedDoll === 'catarina' ? FEMALE_VOICES : MALE_VOICES;
+  const availableVoices = FEMALE_VOICES;
 
   const [selectedVoice, setSelectedVoiceState] = useState<ChildVoice>(() => {
     const savedVoiceId = localStorage.getItem('selected-voice-id');
-    const savedDoll = localStorage.getItem('selected-doll-type') as DollType || 'catarina';
-    const voicesForDoll = savedDoll === 'catarina' ? FEMALE_VOICES : MALE_VOICES;
-    const foundVoice = voicesForDoll.find((v) => v.id === savedVoiceId);
-    
-    // Se a voz salva não existe mais, limpa o localStorage e usa a primeira disponível
+    const foundVoice = FEMALE_VOICES.find((v) => v.id === savedVoiceId);
+
+    // Se a voz salva não existe mais (ex: usuário tinha 'leo' salvo antes da
+    // remoção do Antônio), limpa o localStorage e cai na primeira feminina.
     if (!foundVoice && savedVoiceId) {
       localStorage.removeItem('selected-voice-id');
     }
-    
-    return foundVoice || voicesForDoll[0];
+
+    return foundVoice || FEMALE_VOICES[0];
   });
   
   // Garante que a voz selecionada sempre seja válida quando as vozes disponíveis mudam
@@ -147,9 +126,10 @@ export const VoiceProvider = ({ children }: { children: ReactNode }) => {
     localStorage.setItem('selected-voice-id', selectedVoice.id);
   }, [selectedVoice]);
 
+  // Limpar preferência antiga do localStorage — o Antônio não existe mais.
   useEffect(() => {
-    localStorage.setItem('selected-doll-type', selectedDoll);
-  }, [selectedDoll]);
+    localStorage.removeItem('selected-doll-type');
+  }, []);
 
   const setPlaybackSpeed = (speed: number) => {
     setPlaybackSpeedState(speed);
@@ -160,15 +140,13 @@ export const VoiceProvider = ({ children }: { children: ReactNode }) => {
     setSelectedVoiceState(voice);
   };
 
-  const setSelectedDoll = (doll: DollType) => {
-    setSelectedDollState(doll);
-    // Reset voice to first available for the new doll
-    const newVoices = doll === 'catarina' ? FEMALE_VOICES : MALE_VOICES;
-    setSelectedVoiceState(newVoices[0]);
+  // Noop: modo Antônio removido, boneca é sempre a Catarina.
+  const setSelectedDoll = (_doll: DollType) => {
+    // intencionalmente vazio
   };
 
-  const completeOnboarding = (doll: DollType) => {
-    setSelectedDoll(doll);
+  const completeOnboarding = (_doll: DollType) => {
+    // intencionalmente vazio
   };
 
   return (

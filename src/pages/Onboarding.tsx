@@ -53,23 +53,6 @@ export default function Onboarding() {
                 </div>}
             </div>
           </Card>
-
-          {/* Antonio Option - Hidden but preserved */}
-          <Card className={cn('hidden relative cursor-pointer transition-all hover:scale-105 border-2', selectedDoll === 'antonio' ? 'border-accent bg-accent/10 ring-2 ring-accent/30' : 'border-border/50 hover:border-accent/50')} onClick={() => setSelectedDoll('antonio')}>
-            <div className="p-6 flex flex-col items-center space-y-4">
-              {/* Blue cap icon */}
-              <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center shadow-lg">
-                <span className="text-4xl">👦🏻</span>
-              </div>
-              <div className="text-center">
-                <h3 className="font-bold text-lg">{t.onboarding?.antonio || 'Antônio'}</h3>
-                
-              </div>
-              {selectedDoll === 'antonio' && <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-accent flex items-center justify-center">
-                  <Check className="w-4 h-4 text-accent-foreground" />
-                </div>}
-            </div>
-          </Card>
         </div>
 
         {/* Continue Button */}
