@@ -221,9 +221,13 @@ serve(async (req) => {
           },
           body: JSON.stringify({
             text: processedText,
-            // Turbo v2.5: 0.5 crédito/char (vs 1.0 do multilingual_v2), latência menor,
-            // suporta 32 idiomas incluindo PT-BR. Qualidade ótima pra frases curtas.
-            model_id: 'eleven_turbo_v2_5',
+            // Escolha do modelo por tipo de conteúdo:
+            // - 'multilingual': aulas de idioma com PT+EN ou PT+ES misturados na
+            //   mesma frase. eleven_multilingual_v2 alterna entre idiomas
+            //   naturalmente (code-switching). Custa ~1 crédito/char.
+            // - default: eleven_turbo_v2_5 — mais barato (~0.5 crédito/char) e
+            //   rápido, ideal para frases num único idioma (o resto do app).
+            model_id: contentType === 'multilingual' ? 'eleven_multilingual_v2' : 'eleven_turbo_v2_5',
             voice_settings: voiceSettings,
           }),
         }

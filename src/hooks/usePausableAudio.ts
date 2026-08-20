@@ -116,7 +116,8 @@ export function usePausableAudio() {
   const playSegment = useCallback(async (
     index: number, 
     segments: PauseSegment[], 
-    targetLanguage?: 'pt' | 'en' | 'es'
+    targetLanguage?: 'pt' | 'en' | 'es',
+    contentType?: string
   ) => {
     if (!isPlayingRef.current || index >= segments.length) {
       // End of playback
@@ -142,7 +143,7 @@ export function usePausableAudio() {
     if (segment.type === 'pause') {
       // Handle pause segment
       startPauseTimer(segment.duration || 5, () => {
-        playSegment(index + 1, segments, targetLanguage);
+        playSegment(index + 1, segments, targetLanguage, contentType);
       });
     } else {
       // Handle text segment - check cache first, then generate
@@ -154,7 +155,8 @@ export function usePausableAudio() {
         const cacheKey = getAudioCacheKey(
           segment.content, 
           targetLanguage || 'pt', 
-          selectedVoice.voiceId
+          selectedVoice.voiceId,
+          contentType || 'standard'
         );
         const cachedAudio = audioCache.get(cacheKey);
         
@@ -170,6 +172,7 @@ export function usePausableAudio() {
           const { url } = await generate({ 
             text: segment.content, 
             ...(targetLanguage ? { language: targetLanguage } : {}),
+            ...(contentType ? { contentType } : {}),
           });
           audioUrl = url;
         }
@@ -187,7 +190,7 @@ export function usePausableAudio() {
 
           // Move to next segment
           if (isPlayingRef.current) {
-            playSegment(index + 1, segments, targetLanguage);
+            playSegment(index + 1, segments, targetLanguage, contentType);
           }
         }
         
@@ -197,7 +200,7 @@ export function usePausableAudio() {
         setState(prev => ({ ...prev, isLoading: false }));
         // Continue to next segment even on error
         if (isPlayingRef.current) {
-          playSegment(index + 1, segments, targetLanguage);
+          playSegment(index + 1, segments, targetLanguage, contentType);
         }
       }
     }
@@ -205,7 +208,8 @@ export function usePausableAudio() {
 
   const play = useCallback(async (
     text: string, 
-    targetLanguage?: 'pt' | 'en' | 'es'
+    targetLanguage?: 'pt' | 'en' | 'es',
+    contentType?: string
   ) => {
     // Parse text into segments
     const segments = parseText(text);
@@ -225,7 +229,7 @@ export function usePausableAudio() {
     });
 
     // Start playing from first segment
-    playSegment(0, segments, targetLanguage);
+    playSegment(0, segments, targetLanguage, contentType);
   }, [parseText, playSegment, language]);
 
   const stop = useCallback(() => {

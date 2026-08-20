@@ -62,7 +62,9 @@ const Languages = () => {
         .map(s => s.trim())
         .filter(s => s.length > 0);
       
-      return segments.map(segment => ({ text: segment }));
+      // 'multilingual' faz o preloader chamar a edge function com
+      // contentType='multilingual' → modelo eleven_multilingual_v2 no TTS.
+      return segments.map(segment => ({ text: segment, category: 'multilingual' }));
     });
 
     if (phrasesToPreload.length > 0) {
@@ -86,9 +88,11 @@ const Languages = () => {
     try {
       sequentialPlayer.stop();
       setPlayingId(phrase.id);
-      // Play without translation - the phrases already contain mixed languages as-is
-      // e.g., "How are you?" should be spoken in English, not translated
-      await pausableAudio.play(phrase.text);
+      // Contexto multilíngue: as frases misturam PT + EN/ES na mesma sentença
+      // ("Hello, quer dizer Olá"). Marcamos como 'multilingual' para que a
+      // edge function use o modelo eleven_multilingual_v2 (que faz code-
+      // switching corretamente) em vez do turbo (que se confunde).
+      await pausableAudio.play(phrase.text, undefined, 'multilingual');
     } catch (error) {
       console.error('Error playing phrase:', error);
     }
