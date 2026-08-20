@@ -20,7 +20,7 @@ export const libraryPhrasesData: LibraryPhraseData[] = [
   { text: "Está sol ou está chovendo lá fora? Vamos ver?", category: "daily", timeOfDay: "morning" },
   { text: "Você prefere chuva ou sol?", category: "daily", timeOfDay: "morning" },
   { text: "Eu gosto dos dois. Um dia sol, um dia chuva.", category: "daily", timeOfDay: "morning" },
-  { text: "Sol e chuva casamento de viúva. Chuva e sol casamento de espanhol.", category: "daily", timeOfDay: "morning", soundPrompt: "cute baby girl laughing and giggling happily, realistic child laughter" },
+  { text: "Sol e chuva casamento de viúva. Chuva e sol casamento de espanhol.", category: "daily", timeOfDay: "morning" },
   { text: "Vamos tomar café da manhã?", category: "daily", timeOfDay: "morning" },
   { text: "O café da manhã é uma refeição muito importante. O que você gosta de comer de manhã?", category: "daily", timeOfDay: "morning" },
   { text: "Estou com fome.", category: "daily", timeOfDay: "morning", soundPrompt: "baby crying because hungry, whimpering baby girl wanting food, realistic infant cry" },
