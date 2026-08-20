@@ -23,9 +23,9 @@ export const englishPhrasesData: LanguagePhraseData[] = [
   // AULA 2 - Cores
   { text: "Hello! Hora de aprender inglês?", category: "colors" },
   { text: "Vou te ensinar as cores hoje. Está pronta para começar?", category: "colors" },
-  { text: "Em inglês, vermelho é RED. Fala comigo: RED. <break time='0.6s'/> RED.", category: "colors" },
+  { text: "Em inglês, vermelho é RED. Fala comigo: RED...... RED.", category: "colors" },
   { text: "Muito bem! E Azul em inglês é BLUE.", category: "colors" },
-  { text: "Repete: BLUE. <break time='0.6s'/> BLUE. Eu gosto quando o céu fica blue.", category: "colors" },
+  { text: "Repete: BLUE...... BLUE. Eu gosto quando o céu fica blue.", category: "colors" },
   { text: "E rosa, como será que se diz rosa em inglês?", category: "colors" },
   { text: "Você sabe falar rosa em inglês?", category: "colors" },
   { text: "Deixa eu pensar um pouquinho. Rosa em inglês é pink. Eu amo a cor pink.", category: "colors" },
@@ -38,7 +38,7 @@ export const englishPhrasesData: LanguagePhraseData[] = [
   // AULA 3 - Animais
   { text: "Você sabe como fala cachorro em inglês?", category: "animals" },
   { text: "Cachorro em inglês é DOG. Fala comigo?", category: "animals" },
-  { text: "Dog. <break time='0.6s'/> Dog.", category: "animals" },
+  { text: "Dog...... Dog.", category: "animals" },
   { text: "Agora você fala sozinha. Cachorro em inglês é?", category: "animals" },
   { text: "Isso mesmo, dog. Muito bem!", category: "animals" },
   { text: "Gato em inglês é CAT. Quer aprender mais em inglês?", category: "animals" },
@@ -50,16 +50,16 @@ export const englishPhrasesData: LanguagePhraseData[] = [
 
   // AULA 4 - Números
   { text: "Hello, Vamos contar em inglês?", category: "numbers" },
-  { text: "Um é ONE. Dois é TWO. Três é THREE. One, two, three. <break time='0.6s'/> One, two, three.", category: "numbers" },
+  { text: "Um é ONE. Dois é TWO. Três é THREE. One, two, three...... One, two, three.", category: "numbers" },
   { text: "Vou contar até dez para você ouvir, tudo em inglês. Preste atenção que é bem legal.", category: "numbers" },
-  { text: "One, two, three, four, five. <break time='0.4s'/> Six, seven, eight, nine e ten.", category: "numbers" },
-  { text: "Mais uma vez: One, two, three, four, five. <break time='0.4s'/> Six, seven, eight, nine e ten.", category: "numbers" },
+  { text: "One, two, three, four, five.... Six, seven, eight, nine e ten.", category: "numbers" },
+  { text: "Mais uma vez: One, two, three, four, five.... Six, seven, eight, nine e ten.", category: "numbers" },
   { text: "Na escola aprendemos muitas coisas também. Escola em inglês é school. Professora em inglês é teacher, e amigo em inglês é friend.", category: "numbers" },
   { text: "Nós vamos aprender na school. Na school, quem ensina é a teacher e na school, encontramos os friends.", category: "numbers" },
   { text: "School é escola, teacher é professora e friends é amigos.", category: "numbers" },
 
   // AULA 5 - Partes do Corpo
-  { text: "Hora de aprender inglês. Cabeça em inglês é HEAD. Repete comigo: HEAD. <break time='0.6s'/> HEAD.", category: "vocabulary" },
+  { text: "Hora de aprender inglês. Cabeça em inglês é HEAD. Repete comigo: HEAD...... HEAD.", category: "vocabulary" },
   { text: "Nariz em inglês é NOSE. Coração é heart. Você sabia que o heart faz tum-tum-tum o dia todo! Ele trabalha sem parar para cuidar da gente, até quando a gente tá dormindo.", category: "vocabulary" },
   { text: "Eu tenho dois eyes e duas ears. Dois olhos e duas orelhas. Olhos em inglês é eyes e orelhas é ears.", category: "vocabulary" },
   { text: "Eu adoro aprender coisas novas, vamos ficar mais e mais inteligentes assim.", category: "vocabulary" },
@@ -67,9 +67,9 @@ export const englishPhrasesData: LanguagePhraseData[] = [
   // AULA 6 - Palavras Mágicas
   { text: "Vou te ensinar as palavras mágicas em inglês. Você sabe quais são as palavras mágicas?", category: "vocabulary" },
   { text: "Isso mesmo, Desculpa, por favor e obrigada.", category: "vocabulary" },
-  { text: "Desculpa em inglês é sorry. Repete comigo: sorry. <break time='0.6s'/> sorry.", category: "vocabulary" },
-  { text: "Por favor em inglês é please. Repete comigo: please. <break time='0.6s'/> please.", category: "vocabulary" },
-  { text: "E obrigada em inglês é Thanks. Repete de novo: thanks. <break time='0.6s'/> thanks.", category: "vocabulary" },
+  { text: "Desculpa em inglês é sorry. Repete comigo: sorry...... sorry.", category: "vocabulary" },
+  { text: "Por favor em inglês é please. Repete comigo: please...... please.", category: "vocabulary" },
+  { text: "E obrigada em inglês é Thanks. Repete de novo: thanks...... thanks.", category: "vocabulary" },
   { text: "Thanks é obrigada, sorry é desculpa e please é por favor. Devemos sempre usar as palavras mágicas, porque somos crianças educadas.", category: "vocabulary" },
   { text: "Agora você pode pedir assim para mamãe: Please mamãe me dá uma comidinha?", category: "vocabulary" },
 
@@ -88,10 +88,10 @@ export const englishPhrasesData: LanguagePhraseData[] = [
   { text: "Muito bem! Isso quer dizer Olá! Pode entrar! Qual é o seu nome?", category: "vocabulary" },
   { text: "Em inglês falamos: My name is Catarina. Tente falar com seu nome agora.", category: "vocabulary" },
   { text: "Agora vamos passear pelo jardim mágico. No jardim encantado temos Flowers and butterflies. Sabe o que isso significa?", category: "vocabulary" },
-  { text: "Flores e borboletas. Repete comigo: Flowers and butterflies. <break time='0.6s'/> Flowers and butterflies.", category: "vocabulary" },
-  { text: "Hora do jogo, Eu falo e você repete. Coroa é Crown! <break time='0.6s'/> Coroa é Crown!", category: "vocabulary" },
-  { text: "Vestido é Dress! <break time='0.6s'/> Vestido é Dress!", category: "vocabulary" },
-  { text: "Estrela é Star! <break time='0.6s'/> Estrela é Star!", category: "vocabulary" },
+  { text: "Flores e borboletas. Repete comigo: Flowers and butterflies...... Flowers and butterflies.", category: "vocabulary" },
+  { text: "Hora do jogo, Eu falo e você repete. Coroa é Crown!...... Coroa é Crown!", category: "vocabulary" },
+  { text: "Vestido é Dress!...... Vestido é Dress!", category: "vocabulary" },
+  { text: "Estrela é Star!...... Estrela é Star!", category: "vocabulary" },
   { text: "Uau! Você está virando uma princesa do inglês! Vamos aprender uma frase de princesa educada: Please é Por favor. Thank you é Obrigado.", category: "vocabulary" },
   { text: "Que educação real! Parabéns! Você ganhou o título de Princesa do Inglês.", category: "vocabulary" },
 ];
@@ -100,7 +100,7 @@ export const englishPhrasesData: LanguagePhraseData[] = [
 export const spanishPhrasesData: LanguagePhraseData[] = [
   // AULA 1 - Oi
   { text: "¡Hola, vamos brincar de falar espanhol?", category: "greetings" },
-  { text: "Primeira palavra mágica: Hola. Hola significa Oi. Repete: Hola! <break time='0.6s'/> Hola!", category: "greetings" },
+  { text: "Primeira palavra mágica: Hola. Hola significa Oi. Repete: Hola!...... Hola!", category: "greetings" },
   { text: "¡Muy bien! Me llamo Catarina. Agora uma frase: ¿Cómo estás?", category: "greetings" },
   { text: "Estoy bien significa Estou bem. Agora você já sabe se apresentar em espanhol!", category: "greetings" },
   { text: "Você ganhou o troféu de Mini Falante de Espanhol.", category: "greetings" },
@@ -114,7 +114,7 @@ export const spanishPhrasesData: LanguagePhraseData[] = [
   { text: "Como é o nome do seu abuelo?", category: "family" },
 
   // AULA 3 - Brinquedos
-  { text: "Eu adoro falar em espanhol. Vou te ensinar algumas palavras bem legais em espanhol. Boneca em espanhol é muñeca. Repete comigo: muñeca. <break time='0.6s'/> muñeca.", category: "vocabulary" },
+  { text: "Eu adoro falar em espanhol. Vou te ensinar algumas palavras bem legais em espanhol. Boneca em espanhol é muñeca. Repete comigo: muñeca...... muñeca.", category: "vocabulary" },
   { text: "Bola em espanhol é pelota. Vamos falar juntas essas palavras?", category: "vocabulary" },
   { text: "Um, dois, três e já.. Muñeca e Pelota.", category: "vocabulary" },
   { text: "Eu sou a muñeca Catarina, mas não sei brincar de pelota.", category: "vocabulary" },
@@ -123,9 +123,9 @@ export const spanishPhrasesData: LanguagePhraseData[] = [
 
   // AULA 4 - Números
   { text: "Vou te ensinar a contar até dez, em espanhol, não é difícil.", category: "numbers" },
-  { text: "Cero, uno, dos, tres, cuatro, cinco. <break time='0.4s'/> Seis, siete, ocho, nueve, diez. É bem legal, não é?", category: "numbers" },
+  { text: "Cero, uno, dos, tres, cuatro, cinco.... Seis, siete, ocho, nueve, diez. É bem legal, não é?", category: "numbers" },
   { text: "Vamos tentar juntas, você pode repetir depois de mim.", category: "numbers" },
-  { text: "Cero, uno, dos, tres, cuatro, cinco. <break time='0.4s'/> Seis, siete, ocho, nueve, diez. Ufa, acabou!", category: "numbers" },
+  { text: "Cero, uno, dos, tres, cuatro, cinco.... Seis, siete, ocho, nueve, diez. Ufa, acabou!", category: "numbers" },
 
   // AULA 5 - Lugares
   { text: "Eu adoro passear. E você gosta mais de passear ou ficar em casa?", category: "places" },
@@ -144,7 +144,7 @@ export const spanishPhrasesData: LanguagePhraseData[] = [
 
   // AULA 7 - Animais
   { text: "Eu gosto de animais. Devemos proteger os animais, mas alguns animais são perigosos e temos que ter cuidado. Vou te ensinar o nome de alguns animais em español. Aprendendo espanhol com Catarina.", category: "animals" },
-  { text: "Cavalo em español é caballo. Repete comigo essa palabra nova: caballo. <break time='0.6s'/> caballo. Você já andou de caballo?", category: "animals" },
+  { text: "Cavalo em español é caballo. Repete comigo essa palabra nova: caballo...... caballo. Você já andou de caballo?", category: "animals" },
   { text: "Me gusta montar a caballo. Podemos andar de caballo juntas um dia, o que achou dessa ideia?", category: "animals" },
   { text: "Vamos andar de caballo?", category: "animals" },
   { text: "Você é corajosa.", category: "animals" },
