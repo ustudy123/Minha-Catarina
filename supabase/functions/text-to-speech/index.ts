@@ -278,7 +278,13 @@ serve(async (req) => {
             },
             body: JSON.stringify({
               text: processedText,
-              model_id: contentType === 'multilingual' ? 'eleven_multilingual_v2' : 'eleven_turbo_v2_5',
+              // IMPORTANTE: eleven_multilingual_v2 SEMPRE, para todo o app.
+              // As vozes da Catarina são Instant Voice Clones criados em PT-BR,
+              // e clones só preservam a identidade no multilingual_v2. No
+              // turbo_v2_5 eles degradam para uma voz genérica (todas soam
+              // iguais). A economia do turbo não compensa a perda de identidade
+              // — e com o cache funcionando, cada frase é gerada uma vez só.
+              model_id: 'eleven_multilingual_v2',
               voice_settings: voiceSettings,
             }),
           }
