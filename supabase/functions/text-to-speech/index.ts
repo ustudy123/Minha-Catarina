@@ -1,11 +1,66 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.1';
+import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { encode as base64Encode } from 'https://deno.land/std@0.168.0/encoding/base64.ts';
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
+class TTSProviderError extends Error {
+  constructor(message: string, readonly status: number) {
+    super(message);
+  }
+}
+
+const wait = (milliseconds: number) => new Promise(resolve => setTimeout(resolve, milliseconds));
+
+async function generateWithLovableAI(text: string, isMusic: boolean): Promise<Response> {
+  const apiKey = Deno.env.get('LOVABLE_API_KEY');
+  if (!apiKey) {
+    throw new TTSProviderError('LOVABLE_API_KEY não está configurada para o provedor alternativo de voz.', 500);
+  }
+
+  const maxAttempts = 3;
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    const response = await fetch('https://ai.gateway.lovable.dev/v1/audio/speech', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'openai/gpt-4o-mini-tts',
+        input: text,
+        voice: 'alloy',
+        instructions: isMusic
+          ? 'Fale como uma canção infantil: ritmo alegre, dicção clara e pausas naturais.'
+          : 'Fale com voz acolhedora, natural e dicção clara para uma criança.',
+        response_format: 'mp3',
+        stream_format: 'audio',
+      }),
+    });
+
+    if (response.ok) return response;
+
+    const errorBody = await response.text().catch(() => '');
+    const retryable = response.status === 429 || response.status >= 500;
+    if (!retryable || attempt === maxAttempts - 1) {
+      let message = errorBody;
+      try {
+        const parsed = JSON.parse(errorBody);
+        message = parsed.message || parsed.error?.message || errorBody;
+      } catch {
+        // Preserve the provider response as the actionable error message.
+      }
+      throw new TTSProviderError(message || `Lovable AI retornou HTTP ${response.status}.`, response.status);
+    }
+
+    const retryAfterSeconds = Number(response.headers.get('Retry-After'));
+    const delayMs = Number.isFinite(retryAfterSeconds) && retryAfterSeconds > 0
+      ? retryAfterSeconds * 1000
+      : Math.min(1000 * (2 ** attempt), 4000) + Math.floor(Math.random() * 250);
+    await wait(delayMs);
+  }
+
+  throw new TTSProviderError('Não foi possível gerar o áudio pelo provedor alternativo.', 502);
+}
 
 // Generate a simple hash for cache key
 function generateCacheKey(text: string, voiceId: string, contentType?: string, language?: string): string {
@@ -137,15 +192,14 @@ serve(async (req) => {
 
   try {
     const ELEVENLABS_API_KEY = Deno.env.get('ELEVENLABS_API_KEY');
-    if (!ELEVENLABS_API_KEY) {
-      console.error('ELEVENLABS_API_KEY is not configured');
+    const { text, voiceId = 'Q6ic84dDGldojtRLsDTp', targetLanguage, contentType } = await req.json();
+
+    if (typeof text !== 'string' || text.trim().length === 0 || text.length > 5000) {
       return new Response(
-        JSON.stringify({ error: 'ELEVENLABS_API_KEY is not configured' }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        JSON.stringify({ error: 'O texto deve conter entre 1 e 5000 caracteres.' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
       );
     }
-
-    const { text, voiceId = 'Q6ic84dDGldojtRLsDTp', targetLanguage, contentType } = await req.json();
 
     // Translate text if target language is specified
     let finalText = text;
@@ -192,7 +246,7 @@ serve(async (req) => {
       );
     }
 
-    console.log('Cache MISS. Generating speech with ElevenLabs:', { textLength: processedText.length, voiceId, isMusic });
+    console.log('Cache MISS. Generating speech:', { textLength: processedText.length, voiceId, isMusic });
 
     // Voice settings based on content type
     const voiceSettings = isMusic ? {
@@ -207,41 +261,43 @@ serve(async (req) => {
       use_speaker_boost: true
     };
 
-    // Generate speech from text using ElevenLabs
+    // Prefer the configured ElevenLabs voice. If its quota is exhausted, use
+    // Lovable AI so uncached phrases continue working instead of blanking the UI.
     let response: Response | null = null;
-    const maxRetries = 3;
-    for (let attempt = 0; attempt < maxRetries; attempt++) {
-      response = await fetch(
-        `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`,
-        {
-          method: 'POST',
-          headers: {
-            'xi-api-key': ELEVENLABS_API_KEY,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            text: processedText,
-            // Escolha do modelo por tipo de conteúdo:
-            // - 'multilingual': aulas de idioma com PT+EN ou PT+ES misturados na
-            //   mesma frase. eleven_multilingual_v2 alterna entre idiomas
-            //   naturalmente (code-switching). Custa ~1 crédito/char.
-            // - default: eleven_turbo_v2_5 — mais barato (~0.5 crédito/char) e
-            //   rápido, ideal para frases num único idioma (o resto do app).
-            model_id: contentType === 'multilingual' ? 'eleven_multilingual_v2' : 'eleven_turbo_v2_5',
-            voice_settings: voiceSettings,
-          }),
+    let provider = 'elevenlabs';
+    if (ELEVENLABS_API_KEY) {
+      const maxRetries = 3;
+      for (let attempt = 0; attempt < maxRetries; attempt++) {
+        response = await fetch(
+          `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}?output_format=mp3_44100_128`,
+          {
+            method: 'POST',
+            headers: {
+              'xi-api-key': ELEVENLABS_API_KEY,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              text: processedText,
+              model_id: contentType === 'multilingual' ? 'eleven_multilingual_v2' : 'eleven_turbo_v2_5',
+              voice_settings: voiceSettings,
+            }),
+          }
+        );
+
+        if (response.status === 429 && attempt < maxRetries - 1) {
+          const retryAfterSeconds = Number(response.headers.get('Retry-After'));
+          const waitMs = Number.isFinite(retryAfterSeconds) && retryAfterSeconds > 0
+            ? retryAfterSeconds * 1000
+            : Math.pow(2, attempt + 1) * 1000;
+          console.warn(`Rate limited (429). Retrying in ${waitMs}ms (attempt ${attempt + 1}/${maxRetries})`);
+          await response.text();
+          await wait(waitMs);
+          continue;
         }
-      );
-
-
-      if (response.status === 429 && attempt < maxRetries - 1) {
-        const waitMs = Math.pow(2, attempt + 1) * 1000; // 2s, 4s
-        console.warn(`Rate limited (429). Retrying in ${waitMs}ms (attempt ${attempt + 1}/${maxRetries})`);
-        await response.text(); // consume body
-        await new Promise(r => setTimeout(r, waitMs));
-        continue;
+        break;
       }
-      break;
+    } else {
+      console.warn('ELEVENLABS_API_KEY is not configured; using Lovable AI fallback.');
     }
 
     if (!response || !response.ok) {
@@ -267,22 +323,24 @@ serve(async (req) => {
         elevenMessage = errorBody.slice(0, 200);
       }
 
-      // Diagnóstico do workspace: quanto da chave (mascarada) está sendo usada
-      const keyHint = `${ELEVENLABS_API_KEY.slice(0, 4)}...${ELEVENLABS_API_KEY.slice(-4)}`;
-
-      let friendlyMessage = `Erro ElevenLabs ${status}`;
-      if (elevenStatus === 'quota_exceeded') {
-        friendlyMessage = `ElevenLabs reportou créditos esgotados para a chave em uso (${keyHint}). Pode ser que a chave seja de outra conta/workspace. Detalhe: ${elevenMessage}`;
-      } else if (elevenStatus === 'invalid_api_key' || (status === 401 && !elevenStatus)) {
-        friendlyMessage = `Chave da API ElevenLabs inválida ou expirada (${keyHint}). Atualize o secret ELEVENLABS_API_KEY. Detalhe: ${elevenMessage}`;
-      } else if (elevenStatus === 'voice_not_found') {
-        friendlyMessage = `Voz não disponível para essa chave/plano. Detalhe: ${elevenMessage}`;
-      } else if (status === 429) {
-        friendlyMessage = 'Limite de requisições da ElevenLabs atingido. Tente novamente em alguns segundos.';
-      } else if (elevenMessage) {
-        friendlyMessage = `Erro ElevenLabs ${status} [${elevenStatus}]: ${elevenMessage}`;
+      const shouldFallback = !response || elevenStatus === 'quota_exceeded';
+      if (shouldFallback) {
+        console.warn('ElevenLabs unavailable; switching to Lovable AI.', { reason: elevenStatus || 'missing_key' });
+        response = await generateWithLovableAI(finalText, isMusic);
+        provider = 'lovable-ai';
+      } else {
+        let friendlyMessage = `Erro ElevenLabs ${status}`;
+        if (elevenStatus === 'invalid_api_key' || (status === 401 && !elevenStatus)) {
+          friendlyMessage = `Chave da API ElevenLabs inválida ou expirada. Detalhe: ${elevenMessage}`;
+        } else if (elevenStatus === 'voice_not_found') {
+          friendlyMessage = `Voz não disponível para essa chave/plano. Detalhe: ${elevenMessage}`;
+        } else if (status === 429) {
+          friendlyMessage = 'Limite de requisições da ElevenLabs atingido. Tente novamente em alguns segundos.';
+        } else if (elevenMessage) {
+          friendlyMessage = `Erro ElevenLabs ${status} [${elevenStatus}]: ${elevenMessage}`;
+        }
+        throw new TTSProviderError(friendlyMessage, status || 502);
       }
-      throw new Error(friendlyMessage);
     }
 
     const arrayBuffer = await response.arrayBuffer();
@@ -339,15 +397,16 @@ serve(async (req) => {
     }
 
     return new Response(
-      JSON.stringify({ audioContent: base64Audio, cached: false }),
+      JSON.stringify({ audioContent: base64Audio, cached: false, provider }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error) {
     console.error('Error in text-to-speech function:', error);
+    const status = error instanceof TTSProviderError ? error.status : 500;
     return new Response(
       JSON.stringify({ error: error instanceof Error ? error.message : 'Unknown error' }),
       {
-        status: 500,
+        status,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       }
     );
