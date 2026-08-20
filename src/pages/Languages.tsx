@@ -62,9 +62,9 @@ const Languages = () => {
         .map(s => s.trim())
         .filter(s => s.length > 0);
       
-      // 'multilingual' faz o preloader chamar a edge function com
-      // contentType='multilingual' → modelo eleven_multilingual_v2 no TTS.
-      return segments.map(segment => ({ text: segment, category: 'multilingual' }));
+      // Preload sem contentType multilingual — mantém a voz clonada da
+      // Catarina em vez do fallback genérico do multilingual_v2.
+      return segments.map(segment => ({ text: segment }));
     });
 
     if (phrasesToPreload.length > 0) {
@@ -88,11 +88,13 @@ const Languages = () => {
     try {
       sequentialPlayer.stop();
       setPlayingId(phrase.id);
-      // Contexto multilíngue: as frases misturam PT + EN/ES na mesma sentença
-      // ("Hello, quer dizer Olá"). Marcamos como 'multilingual' para que a
-      // edge function use o modelo eleven_multilingual_v2 (que faz code-
-      // switching corretamente) em vez do turbo (que se confunde).
-      await pausableAudio.play(phrase.text, undefined, 'multilingual');
+      // Deliberadamente NÃO passamos contentType='multilingual'.
+      // O modelo multilingual_v2 tende a "achatar" vozes clonadas em PT
+      // quando pronuncia inglês/espanhol, resultando em vozes genéricas.
+      // Preferimos manter a identidade da voz (turbo) mesmo que o
+      // code-switching fique com sotaque português nas palavras em inglês.
+      // As pausas foram reforçadas via reticências no próprio texto.
+      await pausableAudio.play(phrase.text);
     } catch (error) {
       console.error('Error playing phrase:', error);
     }
