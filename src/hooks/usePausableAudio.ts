@@ -117,7 +117,7 @@ export function usePausableAudio() {
     index: number, 
     segments: PauseSegment[], 
     targetLanguage?: 'pt' | 'en' | 'es',
-    contentType?: string
+    contentType?: 'música' | 'história' | 'frase' | 'multilingual'
   ) => {
     if (!isPlayingRef.current || index >= segments.length) {
       // End of playback
@@ -209,7 +209,7 @@ export function usePausableAudio() {
   const play = useCallback(async (
     text: string, 
     targetLanguage?: 'pt' | 'en' | 'es',
-    contentType?: string
+    contentType?: 'música' | 'história' | 'frase' | 'multilingual'
   ) => {
     // Parse text into segments
     const segments = parseText(text);
