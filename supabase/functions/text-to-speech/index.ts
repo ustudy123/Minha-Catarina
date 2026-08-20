@@ -28,10 +28,11 @@ async function generateWithLovableAI(text: string, isMusic: boolean): Promise<Re
       body: JSON.stringify({
         model: 'openai/gpt-4o-mini-tts',
         input: text,
-        voice: 'alloy',
+        voice: 'coral',
         instructions: isMusic
-          ? 'Fale como uma canção infantil: ritmo alegre, dicção clara e pausas naturais.'
-          : 'Fale com voz acolhedora, natural e dicção clara para uma criança.',
+          ? 'Você é uma menininha de 3 anos cantando uma cantiga de roda. Voz aguda, doce e infantil, bem animada, com ritmo marcado, dicção clara e pausas naturais entre os versos. Nada de tom de narrador ou locutor adulto.'
+          : 'Você é uma menininha de 3 anos falando com carinho. Voz aguda, doce, infantil e espontânea, ritmo levemente acelerado e dicção clara. Nada de tom de narrador ou locutor adulto.',
+
         response_format: 'mp3',
         stream_format: 'audio',
       }),
