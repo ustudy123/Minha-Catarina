@@ -323,10 +323,16 @@ serve(async (req) => {
         elevenMessage = errorBody.slice(0, 200);
       }
 
-      const shouldFallback = !response || elevenStatus === 'quota_exceeded';
+      const shouldFallback = !response
+        || elevenStatus === 'quota_exceeded'
+        || elevenStatus === 'invalid_api_key'
+        || status === 401
+        || status === 402
+        || status === 403;
       if (shouldFallback) {
         console.warn('ElevenLabs unavailable; switching to Lovable AI.', { reason: elevenStatus || 'missing_key' });
-        response = await generateWithLovableAI(finalText, isMusic);
+        const fallbackText = isMusic ? formatarTextoMusica(finalText) : finalText;
+        response = await generateWithLovableAI(fallbackText, isMusic);
         provider = 'lovable-ai';
       } else {
         let friendlyMessage = `Erro ElevenLabs ${status}`;
@@ -388,7 +394,12 @@ serve(async (req) => {
     // EdgeRuntime.waitUntil mantém o worker vivo até a Promise resolver,
     // sem segurar a resposta HTTP.
     // @ts-ignore Deno.EdgeRuntime é fornecido pelo runtime das Edge Functions
-    if (typeof EdgeRuntime !== 'undefined' && EdgeRuntime?.waitUntil) {
+    // Do not persist fallback audio under an ElevenLabs voice cache key. This
+    // lets the phrase automatically return to its selected voice after quota
+    // or credential recovery; the browser still caches it for this session.
+    if (provider !== 'elevenlabs') {
+      console.log('Skipping persistent cache for fallback audio.');
+    } else if (typeof EdgeRuntime !== 'undefined' && EdgeRuntime?.waitUntil) {
       // @ts-ignore
       EdgeRuntime.waitUntil(persistCache());
     } else {
