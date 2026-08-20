@@ -145,7 +145,7 @@ serve(async (req) => {
       );
     }
 
-    const { text, voiceId = 'pFZP5JQG7iQjIQuC4Bku', targetLanguage, contentType } = await req.json();
+    const { text, voiceId = 'Q6ic84dDGldojtRLsDTp', targetLanguage, contentType } = await req.json();
 
     // Translate text if target language is specified
     let finalText = text;

@@ -24,7 +24,7 @@ export const FEMALE_VOICES: ChildVoice[] = [
       en: 'Natural child voice',
       es: 'Voz infantil natural',
     },
-    voiceId: '7p2vHN3pSmIQ7Dd52CVK',
+    voiceId: 'Q6ic84dDGldojtRLsDTp',
     gender: 'female',
   },
   {
@@ -46,7 +46,7 @@ export const FEMALE_VOICES: ChildVoice[] = [
       en: 'Expressive child voice',
       es: 'Voz infantil expresiva',
     },
-    voiceId: 'uEB23VYot0LSckRGjGKB',
+    voiceId: 'L34NP9RouyxSO2YShKBQ',
     gender: 'female',
   },
   {
@@ -57,7 +57,7 @@ export const FEMALE_VOICES: ChildVoice[] = [
       en: 'Sweet and cheerful voice',
       es: 'Voz dulce y alegre',
     },
-    voiceId: '7p2vHN3pSmIQ7Dd52CVK',
+    voiceId: 'Q6ic84dDGldojtRLsDTp',
     gender: 'female',
   },
 ];
