@@ -204,7 +204,7 @@ export const libraryPhrasesData: LibraryPhraseData[] = [
   { text: "Vou te ensinar umas palavrinhas mágicas. As palavras mágicas são: por favor, com licença, desculpa e obrigada.", category: "education", subCategory: "bons-costumes" },
   { text: "Por favor. Para pedir alguma coisa, sempre falamos por favor.", category: "education", subCategory: "bons-costumes" },
   { text: "Com licença. Falamos quando precisamos passar em algum lugar ou falar alguma coisa, então pedimos licença antes.", category: "education", subCategory: "bons-costumes" },
-  { text: "Desculpa. Falamos quando magoamos alguém ou fazemos algo errado é muito importante pedir desculpa.", category: "education", subCategory: "bons-costumes" },
+  { text: "Desculpa. Falamos quando magoamos alguém ou fazemos algo errado. É muito importante pedir desculpa.", category: "education", subCategory: "bons-costumes" },
   { text: "Obrigada. Dizemos quando agradecemos alguém por algo, usamos a palavra obrigada ou também podemos falar muito obrigada.", category: "education", subCategory: "bons-costumes" },
   { text: "Se alguém disser obrigada para nós, respondemos, de nada.", category: "education", subCategory: "bons-costumes" },
   { text: "Gostou de aprender isso?", category: "education", subCategory: "bons-costumes" },
