@@ -384,7 +384,7 @@ export const libraryPhrasesData: LibraryPhraseData[] = [
   { text: "Me mostra onde tá o nariz?", category: "playtime", subCategory: "partes-do-corpo" },
   { text: "Nós sentimos o cheiro das coisas pelo nariz. Quantos nariz nós temos?", category: "playtime", subCategory: "partes-do-corpo" },
   { text: "E a boca, onde está?", category: "playtime", subCategory: "partes-do-corpo" },
-  { text: "Os olhos cadê?", category: "playtime", subCategory: "partes-do-corpo" },
+  { text: "E os olhos, cadê eles?", category: "playtime", subCategory: "partes-do-corpo" },
   { text: "Qual a cor dos seus olhos?", category: "playtime", subCategory: "partes-do-corpo" },
   { text: "Os olhos servem para podermos ver tudo e todos ao nosso redor. Quantos olhos temos?", category: "playtime", subCategory: "partes-do-corpo" },
   { text: "As orelhas onde estão?", category: "playtime", subCategory: "partes-do-corpo" },
