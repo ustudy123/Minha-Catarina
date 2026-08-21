@@ -486,7 +486,7 @@ export const libraryPhrasesData: LibraryPhraseData[] = [
   { text: "Isso! Para a casa da vovó! O lobo saiu correndo e chegou primeiro, prendeu a vovó no guarda roupa e se disfarçou. Quando Chapeuzinho entrou, perguntou: Vovó, que olhos grandes você tem! E o lobo disse: É para te ver melhor! E esse nariz enorme? É para sentir seu cheiro melhor. Chapeuzinho percebeu que não era a vovó e gritou SOCORRO. SOCORRO. O caçador escutou o pedido de Chapeuzinho, salvou a vovó e a Chapeuzinho vermelho. Por isso não pode desobedecer a mamãe e ir sempre pelo caminho certo.", category: "stories", subCategory: "chapeuzinho-vermelho" },
 
   // ==================== HISTÓRIA - A GALINHA RUIVA ====================
-  { text: "Era uma vez uma galinha ruiva que encontrou um grão de trigo. Ela perguntou: Quem me ajuda a plantar? O pato disse: Não! O gato disse: Não! O porquinho disse: Não! E você ajudaria a galinha?", category: "stories", subCategory: "galinha-ruiva" },
+  { text: "Era uma vez uma galinha ruiva que encontrou um grão de trigo. Ela perguntou: Quem me ajuda a plantar? O pato disse: Não! O gato disse: Não! O porquinho disse: Não! E você, ajudaria a galinha?", category: "stories", subCategory: "galinha-ruiva" },
   { text: "Ela plantou sozinha. Depois perguntou: Quem me ajuda a colher? Eles ajudaram?", category: "stories", subCategory: "galinha-ruiva" },
   { text: "Nããão! Ela fez farinha, fez pão… Quando o pão ficou pronto e cheirosinho… Todo mundo disse: Eu quero! Mas a galinha falou: Quem vai comer sou eu! Ninguém me ajudou. E ela comeu tudinho! Você gosta de pão?", category: "stories", subCategory: "galinha-ruiva" },
   { text: "Gostou da história?", category: "stories", subCategory: "galinha-ruiva" },
