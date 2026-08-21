@@ -79,7 +79,7 @@ export const libraryPhrasesData: LibraryPhraseData[] = [
   { text: "Acho que estou com gripe.", category: "daily", timeOfDay: "afternoon", soundPrompt: "cute baby sneeze, small child sneezing atchoo, adorable infant sneeze" },
   { text: "Acho que estou com febre, mede a minha temperatura, por favor!", category: "daily", timeOfDay: "afternoon" },
   { text: "Fiz um dodói. Assopra, assopra. Ai ai ai ai, tá doendo.", category: "daily", timeOfDay: "afternoon" },
-  { text: "Um remédinho para sarar.", category: "daily", timeOfDay: "afternoon" },
+  { text: "Me dá um remédio para sarar? Pode ser?", category: "daily", timeOfDay: "afternoon" },
   { text: "Passa uma pomadinha?", category: "daily", timeOfDay: "afternoon" },
   { text: "Faz um curativo, por favor?", category: "daily", timeOfDay: "afternoon" },
   { text: "Agora está melhor. Você me ajudou. Obrigada por cuidar de mim!", category: "daily", timeOfDay: "afternoon" },
