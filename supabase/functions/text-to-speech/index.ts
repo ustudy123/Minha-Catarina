@@ -214,6 +214,12 @@ serve(async (req) => {
     if (isMusic) {
       processedText = formatarTextoMusica(finalText);
       processedText = wrapInSSML(processedText);
+    } else {
+      // A ElevenLabs às vezes engole a última sílaba de frases curtas
+      // terminadas em '?' ou '!'. Um espaço extra no fim dá "respiro" ao
+      // modelo para completar a fala sem cortar. Só para texto normal
+      // (não música, que tem seu próprio processamento SSML).
+      processedText = finalText.trimEnd() + ' ';
     }
 
     // Initialize Supabase client
