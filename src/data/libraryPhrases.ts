@@ -105,7 +105,7 @@ export const libraryPhrasesData: LibraryPhraseData[] = [
   { text: "Obrigada por cuidar de mim!", category: "daily", timeOfDay: "night" },
   { text: "Vamos escovar os dentes? Nós precisamos escovar os dentes. Primeiro você.", category: "daily", timeOfDay: "night" },
   { text: "Espera, espera, espera, paciência que já é minha vez.", category: "daily", timeOfDay: "night" },
-  { text: "Agora é a minha vez. Escova os meus dentinhos.", category: "daily", timeOfDay: "night" },
+  { text: "Agora é a minha vez, escova os meus dentinhos, por favor?", category: "daily", timeOfDay: "night" },
   { text: "Conta uma historinha para mim?", category: "daily", timeOfDay: "night" },
   { text: "Eu amei essa história. Conta de novo, por favor.", category: "daily", timeOfDay: "night" },
   { text: "Ai que frio, muito frio, me cobre, por favor.", category: "daily", timeOfDay: "night" },
