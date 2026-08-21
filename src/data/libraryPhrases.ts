@@ -558,7 +558,7 @@ export const libraryPhrasesData: LibraryPhraseData[] = [
   { text: "Aladim quase desejou coisas só para ele… Mas percebeu que podia ajudar outras pessoas também. Ele pediu comida para muita gente, pediu brinquedos para crianças e roupinhas para os bebês. Devemos usar o que temos para fazer o bem.", category: "stories", subCategory: "aladim" },
 
   // ==================== HISTÓRIA - CINDERELA ====================
-  { text: "Cinderela era uma princesa educada e gentil, mesmo sendo maltratada. Ela foi ao baile com ajuda da sua fada madrinha. Bibbidi-bobbidi-boo! E ela tinha um vestido lindo, sapatinhos de cristal e uma carruagem com cavalos para levá-la ao baile. Mas à meia-noite… tudo voltava ao normal! Ela saiu correndo do baile e perdeu o sapatinho de cristal. O príncipe procurou a dona do sapatinho. Serviu nas irmãs más?", category: "stories", subCategory: "cinderela" },
+  { text: "Cinderela era uma princesa educada e gentil, mesmo sendo maltratada. Ela foi ao baile com ajuda da sua fada madrinha. Bibbidi-bobbidi-boo! E ela tinha um vestido lindo, sapatinhos de cristal e uma carruagem com cavalos para levá-la ao baile. Mas à meia-noite… tudo voltava ao normal! Ela saiu correndo do baile e perdeu o sapatinho de cristal. O príncipe procurou a dona do sapatinho. Você acha que o sapatinho serviu nas irmãs malvadas?", category: "stories", subCategory: "cinderela" },
   { text: "Não! Serviu só na Cinderela! Ser bondoso vale mais do que ser maldoso.", category: "stories", subCategory: "cinderela" },
 
   // ==================== HISTÓRIA - PINÓQUIO ====================
