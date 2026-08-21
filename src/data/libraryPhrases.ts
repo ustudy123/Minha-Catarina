@@ -477,7 +477,7 @@ export const libraryPhrasesData: LibraryPhraseData[] = [
   { text: "Vou começar.", category: "stories", subCategory: "introducao-historias" },
 
   // ==================== HISTÓRIA - OS TRÊS PORQUINHOS ====================
-  { text: "Era uma vez três porquinhos que foram morar sozinhos. O primeiro porquinho fez uma casa de… Você sabe? Era de quê?", category: "stories", subCategory: "tres-porquinhos" },
+  { text: "Era uma vez, três porquinhos que foram morar sozinhos. O primeiro porquinho fez uma casa de… casa de… não lembro do que era a casa dele. Você sabe de qual material era a casa desse porquinho?", category: "stories", subCategory: "tres-porquinhos" },
   { text: "Isso! De palha! O segundo fez uma casa de madeira! E o terceiro porquinho fez uma casa bem forte, de tijolos! De repente apareceu o lobo e disse: Vou soprarrrrr… e sua casa vou derrubarrrrr! A casa de palha caiu! A casa de madeira também caiu! Mas quando o lobo soprou a casa de tijolos. Será que caiu? O que você acha?", category: "stories", subCategory: "tres-porquinhos" },
   { text: "Nãããooo! E os três porquinhos ficaram seguros e felizes!", category: "stories", subCategory: "tres-porquinhos" },
 
