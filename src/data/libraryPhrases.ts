@@ -294,7 +294,7 @@ export const libraryPhrasesData: LibraryPhraseData[] = [
   { text: "Pai Nosso que estais no céu, santificado seja o vosso nome, vem a nós o vosso reino, seja feita a vossa vontade assim na terra como no céu. O pão nosso de cada dia nos daí hoje, perdoai-nos as nossas ofensas, assim como nós perdoamos a quem nos tem ofendido, não nos deixei cair em tentação mas livrai-nos do mal. Amém.", category: "prayers", subCategory: "pai-nosso" },
   { text: "Bença. Boa noite para você.", category: "prayers", subCategory: "pai-nosso" },
   { text: "O que está procurando?", category: "prayers", subCategory: "sao-longuinho" },
-  { text: "Tive uma ideia. Tem uma oração para poder encontrar as coisas sabia?", category: "prayers", subCategory: "sao-longuinho" },
+  { text: "Tive uma ideia. Tem uma oração para poder encontrar as coisas, sabia?", category: "prayers", subCategory: "sao-longuinho" },
   { text: "Você sabe para quem pedimos ajuda para encontrar algo que perdemos?", category: "prayers", subCategory: "sao-longuinho" },
   { text: "São Longuinho, São Longuinho, se eu achar meu negócio, te dou três pulinhos.", category: "prayers", subCategory: "sao-longuinho" },
   { text: "Vamos procurar juntas. Eu te ajudo.", category: "prayers", subCategory: "sao-longuinho" },
