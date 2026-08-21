@@ -479,7 +479,7 @@ export const libraryPhrasesData: LibraryPhraseData[] = [
   // ==================== HISTÓRIA - OS TRÊS PORQUINHOS ====================
   { text: "Era uma vez, três porquinhos que foram morar sozinhos. O primeiro porquinho fez uma casa de… casa de… não lembro do que era a casa dele. Você sabe de qual material era a casa desse porquinho?", category: "stories", subCategory: "tres-porquinhos" },
   { text: "Isso! De palha! O segundo fez uma casa de madeira! E o terceiro porquinho fez uma casa bem forte, de tijolos! De repente apareceu o lobo e disse: Vou soprarrrrr… e sua casa vou derrubarrrrr! A casa de palha caiu! A casa de madeira também caiu! Mas quando o lobo soprou a casa de tijolos. Será que caiu? O que você acha?", category: "stories", subCategory: "tres-porquinhos" },
-  { text: "Nãããooo! E os três porquinhos ficaram seguros e felizes!", category: "stories", subCategory: "tres-porquinhos" },
+  { text: "A casa não caiu não. Os três porquinhos ficaram seguros e felizes na casa de tijolos, que era a casa mais forte!", category: "stories", subCategory: "tres-porquinhos" },
 
   // ==================== HISTÓRIA - CHAPEUZINHO VERMELHO ====================
   { text: "Era uma vez uma menina chamada Chapeuzinho Vermelho. Sua mãe pediu para ela levar doces para a vovó. Sua mãe falou para Chapeuzinho não ir pela floresta porque lá era perigoso e tinha um lobo mal que andava pela floresta. Chapeuzinho vermelho desobedeceu e foi pela floresta. O lobo apareceu e perguntou: Para onde você vai? Para onde ela estava indo mesmo?", category: "stories", subCategory: "chapeuzinho-vermelho" },
