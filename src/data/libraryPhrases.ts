@@ -77,7 +77,7 @@ export const libraryPhrasesData: LibraryPhraseData[] = [
   { text: "Minha cor preferida é cor de rosa.", category: "daily", timeOfDay: "afternoon" },
   { text: "Não estou me sentindo bem.", category: "daily", timeOfDay: "afternoon", soundPrompt: "little girl around 5 years old crying softly, gentle young child whimpering, sweet kid cry" },
   { text: "Acho que estou com gripe.", category: "daily", timeOfDay: "afternoon", soundPrompt: "cute baby sneeze, small child sneezing atchoo, adorable infant sneeze" },
-  { text: "Acho que estou com febre, mede a minha temperatura, por favor!", category: "daily", timeOfDay: "afternoon", soundPrompt: "baby coughing softly, small child cough, gentle infant cough sound" },
+  { text: "Acho que estou com febre, mede a minha temperatura, por favor!", category: "daily", timeOfDay: "afternoon" },
   { text: "Fiz um dodói. Assopra, assopra. Ai ai ai ai, tá doendo.", category: "daily", timeOfDay: "afternoon" },
   { text: "Um remédinho para sarar.", category: "daily", timeOfDay: "afternoon" },
   { text: "Passa uma pomadinha?", category: "daily", timeOfDay: "afternoon" },
@@ -618,6 +618,6 @@ export const libraryPhrasesData: LibraryPhraseData[] = [
   { text: "Som de cocô", category: "sounds", soundPrompt: "baby pooping sound, funny baby bowel movement, small squelching sound" },
   { text: "Som de beijo", category: "sounds", soundPrompt: "sweet kiss sound, gentle kissing sound, cute baby kiss mwah" },
   { text: "Som de espirro", category: "sounds", soundPrompt: "cute baby sneeze, small child sneezing atchoo, adorable infant sneeze" },
-  { text: "Som de tosse", category: "sounds", soundPrompt: "baby coughing softly, small child cough, gentle infant cough sound" },
+  { text: "Som de tosse", category: "sounds", soundPrompt: "little girl around 5 years old coughing softly, gentle young child cough, sweet kid cough sound" },
   { text: "Som de bocejo", category: "sounds", soundPrompt: "cute baby yawning, sleepy baby girl yawn, adorable infant yawning sound" },
 ];

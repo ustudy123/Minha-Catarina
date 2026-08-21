@@ -405,11 +405,20 @@ const Library = () => {
           text: phrase.text, 
           contentType: isStory ? 'história' : 'frase'
         });
+        // Se a frase tem efeito sonoro, gera o SFX ANTES de tocar a fala
+        // (em paralelo, enquanto a fala é gerada) para não haver gap. Depois
+        // toca a fala INTEIRA (playAndWait) e só então o som — assim o efeito
+        // não corta a frase no meio.
+        const wantsSfx = phrase.soundPrompt && phrase.category !== 'sounds' && !isStory;
+        const sfxPromise = wantsSfx
+          ? generateSFX({ prompt: phrase.soundPrompt!, duration: 10 })
+          : null;
+
         if (url) {
-          await audioPlayer.play(url);
+          await audioPlayer.playAndWait(url);
         }
-        if (phrase.soundPrompt && phrase.category !== 'sounds' && !isStory) {
-          const { url: sfxUrl } = await generateSFX({ prompt: phrase.soundPrompt, duration: 10 });
+        if (sfxPromise) {
+          const { url: sfxUrl } = await sfxPromise;
           if (sfxUrl) {
             await audioPlayer.play(sfxUrl);
           }

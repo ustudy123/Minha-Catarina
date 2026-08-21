@@ -143,6 +143,26 @@ export const useAudioPlayer = () => {
     }
   }, []);
 
+  // Toca e resolve a Promise só quando o áudio TERMINA (ou dá erro).
+  // Útil para encadear fala -> efeito sonoro sem um cortar o outro.
+  const playAndWait = useCallback(async (audioSource: string | Blob): Promise<void> => {
+    await play(audioSource);
+    return new Promise<void>((resolve) => {
+      const audio = audioRef.current;
+      if (!audio) {
+        resolve();
+        return;
+      }
+      const done = () => {
+        audio.removeEventListener('ended', done);
+        audio.removeEventListener('error', done);
+        resolve();
+      };
+      audio.addEventListener('ended', done);
+      audio.addEventListener('error', done);
+    });
+  }, [play]);
+
   const stop = useCallback(() => {
     if (audioRef.current) {
       isPlayingRef.current = false;
@@ -192,6 +212,7 @@ export const useAudioPlayer = () => {
   return {
     ...state,
     play,
+    playAndWait,
     pause,
     stop,
     setVolume,
