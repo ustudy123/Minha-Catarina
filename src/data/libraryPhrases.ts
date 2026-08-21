@@ -377,7 +377,7 @@ export const libraryPhrasesData: LibraryPhraseData[] = [
   { text: "E o peru, como faz?", category: "playtime", subCategory: "imitacao" },
   { text: "Glu glu glu glu.", category: "playtime", subCategory: "imitacao" },
   { text: "Engraçado esse não é?", category: "playtime", subCategory: "imitacao", soundPrompt: "cute baby girl laughing and giggling happily, realistic child laughter" },
-  { text: "Cansei agora, mas foi muito divertido essa brincadeira.", category: "playtime", subCategory: "imitacao" },
+  { text: "Eu cansei agora. Mas foi muito divertido essa brincadeira.", category: "playtime", subCategory: "imitacao" },
 
   // ==================== BRINCADEIRAS - PARTES DO CORPO (playtime) ====================
   { text: "Eu quero aprender as partes do corpo. Você me ensina?", category: "playtime", subCategory: "partes-do-corpo" },
