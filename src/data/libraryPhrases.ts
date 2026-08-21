@@ -487,7 +487,7 @@ export const libraryPhrasesData: LibraryPhraseData[] = [
 
   // ==================== HISTÓRIA - A GALINHA RUIVA ====================
   { text: "Era uma vez uma galinha ruiva que encontrou um grão de trigo. Ela perguntou: Quem me ajuda a plantar? O pato disse: Não! O gato disse: Não! O porquinho disse: Não! E você, ajudaria a galinha?", category: "stories", subCategory: "galinha-ruiva" },
-  { text: "Ela plantou sozinha. Depois perguntou: Quem me ajuda a colher? Eles ajudaram?", category: "stories", subCategory: "galinha-ruiva" },
+  { text: "A galinha plantou todo o trigo sozinha! Depois ela perguntou: quem me ajuda a colher? Você acha que algum animal ajudou a galinha a colher o trigo?", category: "stories", subCategory: "galinha-ruiva" },
   { text: "Nããão! Ela fez farinha, fez pão… Quando o pão ficou pronto e cheirosinho… Todo mundo disse: Eu quero! Mas a galinha falou: Quem vai comer sou eu! Ninguém me ajudou. E ela comeu tudinho! Você gosta de pão?", category: "stories", subCategory: "galinha-ruiva" },
   { text: "Gostou da história?", category: "stories", subCategory: "galinha-ruiva" },
   { text: "Quer outra historinha?", category: "stories", subCategory: "galinha-ruiva" },
