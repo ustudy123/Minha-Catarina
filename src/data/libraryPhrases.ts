@@ -373,7 +373,7 @@ export const libraryPhrasesData: LibraryPhraseData[] = [
   { text: "Uau, adorei. E como faz o boi?", category: "playtime", subCategory: "imitacao" },
   { text: "Agora é a minha vez. Vou imitar um pintinho. Piu piu piu piu piu.", category: "playtime", subCategory: "imitacao" },
   { text: "Também sei imitar um cavalo. Pocotó pocotó pocotó pocotó.", category: "playtime", subCategory: "imitacao" },
-  { text: "E a ovelhinha que é tão fofinha e do seu pelo se faz a lã, sabia? Mééé mééé mééé.", category: "playtime", subCategory: "imitacao" },
+  { text: "E a ovelhinha que é tão fofinha e do seu pelo se faz a lã, sabia? Bééééééééé bééééééé bééééééééé.", category: "playtime", subCategory: "imitacao" },
   { text: "E o peru, como faz?", category: "playtime", subCategory: "imitacao" },
   { text: "Glu glu glu glu.", category: "playtime", subCategory: "imitacao" },
   { text: "Engraçado esse não é?", category: "playtime", subCategory: "imitacao", soundPrompt: "cute baby girl laughing and giggling happily, realistic child laughter" },
