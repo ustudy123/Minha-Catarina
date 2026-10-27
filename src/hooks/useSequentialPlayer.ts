@@ -7,6 +7,9 @@ export interface PlayablePhrase {
   id: string;
   text: string;
   category?: string;
+  // Áudio fixo (ex.: música gravada pela equipe). Quando presente, toca
+  // direto sem chamar a ElevenLabs.
+  audioUrl?: string;
 }
 
 interface SequentialPlayerState {
@@ -196,12 +199,14 @@ export function useSequentialPlayer() {
       const isMusic = currentPhrase.category === 'música' || currentPhrase.category === 'music' || currentPhrase.category === 'Songs' || currentPhrase.category === 'songs';
       const isStory = currentPhrase.category === 'história' || currentPhrase.category === 'stories' || currentPhrase.category === 'Histórias';
       
-      const { url } = await generate({ 
-        text: currentPhrase.text, 
-        silent: true,
-        language: language as 'pt' | 'en' | 'es',
-        contentType: isMusic ? 'música' : isStory ? 'história' : 'frase'
-      });
+      const { url } = currentPhrase.audioUrl
+        ? { url: currentPhrase.audioUrl }
+        : await generate({
+            text: currentPhrase.text,
+            silent: true,
+            language: language as 'pt' | 'en' | 'es',
+            contentType: isMusic ? 'música' : isStory ? 'história' : 'frase'
+          });
       
       if (!isPlayingRef.current) {
         if (url && url.startsWith('blob:')) URL.revokeObjectURL(url);

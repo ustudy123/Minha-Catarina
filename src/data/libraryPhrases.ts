@@ -7,6 +7,9 @@ export interface LibraryPhraseData {
   timeOfDay?: string;
   subCategory?: string;
   soundPrompt?: string;
+  // Chave fixa do áudio em `library_audio` (ver src/lib/libraryAudioKey.ts).
+  // Usada nas músicas, que podem receber um MP3 gravado pela equipe.
+  audioKey?: string;
 }
 
 export const libraryPhrasesData: LibraryPhraseData[] = [
@@ -411,64 +414,64 @@ export const libraryPhrasesData: LibraryPhraseData[] = [
   { text: "Se você não souber a música, eu te ensino. Tem música que podemos cantar e dançar também. Vamos?", category: "songs", subCategory: "introducao-musicas" },
 
   // ==================== MÚSICA - CIRANDA CIRANDINHA ====================
-  { text: "Ciranda, Cirandinha, Vamos todos cirandar, Vamos dar a meia volta, Volta e meia vamos dar. O Anel que tu me destes, Era vidro e se quebrou, O amor que tu me tinhas, Era pouco e se acabou. Por isso dona moça, Faz favor de entrar na roda, Diga um verso bem bonito, Diga adeus e vá embora.", category: "songs", subCategory: "ciranda" },
+  { text: "Ciranda, Cirandinha, Vamos todos cirandar, Vamos dar a meia volta, Volta e meia vamos dar. O Anel que tu me destes, Era vidro e se quebrou, O amor que tu me tinhas, Era pouco e se acabou. Por isso dona moça, Faz favor de entrar na roda, Diga um verso bem bonito, Diga adeus e vá embora.", category: "songs", subCategory: "ciranda", audioKey: "ciranda" },
 
   // ==================== MÚSICA - ABRAÇO ====================
-  { text: "Levantar um braço, levantar o outro, fazer bamboleio, mexer o pescoço. Olhar para o teto, olhar para o sapato. E me dá um abraço.", category: "songs", subCategory: "abraco" },
+  { text: "Levantar um braço, levantar o outro, fazer bamboleio, mexer o pescoço. Olhar para o teto, olhar para o sapato. E me dá um abraço.", category: "songs", subCategory: "abraco", audioKey: "abraco" },
 
   // ==================== MÚSICA - BARATA ====================
-  { text: "A Barata diz que tem sete saias de filó, É mentira da barata, ela tem é uma só, Ah ra ra, iá ro ró, ela tem é uma só! A Barata diz que tem um sapato de veludo, É mentira da barata, o pé dela é peludo, Ah ra ra, Iu ru ru, o pé dela é peludo! A Barata diz que tem uma cama de marfim, É mentira da barata, ela tem é de capim, Ah ra ra, rim rim rim, ela tem é de capim. A Barata diz que tem um anel de formatura, É mentira da barata, ela tem é casca dura, Ah ra ra, iu ru ru, ela tem é casca dura. A barata diz que vai viajar de avião, É mentira da barata ela vai de caminhão, Ah ra ra, iu ru ru, ela vai de caminhão.", category: "songs", subCategory: "barata" },
+  { text: "A Barata diz que tem sete saias de filó, É mentira da barata, ela tem é uma só, Ah ra ra, iá ro ró, ela tem é uma só! A Barata diz que tem um sapato de veludo, É mentira da barata, o pé dela é peludo, Ah ra ra, Iu ru ru, o pé dela é peludo! A Barata diz que tem uma cama de marfim, É mentira da barata, ela tem é de capim, Ah ra ra, rim rim rim, ela tem é de capim. A Barata diz que tem um anel de formatura, É mentira da barata, ela tem é casca dura, Ah ra ra, iu ru ru, ela tem é casca dura. A barata diz que vai viajar de avião, É mentira da barata ela vai de caminhão, Ah ra ra, iu ru ru, ela vai de caminhão.", category: "songs", subCategory: "barata", audioKey: "barata" },
 
   // ==================== MÚSICA - ALECRIM ====================
-  { text: "Alecrim, Alecrim dourado, Que nasceu no campo, Sem ser semeado. Alecrim, Alecrim dourado, Que nasceu no campo, Sem ser semeado. Foi meu amor, Que me disse assim, Que a flor do campo é o alecrim. Foi meu amor, Que me disse assim, Que a flor do campo é o alecrim.", category: "songs", subCategory: "alecrim" },
+  { text: "Alecrim, Alecrim dourado, Que nasceu no campo, Sem ser semeado. Alecrim, Alecrim dourado, Que nasceu no campo, Sem ser semeado. Foi meu amor, Que me disse assim, Que a flor do campo é o alecrim. Foi meu amor, Que me disse assim, Que a flor do campo é o alecrim.", category: "songs", subCategory: "alecrim", audioKey: "alecrim" },
 
   // ==================== MÚSICA - POMBINHA BRANCA ====================
-  { text: "Pombinha branca o que está fazendo? Lavando roupa pro casamento. Vou me lavar, vou me secar, Vou pra janela pra namorar. Passou um moço de terno branco, Chapéu de lado meu namorado. Mandei entrar, mandei sentar, Cuspiu no chão, limpa aí seu porcalhão.", category: "songs", subCategory: "pombinha-branca" },
+  { text: "Pombinha branca o que está fazendo? Lavando roupa pro casamento. Vou me lavar, vou me secar, Vou pra janela pra namorar. Passou um moço de terno branco, Chapéu de lado meu namorado. Mandei entrar, mandei sentar, Cuspiu no chão, limpa aí seu porcalhão.", category: "songs", subCategory: "pombinha-branca", audioKey: "pombinha-branca" },
 
   // ==================== MÚSICA - INDIOZINHO ====================
-  { text: "Um, dois, três indiozinhos, quatro, cinco, seis indiozinhos, Sete, oito, nove indiozinhos, Dez num pequeno bote. Iam navegando pelo rio abaixo, Quando um jacaré se aproximou, E o pequeno bote dos indiozinhos, Quase, quase virou.", category: "songs", subCategory: "indiozinho" },
+  { text: "Um, dois, três indiozinhos, quatro, cinco, seis indiozinhos, Sete, oito, nove indiozinhos, Dez num pequeno bote. Iam navegando pelo rio abaixo, Quando um jacaré se aproximou, E o pequeno bote dos indiozinhos, Quase, quase virou.", category: "songs", subCategory: "indiozinho", audioKey: "indiozinho" },
 
   // ==================== MÚSICA - NÚMERO ZERO ====================
-  { text: "Se essa rua, Se essa rua fosse minha, Eu mandava, Eu mandava ladrilhar, Com pedrinhas, Com pedrinhas de brilhante, Para o meu, Para o meu amor passar. Nessa rua, Nessa rua tem um bosque, Que se chama, Que se chama solidão, Dentro dele, Dentro dele mora um anjo, Que roubou, Que roubou meu coração. Se eu roubei, Se eu roubei teu coração, Tu roubaste, Tu roubaste o meu também. Se eu roubei, Se eu roubei teu coração, É porque, É porque te quero bem.", category: "songs", subCategory: "numero-zero" },
+  { text: "Se essa rua, Se essa rua fosse minha, Eu mandava, Eu mandava ladrilhar, Com pedrinhas, Com pedrinhas de brilhante, Para o meu, Para o meu amor passar. Nessa rua, Nessa rua tem um bosque, Que se chama, Que se chama solidão, Dentro dele, Dentro dele mora um anjo, Que roubou, Que roubou meu coração. Se eu roubei, Se eu roubei teu coração, Tu roubaste, Tu roubaste o meu também. Se eu roubei, Se eu roubei teu coração, É porque, É porque te quero bem.", category: "songs", subCategory: "numero-zero", audioKey: "numero-zero" },
 
   // ==================== MÚSICA - MESTRE ANDRÉ ====================
-  { text: "Foi na loja do Mestre André, Que eu comprei um pianinho, Plim, plim, plim, um pianinho, Ai olé, ai olé! Foi na loja do Mestre André! Foi na loja do Mestre André, Que eu comprei um violão, Dão, dão, dão, um violão, Plim, plim, plim, um pianinho, Ai olé, ai olé! Foi na loja do Mestre André! Foi na loja do Mestre André, Que eu comprei uma flautinha, Flá, flá, flá, uma flautinha, Dão, dão, dão, um violão, Plim, plim, plim, um pianinho, Ai olé, ai olé! Foi na loja do Mestre André! Foi na loja do Mestre André, Que eu comprei um tamborzinho, Dum, dum, dum, um tamborzinho, Flá, flá, flá, uma flautinha, Dão, dão, dão, um violão, Plim, plim, plim, um pianinho, Ai olé, ai olé! Foi na loja do Mestre André!", category: "songs", subCategory: "mestre-andre" },
+  { text: "Foi na loja do Mestre André, Que eu comprei um pianinho, Plim, plim, plim, um pianinho, Ai olé, ai olé! Foi na loja do Mestre André! Foi na loja do Mestre André, Que eu comprei um violão, Dão, dão, dão, um violão, Plim, plim, plim, um pianinho, Ai olé, ai olé! Foi na loja do Mestre André! Foi na loja do Mestre André, Que eu comprei uma flautinha, Flá, flá, flá, uma flautinha, Dão, dão, dão, um violão, Plim, plim, plim, um pianinho, Ai olé, ai olé! Foi na loja do Mestre André! Foi na loja do Mestre André, Que eu comprei um tamborzinho, Dum, dum, dum, um tamborzinho, Flá, flá, flá, uma flautinha, Dão, dão, dão, um violão, Plim, plim, plim, um pianinho, Ai olé, ai olé! Foi na loja do Mestre André!", category: "songs", subCategory: "mestre-andre", audioKey: "mestre-andre" },
 
   // ==================== MÚSICA - BOI DA CARA PRETA ====================
-  { text: "Boi, boi, boi, Boi da cara preta, Pega esta criança que tem medo de careta. Boi, boi, boi, Boi do Piauí, Pega essa criança Que não gosta de dormir. Não, não, não, Não pega ela não, Ela é bonitinha, ela chora coitadinha. Boi, boi, boi, Boi do Maranhão, Pega essa criança Que não quer fazer lição. Boi, boi, boi, Boi lá de Goiás, Pega essa criança Que não quer comer jamais. Não, não, não, Não pega ela não, Ela é bonitinha, ela chora coitadinha. Boi lá da Bahia, Pega essa criança que é teimosa todo dia. Boi, boi, boi, Boi do Sol Nascente, Pega essa criança que não quer escovar os dentes. Boi, boi, boi, Boi lá do Pará, Pega essas crianças Que não largam o celular!", category: "songs", subCategory: "boi-cara-preta" },
+  { text: "Boi, boi, boi, Boi da cara preta, Pega esta criança que tem medo de careta. Boi, boi, boi, Boi do Piauí, Pega essa criança Que não gosta de dormir. Não, não, não, Não pega ela não, Ela é bonitinha, ela chora coitadinha. Boi, boi, boi, Boi do Maranhão, Pega essa criança Que não quer fazer lição. Boi, boi, boi, Boi lá de Goiás, Pega essa criança Que não quer comer jamais. Não, não, não, Não pega ela não, Ela é bonitinha, ela chora coitadinha. Boi lá da Bahia, Pega essa criança que é teimosa todo dia. Boi, boi, boi, Boi do Sol Nascente, Pega essa criança que não quer escovar os dentes. Boi, boi, boi, Boi lá do Pará, Pega essas crianças Que não largam o celular!", category: "songs", subCategory: "boi-cara-preta", audioKey: "boi-cara-preta" },
 
   // ==================== MÚSICA - BOTA AQUI ====================
-  { text: "Ai bota aqui, Ai bota aqui o seu pezinho, Seu pezinho bem juntinho com o meu. E depois não vá dizer, Que você se arrependeu!", category: "songs", subCategory: "bota-aqui" },
+  { text: "Ai bota aqui, Ai bota aqui o seu pezinho, Seu pezinho bem juntinho com o meu. E depois não vá dizer, Que você se arrependeu!", category: "songs", subCategory: "bota-aqui", audioKey: "bota-aqui" },
 
   // ==================== MÚSICA - REQUEBRADINHA ====================
-  { text: "Vai abóbora vai melão de melão vai melancia, Vai jambo sinhá, vai jambo sinhá, vai doce, vai cocadinha. Quem quiser aprender a dançar, vai na casa do Juquinha, Ele pula, ele dança, ele faz requebradinha.", category: "songs", subCategory: "requebradinha" },
+  { text: "Vai abóbora vai melão de melão vai melancia, Vai jambo sinhá, vai jambo sinhá, vai doce, vai cocadinha. Quem quiser aprender a dançar, vai na casa do Juquinha, Ele pula, ele dança, ele faz requebradinha.", category: "songs", subCategory: "requebradinha", audioKey: "requebradinha" },
 
   // ==================== MÚSICA - AS BORBOLETAS ====================
-  { text: "As borboletas, Brancas, Azuis, Amarelas, E pretas, Brincam na luz, As belas borboletas. Borboletas brancas, São alegres e francas. Borboletas azuis, Gostam de muita luz. As amarelinhas, São tão bonitinhas! E as pretas, então, Oh, que escuridão!", category: "songs", subCategory: "borboletas" },
+  { text: "As borboletas, Brancas, Azuis, Amarelas, E pretas, Brincam na luz, As belas borboletas. Borboletas brancas, São alegres e francas. Borboletas azuis, Gostam de muita luz. As amarelinhas, São tão bonitinhas! E as pretas, então, Oh, que escuridão!", category: "songs", subCategory: "borboletas", audioKey: "borboletas" },
 
   // ==================== MÚSICA - ACHOU ====================
-  { text: "Cadê o bebê? Achou! Beijo no bebê! Abraço no bebê! Carinho no bebê! Te amo, bebê!", category: "songs", subCategory: "achou" },
+  { text: "Cadê o bebê? Achou! Beijo no bebê! Abraço no bebê! Carinho no bebê! Te amo, bebê!", category: "songs", subCategory: "achou", audioKey: "achou" },
 
   // ==================== MÚSICA - DEDINHOS ====================
-  { text: "Um dedinho, um dedinho, vira uma minhoca. Dois dedinhos, dois dedinhos, viram um coelho. Três dedinhos, três dedinhos, viram um gato. Quatro dedos, quatro dedos, viram uma borboleta. Cinco dedos, cinco dedos, viram um leão.", category: "songs", subCategory: "dedinhos-musica" },
+  { text: "Um dedinho, um dedinho, vira uma minhoca. Dois dedinhos, dois dedinhos, viram um coelho. Três dedinhos, três dedinhos, viram um gato. Quatro dedos, quatro dedos, viram uma borboleta. Cinco dedos, cinco dedos, viram um leão.", category: "songs", subCategory: "dedinhos-musica", audioKey: "dedinhos-musica" },
 
   // ==================== MÚSICA - PARABÉNS ====================
-  { text: "Parabéns pra você, Nesta data querida, Muitas felicidades, Muitos anos de vida. É pic, é pic, É hora, é hora, é hora, Ra-tim-bum, Vivaaa!", category: "songs", subCategory: "parabens" },
+  { text: "Parabéns pra você, Nesta data querida, Muitas felicidades, Muitos anos de vida. É pic, é pic, É hora, é hora, é hora, Ra-tim-bum, Vivaaa!", category: "songs", subCategory: "parabens", audioKey: "parabens" },
 
   // ==================== MÚSICA - CASINHA ====================
-  { text: "Era uma casa bem fechada, Abre a janelinha, Deixa o sol entrar. Perto da casa tem uma árvore, E os passarinhos pousam nela assim. Perto da árvore tem uma ponte, E por baixo dela corre um rio assim. Está trovejando e escurecendo, Fecha a janelinha que já vai chover. Chuuuá!", category: "songs", subCategory: "casinha" },
+  { text: "Era uma casa bem fechada, Abre a janelinha, Deixa o sol entrar. Perto da casa tem uma árvore, E os passarinhos pousam nela assim. Perto da árvore tem uma ponte, E por baixo dela corre um rio assim. Está trovejando e escurecendo, Fecha a janelinha que já vai chover. Chuuuá!", category: "songs", subCategory: "casinha", audioKey: "casinha" },
 
   // ==================== MÚSICA - VIRA VIROU ====================
-  { text: "Em uma caneca, Uma chaleira, Uma colherinha, E um colherão, Um prato raso, Um prato fundo, Viro um garfinho, E um facão, Viro um saleiro, Açucareiro, E uma panela que faz feijão. Fu fuuu! Ô ô ô ô ô ô ô! Viro vira virou.", category: "songs", subCategory: "vira-virou" },
+  { text: "Em uma caneca, Uma chaleira, Uma colherinha, E um colherão, Um prato raso, Um prato fundo, Viro um garfinho, E um facão, Viro um saleiro, Açucareiro, E uma panela que faz feijão. Fu fuuu! Ô ô ô ô ô ô ô! Viro vira virou.", category: "songs", subCategory: "vira-virou", audioKey: "vira-virou" },
 
   // ==================== MÚSICA - ESTÁTUA ====================
-  { text: "Mão na cabeça, Mão na cintura, Um pé na frente e o outro atrás. Agora ninguém pode se mexer. Estátua! Um braço pra cima, Um braço pra frente, Cruzando as pernas, Bumbum para trás. Agora ninguém pode se mexer. Estátua! Rodando, rodando, Braços esticados, Não pode parar, continue rodando. Quero saber quem é que consegue ficar parado. Estátua! Mão na cabeça, Mão na cintura, Um pé na frente e o outro atrás. Agora ninguém pode se mexer. Estátua! Mexendo a cabeça, Mexendo as mãos, Faz um shake shake, Até o chão. Quero saber quem é que consegue ficar parado. A gente vai ter que rodar, Roda, roda no lugar, Ninguém aqui pode cair. Eu vou contar pra terminar, Três, dois, um, Estátua!", category: "songs", subCategory: "estatua" },
+  { text: "Mão na cabeça, Mão na cintura, Um pé na frente e o outro atrás. Agora ninguém pode se mexer. Estátua! Um braço pra cima, Um braço pra frente, Cruzando as pernas, Bumbum para trás. Agora ninguém pode se mexer. Estátua! Rodando, rodando, Braços esticados, Não pode parar, continue rodando. Quero saber quem é que consegue ficar parado. Estátua! Mão na cabeça, Mão na cintura, Um pé na frente e o outro atrás. Agora ninguém pode se mexer. Estátua! Mexendo a cabeça, Mexendo as mãos, Faz um shake shake, Até o chão. Quero saber quem é que consegue ficar parado. A gente vai ter que rodar, Roda, roda no lugar, Ninguém aqui pode cair. Eu vou contar pra terminar, Três, dois, um, Estátua!", category: "songs", subCategory: "estatua", audioKey: "estatua" },
 
   // ==================== MÚSICAS DA ROTINA ====================
-  { text: "Tchau, preguiça! Tchau, sujeira! Adeus, cheirinho de suor! Lava, lava, lava, lava, lava, lava. Uma orelha, uma orelha, Outra orelha, outra orelha. Lava, lava, lava, lava, lava. Lava a testa, a bochecha, Lava o queixo, lava a coxa, E lava até... Meu pé, meu querido pé, Que me aguenta o dia inteiro. E o meu nariz, meu pescoço, O meu tórax e o meu bumbum. La, la, laiá, laiá, la. Banho é bom! Banho é bom! Banho é muito bom! Agora acabou!", category: "songs", subCategory: "banho" },
-  { text: "Eu vou, eu vou para o parque agora eu vou… Pararatimbum, pararatimbum, eu vou, eu vou… Eu vou, eu vou para o parque agora eu vou… Pararatimbum, pararatimbum, eu vou, eu vou…", category: "songs", subCategory: "parque" },
-  { text: "Guarda, guarda, guarda, bem direitinho, quem guarda tudo, acha tudo arrumadinho. Guarda, guarda, guarda, bem direitinho, quem guarda tudo, acha tudo arrumadinho.", category: "songs", subCategory: "guarda" },
-  { text: "Meu lanchinho, meu lanchinho, vou comer… vou comer… Para ficar fortinho, para ficar fortinho e crescer. E crescer. Se não comer, se não comer, Passa mal, passa mal. Fica doentinho, fica doentinho. Vai pro hospital, comer mingau.", category: "songs", subCategory: "lanchinho" },
+  { text: "Tchau, preguiça! Tchau, sujeira! Adeus, cheirinho de suor! Lava, lava, lava, lava, lava, lava. Uma orelha, uma orelha, Outra orelha, outra orelha. Lava, lava, lava, lava, lava. Lava a testa, a bochecha, Lava o queixo, lava a coxa, E lava até... Meu pé, meu querido pé, Que me aguenta o dia inteiro. E o meu nariz, meu pescoço, O meu tórax e o meu bumbum. La, la, laiá, laiá, la. Banho é bom! Banho é bom! Banho é muito bom! Agora acabou!", category: "songs", subCategory: "banho", audioKey: "banho" },
+  { text: "Eu vou, eu vou para o parque agora eu vou… Pararatimbum, pararatimbum, eu vou, eu vou… Eu vou, eu vou para o parque agora eu vou… Pararatimbum, pararatimbum, eu vou, eu vou…", category: "songs", subCategory: "parque", audioKey: "parque" },
+  { text: "Guarda, guarda, guarda, bem direitinho, quem guarda tudo, acha tudo arrumadinho. Guarda, guarda, guarda, bem direitinho, quem guarda tudo, acha tudo arrumadinho.", category: "songs", subCategory: "guarda", audioKey: "guarda" },
+  { text: "Meu lanchinho, meu lanchinho, vou comer… vou comer… Para ficar fortinho, para ficar fortinho e crescer. E crescer. Se não comer, se não comer, Passa mal, passa mal. Fica doentinho, fica doentinho. Vai pro hospital, comer mingau.", category: "songs", subCategory: "lanchinho", audioKey: "lanchinho" },
 
   // ==================== HISTÓRIAS - INTRODUÇÃO (stories - introducao-historias) ====================
   { text: "É hora da história. Eu amo histórias. Você sabe contar alguma história?", category: "stories", subCategory: "introducao-historias" },
