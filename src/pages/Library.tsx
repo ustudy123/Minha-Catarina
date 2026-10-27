@@ -12,6 +12,7 @@ import { useTextToSpeech } from "@/hooks/useTextToSpeech";
 import { useTextToSong } from "@/hooks/useTextToSong";
 import { useSoundEffects } from "@/hooks/useSoundEffects";
 import { useLibraryAudio } from "@/hooks/useLibraryAudio";
+import { getLibraryAudioKey } from "@/lib/libraryAudioKey";
 import { useAudioPreloader } from "@/hooks/useAudioPreloader";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useFavorites } from "@/hooks/useFavorites";
@@ -335,7 +336,11 @@ const Library = () => {
     const mappedCategory = categoryMap[phrase.category] || phrase.category;
     const timeOfDayOptions: Array<'morning' | 'afternoon' | 'night'> = ['morning', 'afternoon', 'night'];
     const timeOfDay = phrase.timeOfDay as 'morning' | 'afternoon' | 'night' || timeOfDayOptions[index % 3];
-    const phraseKey = `${language}_${mappedCategory}_${index}`;
+    const phraseKey = getLibraryAudioKey({
+      text: phrase.text,
+      category: mappedCategory,
+      audioKey: (phrase as { audioKey?: string }).audioKey,
+    });
 
     return {
       id: `phrase-${index}`,
@@ -346,7 +351,7 @@ const Library = () => {
       soundPrompt: (phrase as { soundPrompt?: string }).soundPrompt,
       phraseKey,
     };
-  }), [language, t.library.prerecordedPhrases]);
+  }), [t.library.prerecordedPhrases]);
 
   const getSubCategoryPhraseCount = useCallback((categoryId: string, subId: string) => {
     return samplePhrases.filter(p => p.category === categoryId && p.subCategory === subId).length;
@@ -474,9 +479,14 @@ const Library = () => {
   // Dispara reprodução sequencial a partir de uma frase específica.
   const handlePlayFromIndex = useCallback((startIndex: number) => {
     if (filteredPhrases.length === 0) return;
-    const playable = filteredPhrases.map(p => ({ id: p.id, text: getTextWithoutPauses(p.text) }));
+    const playable = filteredPhrases.map(p => ({
+      id: p.id,
+      text: getTextWithoutPauses(p.text),
+      category: p.category,
+      audioUrl: p.phraseKey ? getAudioUrl(p.phraseKey) ?? undefined : undefined,
+    }));
     sequentialPlayer.startPlayAll(playable, false, autoPlayInterval, true, startIndex);
-  }, [filteredPhrases, sequentialPlayer, autoPlayInterval]);
+  }, [filteredPhrases, sequentialPlayer, autoPlayInterval, getAudioUrl]);
 
 
 
