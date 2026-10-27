@@ -315,6 +315,7 @@ const Library = () => {
       { id: "casinha", name: "Casinha", icon: Music },
       { id: "vira-virou", name: "Vira Virou", icon: Music },
       { id: "estatua", name: "Estátua", icon: Music },
+      { id: "cabeca-ombro", name: "Cabeça, Ombro, Joelho e Pé", icon: Music },
       { id: "banho", name: "Banho", icon: Music },
       { id: "parque", name: "Parque", icon: Music },
       { id: "guarda", name: "Guarda", icon: Music },
