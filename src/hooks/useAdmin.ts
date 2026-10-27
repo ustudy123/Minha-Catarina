@@ -5,13 +5,17 @@ import { supabase } from '@/integrations/supabase/client';
 export const useAdmin = () => {
   const { user } = useAuth();
   const [isAdmin, setIsAdmin] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  // Usuário para o qual o papel já foi verificado. Enquanto for diferente do
+  // usuário atual, a verificação ainda está pendente: sem isso, ao abrir
+  // /admin direto pelo endereço, o AdminRoute via "não é admin" por um
+  // instante (login chegou, checagem ainda não) e redirecionava para "/".
+  const [checkedUserId, setCheckedUserId] = useState<string | null | undefined>(undefined);
 
   useEffect(() => {
     const checkAdminRole = async () => {
       if (!user) {
         setIsAdmin(false);
-        setIsLoading(false);
+        setCheckedUserId(null);
         return;
       }
 
@@ -29,12 +33,14 @@ export const useAdmin = () => {
         console.error('Error checking admin role:', error);
         setIsAdmin(false);
       } finally {
-        setIsLoading(false);
+        setCheckedUserId(user.id);
       }
     };
 
     checkAdminRole();
   }, [user]);
 
-  return { isAdmin, isLoading };
+  const isLoading = checkedUserId !== (user?.id ?? null);
+
+  return { isAdmin: isAdmin && !isLoading, isLoading };
 };

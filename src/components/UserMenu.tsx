@@ -12,13 +12,15 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { User, LogOut } from 'lucide-react';
+import { User, LogOut, Shield } from 'lucide-react';
 import { toast } from 'sonner';
+import { useAdmin } from '@/hooks/useAdmin';
 
 export function UserMenu() {
   const { user, profile, signOut } = useAuth();
   const { language } = useLanguage();
   const navigate = useNavigate();
+  const { isAdmin } = useAdmin();
   const t = getTranslations(language);
 
   const handleSignOut = async () => {
@@ -66,6 +68,12 @@ export function UserMenu() {
           <User className="mr-2 h-4 w-4" />
           <span>{t.auth.profile}</span>
         </DropdownMenuItem>
+        {isAdmin && (
+          <DropdownMenuItem className="cursor-pointer" onClick={() => navigate('/admin')}>
+            <Shield className="mr-2 h-4 w-4" />
+            <span>Administração</span>
+          </DropdownMenuItem>
+        )}
         <DropdownMenuSeparator />
         <DropdownMenuItem className="cursor-pointer text-destructive" onClick={handleSignOut}>
           <LogOut className="mr-2 h-4 w-4" />
